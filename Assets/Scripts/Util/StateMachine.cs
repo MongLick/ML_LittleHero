@@ -40,6 +40,18 @@ public class StateMachine<T> where T : Enum
         curState = stateDic[stateEnum];
         curState.Enter();
     }
+
+	public T GetCurrentState()
+	{
+		foreach (var kvp in stateDic)
+		{
+			if (kvp.Value == curState)
+			{
+				return kvp.Key;
+			}
+		}
+		throw new InvalidOperationException("Current state not found in state dictionary.");
+	}
 }
 
 public class BaseState<T> where T : Enum
