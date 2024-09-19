@@ -11,4 +11,52 @@ public class PlayerBlockState : BaseState<PlayerStateType>
 	{
 		this.player = player;
 	}
+
+	public override void Enter()
+	{
+		if (player.BlockRoutine != null)
+		{
+			player.StopCoroutine(player.BlockRoutine);
+		}
+		player.BlockRoutine = player.StartCoroutine(BlockCoroutine());
+	}
+
+	public override void Update()
+	{
+		if (player.IsTakeHit)
+		{
+			ChangeState(PlayerStateType.TakeHit);
+		}
+		else if (player.IsStunned)
+		{
+			ChangeState(PlayerStateType.Stunned);
+		}
+		else if (player.IsAttack)
+		{
+			ChangeState(PlayerStateType.Attack);
+		}
+		else if (!player.IsBlock)
+		{
+			ChangeState(PlayerStateType.Idle);
+		}
+	}
+
+	public override void Exit()
+	{
+		if (!player.IsTakeHit)
+		{
+			player.IsBlock = false;
+		}
+	}
+
+	private IEnumerator BlockCoroutine()
+	{
+		while(player.IsBlock)
+		{
+			player.Animator.SetBool("Block", true);
+			yield return null;
+		}
+		player.Animator.SetBool("Block", false);
+		yield return null;
+	}
 }

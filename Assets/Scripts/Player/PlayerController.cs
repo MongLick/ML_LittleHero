@@ -6,9 +6,20 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using static PlayerState;
 using UnityEngine.Playables;
+using Cinemachine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDamageable
 {
+	[SerializeField] GameObject attack;
+	public GameObject Attack { get { return attack; }  set { attack = value; } }
+	[SerializeField] PlayerInput playerInput;
+	public PlayerInput PlayerInput { get { return playerInput; } set { playerInput = value; } }
+	[SerializeField] TPSCameraController tPSCamera;
+	public TPSCameraController TPSCamera { get { return tPSCamera; } set { tPSCamera = value; } }
+	[SerializeField] CinemachineVirtualCamera gameOverCamera;
+	public CinemachineVirtualCamera GameOverCamera { get { return gameOverCamera; } set { gameOverCamera = value; } }
+	[SerializeField] float hp;
+	public float HP { get { return hp; } }
 	[SerializeField] StateMachine<PlayerStateType> playerState;
 	[SerializeField] PlayerStateType currentState;
 	[SerializeField] CharacterController controller;
@@ -22,6 +33,10 @@ public class PlayerController : MonoBehaviour
 
 	[SerializeField] float attackDelay;
 	public float AttackDelay { get { return attackDelay; } }
+	[SerializeField] float takeHitDelay;
+	public float TakeHitDelay { get { return takeHitDelay; } }
+	[SerializeField] float stunnedDelay;
+	public float StunnedDelay { get { return stunnedDelay; } }
 
 	private Vector3 moveDir;
 	private Vector3 direction;
@@ -40,6 +55,12 @@ public class PlayerController : MonoBehaviour
 
 	private Coroutine attackRoutine;
 	public Coroutine AttackRoutine { get { return attackRoutine; } set { attackRoutine = value; } }
+	private Coroutine blockRoutine;
+	public Coroutine BlockRoutine { get { return blockRoutine; } set { blockRoutine = value; } }
+	private Coroutine stunnedRoutine;
+	public Coroutine StunnedRoutine { get { return stunnedRoutine; } set { stunnedRoutine = value; } }
+	private Coroutine takeHitRoutine;
+	public Coroutine TakeHitRoutine { get { return takeHitRoutine; } set { takeHitRoutine = value; } }
 
 	private void Awake()
 	{
@@ -79,7 +100,22 @@ public class PlayerController : MonoBehaviour
 
 	private void OnAttack(InputValue value)
 	{
-		isAttack = true;
+		if (!isAttack)
+		{
+			isAttack = true;
+		}
+	}
+
+	private void OnBlock(InputValue value)
+	{
+		if(value.isPressed)
+		{
+			isBlock = true;
+		}
+		else
+		{
+			isBlock = false;
+		}
 	}
 
 	private void Move()
@@ -124,6 +160,31 @@ public class PlayerController : MonoBehaviour
 		if (groundLayer.Contain(other.gameObject.layer))
 		{
 			isGround = false;
+		}
+	}
+
+	public void TakeDamage(int damage, bool isStunAttack)
+	{
+		if(!isBlock)
+		{
+			hp -= damage;
+			if(isStunAttack)
+			{
+				isStunned = true;
+			}
+			else
+			{
+				isTakeHit = true;
+			}
+		}
+		else
+		{
+			isTakeHit = true;
+		}
+		
+		if(hp <= 0)
+		{
+			isDie = true;
 		}
 	}
 }

@@ -23,27 +23,32 @@ public class PlayerAttackState : BaseState<PlayerStateType>
 
 	public override void Update()
 	{
-		if(player.IsTakeHit)
+		if (player.IsTakeHit)
 		{
 			ChangeState(PlayerStateType.TakeHit);
 		}
-		else if(player.IsStunned)
+		else if (player.IsStunned)
 		{
 			ChangeState(PlayerStateType.Stunned);
 		}
-		else if(player.IsDie)
+		else if (player.IsBlock)
 		{
-			ChangeState(PlayerStateType.Die);
+			ChangeState(PlayerStateType.Block);
 		}
-		else if(!player.IsAttack)
+		else if (!player.IsAttack)
 		{
 			ChangeState(PlayerStateType.Idle);
 		}
-    }
+	}
+
+	public override void Exit()
+	{
+		player.IsAttack = false;
+	}
 
 	private IEnumerator AttackCoroutine()
 	{
-		Debug.Log(1);
+		player.Attack.SetActive(true);
 		int attackIndex = Random.Range(0, 3);
 
 		switch (attackIndex)
@@ -60,8 +65,8 @@ public class PlayerAttackState : BaseState<PlayerStateType>
 		}
 
 		yield return new WaitForSeconds(player.AttackDelay);
-
 		player.IsAttack = false;
-		Debug.Log(2);
+		player.Attack.SetActive(false);
+		ChangeState(PlayerStateType.Idle);
 	}
 }

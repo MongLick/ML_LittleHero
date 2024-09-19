@@ -30,9 +30,5 @@ public class PlayerIdleState : BaseState<PlayerStateType>
 		{
 			ChangeState(PlayerStateType.Stunned);
 		}
-		else if(player.IsDie)
-		{
-			ChangeState(PlayerStateType.Die);
-		}
 	}
 }

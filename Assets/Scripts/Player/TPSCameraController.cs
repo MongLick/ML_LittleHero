@@ -10,16 +10,6 @@ public class TPSCameraController : MonoBehaviour
 	private Vector2 inputDir;
 	private float xRotation;
 
-	/*private void OnEnable()
-	{
-		Cursor.lockState = CursorLockMode.Locked;
-	}
-
-	private void OnDisable()
-	{
-		Cursor.lockState = CursorLockMode.None;
-	}*/
-
 	private void LateUpdate()
 	{
 		xRotation -= inputDir.y * mouseSensitivity * Time.deltaTime;

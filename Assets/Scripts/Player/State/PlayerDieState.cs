@@ -11,4 +11,12 @@ public class PlayerDieState : BaseState<PlayerStateType>
 	{
 		this.player = player;
 	}
+
+	public override void Enter()
+	{
+		player.Animator.SetTrigger("Die");
+		player.GameOverCamera.Priority = 100;
+		player.PlayerInput.enabled = false;
+		player.TPSCamera.enabled = false;
+	}
 }
