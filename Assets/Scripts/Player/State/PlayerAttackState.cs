@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
+using static MonsterState;
 using static PlayerState;
 
 public class PlayerAttackState : BaseState<PlayerStateType>
@@ -14,6 +16,17 @@ public class PlayerAttackState : BaseState<PlayerStateType>
 
 	public override void Enter()
 	{
+		if (player.IsAttackCooltime)
+		{
+			ChangeState(PlayerStateType.Idle);
+			return;
+		}
+		if(player.IsBlock)
+		{
+			ChangeState(PlayerStateType.Block);
+			return;
+		}
+
 		if (player.AttackRoutine != null)
 		{
 			player.StopCoroutine(player.AttackRoutine);
@@ -48,7 +61,6 @@ public class PlayerAttackState : BaseState<PlayerStateType>
 
 	private IEnumerator AttackCoroutine()
 	{
-		player.Attack.SetActive(true);
 		int attackIndex = Random.Range(0, 3);
 
 		switch (attackIndex)
@@ -65,8 +77,8 @@ public class PlayerAttackState : BaseState<PlayerStateType>
 		}
 
 		yield return new WaitForSeconds(player.AttackDelay);
+		player.IsAttackCooltime = true;
 		player.IsAttack = false;
-		player.Attack.SetActive(false);
 		ChangeState(PlayerStateType.Idle);
 	}
 }

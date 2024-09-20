@@ -14,16 +14,21 @@ public class MonsterReturnState : BaseState<MonsterStateType>
 
 	public override void Enter()
 	{
+		monster.Animator.SetBool("Move", true);
+		monster.BoxCollider.enabled = false;
 		monster.Agent.SetDestination(monster.SpawnPos.position);
 	}
 
 	public override void Update()
 	{
-		monster.SpawnDistance = Vector3.Distance(monster.transform.position, monster.SpawnPos.position);
-
-		if (monster.SpawnDistance < 0.1f)
+		if(monster.IsIdle)
 		{
 			ChangeState(MonsterStateType.Idle);
 		}
+	}
+
+	public override void Exit()
+	{
+		monster.Animator.SetBool("Move", false);
 	}
 }

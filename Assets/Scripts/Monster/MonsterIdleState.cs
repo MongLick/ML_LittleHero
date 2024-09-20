@@ -13,30 +13,34 @@ public class MonsterIdleState : BaseState<MonsterStateType>
 		this.monster = monster;
 	}
 
+	public override void Enter()
+	{
+		monster.IsReturn = false;
+		monster.IsIdle = false;
+		monster.BoxCollider.enabled = true;
+	}
+
 	public override void Update()
 	{
-		CheckPlayer();
-
-		if (monster.IsMove)
+		if (monster.IsTakeHit)
 		{
-			ChangeState(MonsterStateType.Move);
+			ChangeState(MonsterStateType.TakeHit);
+		}
+		else if (monster.IsStunned)
+		{
+			ChangeState(MonsterStateType.Stunned);
+		}
+		else if (monster.IsReturn)
+		{
+			ChangeState(MonsterStateType.Return);
 		}
 		else if (monster.IsAttack)
 		{
 			ChangeState(MonsterStateType.Attack);
 		}
-		else if (monster.IsTakeHit)
+		else if (monster.IsMove)
 		{
-			ChangeState(MonsterStateType.TakeHit);
-		}
-	}
-
-	private void CheckPlayer()
-	{
-		Collider[] player = Physics.OverlapSphere(monster.transform.position, monster.DetectionRadius, monster.PlayerLayer);
-		if (player != null)
-		{
-			monster.IsMove = player.Length > 0;
+			ChangeState(MonsterStateType.Move);
 		}
 	}
 }

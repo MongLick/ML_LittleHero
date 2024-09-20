@@ -10,6 +10,9 @@ using Cinemachine;
 
 public class PlayerController : MonoBehaviour, IDamageable
 {
+	[SerializeField] float attackCooltime;
+	public float AttackCooltime { get { return attackCooltime; } }
+	[SerializeField] float cooltime;
 	[SerializeField] GameObject attack;
 	public GameObject Attack { get { return attack; }  set { attack = value; } }
 	[SerializeField] PlayerInput playerInput;
@@ -42,6 +45,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 	private Vector3 direction;
 	private float ySpeed;
 
+	private bool isAttackCooltime;
+	public bool IsAttackCooltime { get { return isAttackCooltime; } set { isAttackCooltime = value; } }
 	private bool isAttack;
 	public bool IsAttack { get { return isAttack; } set { isAttack = value; } }
 	private bool isTakeHit;
@@ -80,6 +85,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 		currentState = playerState.GetCurrentState();
 		Move();
 		JumpMove();
+		CoolTimeCheck();
 	}
 
 	private void OnMove(InputValue value)
@@ -163,6 +169,19 @@ public class PlayerController : MonoBehaviour, IDamageable
 		}
 	}
 
+	private void CoolTimeCheck()
+	{
+		if (isAttackCooltime)
+		{
+			cooltime += Time.deltaTime;
+			if (cooltime >= attackCooltime)
+			{
+				isAttackCooltime = false;
+				cooltime = 0;
+			}
+		}
+	}
+
 	public void TakeDamage(int damage, bool isStunAttack)
 	{
 		if(!isBlock)
@@ -186,5 +205,15 @@ public class PlayerController : MonoBehaviour, IDamageable
 		{
 			isDie = true;
 		}
+	}
+
+	public void Attacktrue()
+	{
+		attack.SetActive(true);
+	}
+
+	public void Attackfalse()
+	{
+		attack.SetActive(false);
 	}
 }

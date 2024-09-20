@@ -51,6 +51,7 @@ public class PlayerStunnedState : BaseState<PlayerStateType>
 
 	private IEnumerator StunnedCoroutine()
 	{
+		player.IsAttack = false;
 		player.Animator.SetBool("Stunned", true);
 
 		player.PlayerInput.enabled = false;

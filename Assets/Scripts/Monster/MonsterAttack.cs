@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAttack : MonoBehaviour
+public class MonsterAttack : MonoBehaviour
 {
-	[SerializeField] LayerMask monsterLayer;
+	[SerializeField] LayerMask palyerLayer;
 	[SerializeField] int damage;
 
 	private void OnTriggerEnter(Collider other)
 	{
-		if (monsterLayer.Contain(other.gameObject.layer))
+		if (palyerLayer.Contain(other.gameObject.layer))
 		{
 			IDamageable damageable = other.GetComponent<IDamageable>();
 			if (damageable != null)

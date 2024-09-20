@@ -41,14 +41,6 @@ public class PlayerBlockState : BaseState<PlayerStateType>
 		}
 	}
 
-	public override void Exit()
-	{
-		if (!player.IsTakeHit)
-		{
-			player.IsBlock = false;
-		}
-	}
-
 	private IEnumerator BlockCoroutine()
 	{
 		while(player.IsBlock)
