@@ -67,7 +67,7 @@ public class MonsterAttackState : BaseState<MonsterStateType>
 
 	private IEnumerator AttackCoroutine()
 	{
-		int attackIndex = Random.Range(0, 3);
+		int attackIndex = Random.Range(0, 2);
 
 		switch (attackIndex)
 		{
@@ -76,9 +76,6 @@ public class MonsterAttackState : BaseState<MonsterStateType>
 				break;
 			case 1:
 				monster.Animator.SetTrigger("Attack2");
-				break;
-			case 2:
-				monster.Animator.SetTrigger("Attack3");
 				break;
 		}
 

@@ -17,8 +17,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 	public GameObject Attack { get { return attack; }  set { attack = value; } }
 	[SerializeField] PlayerInput playerInput;
 	public PlayerInput PlayerInput { get { return playerInput; } set { playerInput = value; } }
-	[SerializeField] TPSCameraController tPSCamera;
-	public TPSCameraController TPSCamera { get { return tPSCamera; } set { tPSCamera = value; } }
 	[SerializeField] CinemachineVirtualCamera gameOverCamera;
 	public CinemachineVirtualCamera GameOverCamera { get { return gameOverCamera; } set { gameOverCamera = value; } }
 	[SerializeField] float hp;
@@ -33,6 +31,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 	[SerializeField] bool isGround;
 	[SerializeField] LayerMask groundLayer;
 	[SerializeField] float ySpeedMax;
+	[SerializeField] float rotationSpeed;
 
 	[SerializeField] float attackDelay;
 	public float AttackDelay { get { return attackDelay; } }
@@ -126,11 +125,19 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	private void Move()
 	{
-		controller.Move(transform.right * moveDir.x * moveSpeed * Time.deltaTime);
-		controller.Move(transform.forward * moveDir.z * moveSpeed * Time.deltaTime);
+		Vector3 move = new Vector3(moveDir.x, 0, moveDir.z).normalized;
+		if (move != Vector3.zero)
+		{
+			Quaternion rotation = Quaternion.LookRotation(move, Vector3.up);
+			transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * rotationSpeed);
+			animator.SetBool("Move",true);
+		}
+		else
+		{
+			animator.SetBool("Move", false);
+		}
 
-		animator.SetFloat("XSpeed", moveDir.x * moveSpeed, 0.1f, Time.deltaTime);
-		animator.SetFloat("YSpeed", moveDir.z * moveSpeed, 0.1f, Time.deltaTime);
+		controller.Move(move * moveSpeed * Time.deltaTime);
 	}
 
 	private void JumpMove()

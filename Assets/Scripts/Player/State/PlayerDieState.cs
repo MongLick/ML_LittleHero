@@ -17,6 +17,5 @@ public class PlayerDieState : BaseState<PlayerStateType>
 		player.Animator.SetTrigger("Die");
 		player.GameOverCamera.Priority = 100;
 		player.PlayerInput.enabled = false;
-		player.TPSCamera.enabled = false;
 	}
 }

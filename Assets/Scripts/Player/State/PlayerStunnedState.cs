@@ -14,6 +14,7 @@ public class PlayerStunnedState : BaseState<PlayerStateType>
 
 	public override void Enter()
 	{
+		player.IsAttack = false;
 		if (player.StunnedRoutine != null)
 		{
 			player.StopCoroutine(player.StunnedRoutine);
@@ -49,20 +50,22 @@ public class PlayerStunnedState : BaseState<PlayerStateType>
 		}
 	}
 
+	public override void Exit()
+	{
+		player.IsStunned = false;
+	}
+
 	private IEnumerator StunnedCoroutine()
 	{
-		player.IsAttack = false;
 		player.Animator.SetBool("Stunned", true);
 
 		player.PlayerInput.enabled = false;
-		player.TPSCamera.enabled = false;
 
 		yield return new WaitForSeconds(player.StunnedDelay);
 
 		player.Animator.SetBool("Stunned", false);
 
 		player.PlayerInput.enabled = true;
-		player.TPSCamera.enabled = true;
 		player.IsStunned = false;
 	}
 }
