@@ -14,7 +14,6 @@ public class PlayerStunnedState : BaseState<PlayerStateType>
 
 	public override void Enter()
 	{
-		player.IsAttack = false;
 		if (player.StunnedRoutine != null)
 		{
 			player.StopCoroutine(player.StunnedRoutine);
@@ -57,6 +56,7 @@ public class PlayerStunnedState : BaseState<PlayerStateType>
 
 	private IEnumerator StunnedCoroutine()
 	{
+		player.IsAttack = false;
 		player.Animator.SetBool("Stunned", true);
 
 		player.PlayerInput.enabled = false;

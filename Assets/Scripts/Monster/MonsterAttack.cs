@@ -14,7 +14,7 @@ public class MonsterAttack : MonoBehaviour
 			IDamageable damageable = other.GetComponent<IDamageable>();
 			if (damageable != null)
 			{
-				damageable.TakeDamage(damage, true);
+				damageable.TakeDamage(damage, false);
 			}
 		}
 	}

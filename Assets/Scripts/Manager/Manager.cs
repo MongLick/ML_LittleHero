@@ -2,6 +2,7 @@ using UnityEngine;
 
 public static class Manager
 {
+    public static FirebaseManager Fire { get { return FirebaseManager.Instance; } }
     public static GameManager Game { get { return GameManager.Instance; } }
     public static DataManager Data { get { return DataManager.Instance; } }
     public static PoolManager Pool { get { return PoolManager.Instance; } }
@@ -13,6 +14,7 @@ public static class Manager
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Initialize()
     {
+        FirebaseManager.ReleaseInstance();
         GameManager.ReleaseInstance();
         DataManager.ReleaseInstance();
         PoolManager.ReleaseInstance();
@@ -21,6 +23,7 @@ public static class Manager
         SoundManager.ReleaseInstance();
         UIManager.ReleaseInstance();
 
+        FirebaseManager.CreateInstance();
         GameManager.CreateInstance();
         DataManager.CreateInstance();
         PoolManager.CreateInstance();

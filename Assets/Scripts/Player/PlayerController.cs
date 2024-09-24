@@ -194,7 +194,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 		if(!isBlock)
 		{
 			hp -= damage;
-			if(isStunAttack)
+			isAttack = false;
+			if (isStunAttack && !isStunned)
 			{
 				isStunned = true;
 			}
