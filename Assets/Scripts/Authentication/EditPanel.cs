@@ -8,49 +8,19 @@ public class EditPanel : MonoBehaviour
 {
     [SerializeField] PanelController panelController;
 
-    [SerializeField] TMP_InputField nameInputField;
     [SerializeField] TMP_InputField passInputField;
     [SerializeField] TMP_InputField confirmInputField;
 
-    [SerializeField] Button nameApplyButton;
     [SerializeField] Button passApplyButton;
     [SerializeField] Button backButton;
     [SerializeField] Button deleteButton;
 
     private void Awake()
     {
-        nameApplyButton.onClick.AddListener(NameApply);
         passApplyButton.onClick.AddListener(PassApply);
         backButton.onClick.AddListener(Back);
         deleteButton.onClick.AddListener(Delete);
     }
-
-    private void NameApply()
-    {
-        SetInteractable(false);
-
-        UserProfile profile = new UserProfile();
-        profile.DisplayName = nameInputField.text;
-
-        Manager.Fire.Auth.CurrentUser.UpdateUserProfileAsync(profile).ContinueWithOnMainThread(task =>
-        {
-            if(task.IsCanceled)
-            {
-                panelController.ShowInfo("UpdateUserProfileAsync canceled");
-				SetInteractable(true);
-				return;
-            }
-            else if(task.IsFaulted)
-            {
-                panelController.ShowInfo($"UpdateUserProfileAsync failed : {task.Exception.Message}");
-				SetInteractable(true);
-				return;
-            }
-
-            panelController.ShowInfo("UpdateUserProfileAsync success");
-			SetInteractable(true);
-		});
-	}
 
     private void PassApply()
     {
@@ -117,10 +87,8 @@ public class EditPanel : MonoBehaviour
 
     private void SetInteractable(bool interactable)
     {
-        nameInputField.interactable = interactable;
         passInputField.interactable = interactable;
         confirmInputField.interactable = interactable;
-        nameApplyButton.interactable = interactable;
         passApplyButton.interactable = interactable;
         backButton.interactable = interactable;
         deleteButton.interactable = interactable;

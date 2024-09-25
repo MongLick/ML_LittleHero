@@ -1,5 +1,6 @@
 using Firebase;
 using Firebase.Auth;
+using Firebase.Database;
 using UnityEngine;
 
 public class FirebaseManager : Singleton<FirebaseManager>
@@ -9,6 +10,9 @@ public class FirebaseManager : Singleton<FirebaseManager>
 
     private FirebaseAuth auth;
     public FirebaseAuth Auth { get { return auth; } }
+
+    private FirebaseDatabase db;
+    public FirebaseDatabase DB { get { return db; } }
 
     private bool isValid;
     public bool IsValid { get { return isValid; } }
@@ -27,6 +31,7 @@ public class FirebaseManager : Singleton<FirebaseManager>
 
             app = FirebaseApp.DefaultInstance;
             auth = FirebaseAuth.DefaultInstance;
+            db = FirebaseDatabase.DefaultInstance;
 
             Debug.Log("Firebase Check and FixDependencies success");
             isValid = true;
@@ -38,6 +43,7 @@ public class FirebaseManager : Singleton<FirebaseManager>
 
             app = null;
             auth = null;
+            db = null;
         }
     }
 }
