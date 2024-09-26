@@ -1,3 +1,4 @@
+using Firebase.Extensions;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,10 +6,12 @@ using UnityEngine.UI;
 
 public class ChoicePanel : MonoBehaviour
 {
-    [SerializeField] Button cancelButton;
-    [SerializeField] Button confirmButton;
+	[SerializeField] Button cancelButton;
+	[SerializeField] Button confirmButton;
 	[SerializeField] Button creationButton;
 	[SerializeField] MainPanel mainPanel;
+
+	private bool isLeftChoice;
 
 	private void Awake()
 	{
@@ -16,23 +19,53 @@ public class ChoicePanel : MonoBehaviour
 		confirmButton.onClick.AddListener(Confirm);
 	}
 
-	public void ShowChoice()
+	public void ShowChoice(bool isLeft)
 	{
+		isLeftChoice = isLeft;
 		gameObject.SetActive(true);
 		mainPanel.gameObject.SetActive(false);
 	}
 
-	public void Cancel()
+	private void Cancel()
 	{
 		gameObject.SetActive(false);
 		mainPanel.gameObject.SetActive(true);
 	}
 
-	public void Confirm()
+	private void Confirm()
 	{
-		// 데이터베이스에서 캐릭터 삭제 진행
-		gameObject.SetActive(false);
-		creationButton.gameObject.SetActive(true);
-		mainPanel.gameObject.SetActive(true);
+		string userID = mainPanel.UserID;
+
+		if (isLeftChoice)
+		{
+			Manager.Fire.DB.GetReference("UserData")
+				.Child(userID)
+				.Child("Left")
+				.RemoveValueAsync()
+				.ContinueWithOnMainThread(task =>
+				{
+					if (task.IsCompleted)
+					{
+						gameObject.SetActive(false);
+						mainPanel.gameObject.SetActive(true);
+						mainPanel.UIOffChange1();
+					}
+				});
+		}
+		else
+		{
+			Manager.Fire.DB.GetReference("UserData")
+				.Child(userID)
+				.Child("Right")
+				.RemoveValueAsync().ContinueWithOnMainThread(task =>
+				{
+					if (task.IsCompleted)
+					{
+						gameObject.SetActive(false);
+						mainPanel.gameObject.SetActive(true);
+						mainPanel.UIOffChange2();
+					}
+				});
+		}
 	}
 }

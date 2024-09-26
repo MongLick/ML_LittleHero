@@ -35,8 +35,8 @@ public class PanelController : MonoBehaviour
         infoPanel.ShowInfo(message);
     }
 
-    public void ShowChoice()
+    public void ShowChoice(bool isLeft)
     {
-        choicePanel.ShowChoice();
+        choicePanel.ShowChoice(isLeft);
     }
 }

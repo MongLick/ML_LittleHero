@@ -4,21 +4,14 @@ using System;
 public class UserData
 {
 	public string nickName;
-	public int level;
 	public CharacterType type;
+	public string position;
 
-	public UserData()
-	{
-		this.nickName = "nickName";
-		this.level = 1;
-		this.type = CharacterType.Man;
-	}
-
-	public UserData(string nickName, int level, CharacterType type)
+	public UserData(string nickName, CharacterType type, string position)
 	{
 		this.nickName = nickName;
-		this.level = level;
 		this.type = type;
+		this.position = position;
 	}
 }
 
