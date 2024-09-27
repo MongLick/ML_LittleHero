@@ -147,19 +147,30 @@ public class MonsterController : MonoBehaviour, IDamageable
 
 	private void MoveCheck()
 	{
-		Collider[] player = Physics.OverlapSphere(transform.position, moveDetectionRadius, playerLayer);
-		if (player != null)
+		Collider[] players = Physics.OverlapSphere(transform.position, moveDetectionRadius, playerLayer);
+
+		if (players.Length > 0)
 		{
-			isMove = player.Length > 0;
+			isMove = true;
+			target = players[0].transform;
+		}
+		else
+		{
+			isMove = false;
+			target = null;
 		}
 	}
 
 	private void AttackCheck()
 	{
-		Collider[] player = Physics.OverlapSphere(transform.position, attackDetectionRadius, playerLayer);
-		if (player != null)
+		Collider[] players = Physics.OverlapSphere(transform.position, attackDetectionRadius, playerLayer);
+		if (players.Length > 0)
 		{
-			isAttack = player.Length > 0;
+			isAttack = true;
+		}
+		else
+		{
+			isAttack = false;
 		}
 	}
 

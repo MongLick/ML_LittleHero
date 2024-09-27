@@ -4192,7 +4192,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &577199607
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4232,7 +4232,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uBC14\uBCF4"
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5dc0ec251247686408e540abf7d67be6, type: 2}
   m_sharedMaterial: {fileID: 9022146586916268346, guid: 5dc0ec251247686408e540abf7d67be6,
@@ -6429,7 +6429,7 @@ PrefabInstance:
     - target: {fileID: 1328023254706044480, guid: 257c304c754d3b247a51ef5bea7a90d0,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1812072891626710266, guid: 257c304c754d3b247a51ef5bea7a90d0,
         type: 3}
@@ -10631,7 +10631,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1336727529
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10671,7 +10671,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uCF69\uC774"
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5dc0ec251247686408e540abf7d67be6, type: 2}
   m_sharedMaterial: {fileID: 9022146586916268346, guid: 5dc0ec251247686408e540abf7d67be6,
@@ -11737,6 +11737,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panelController: {fileID: 961723365}
+  heroPanel: {fileID: 939023238}
   logoutButton: {fileID: 1480819428}
   editButton: {fileID: 1356078890}
   startButton: {fileID: 322329542}

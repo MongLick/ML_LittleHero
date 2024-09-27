@@ -34,12 +34,10 @@ public class ChoicePanel : MonoBehaviour
 
 	private void Confirm()
 	{
-		string userID = mainPanel.UserID;
-
 		if (isLeftChoice)
 		{
 			Manager.Fire.DB.GetReference("UserData")
-				.Child(userID)
+				.Child(Manager.Fire.UserID)
 				.Child("Left")
 				.RemoveValueAsync()
 				.ContinueWithOnMainThread(task =>
@@ -55,7 +53,7 @@ public class ChoicePanel : MonoBehaviour
 		else
 		{
 			Manager.Fire.DB.GetReference("UserData")
-				.Child(userID)
+				.Child(Manager.Fire.UserID)
 				.Child("Right")
 				.RemoveValueAsync().ContinueWithOnMainThread(task =>
 				{

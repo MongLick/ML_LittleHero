@@ -77,7 +77,7 @@ public class HeroPanel : MonoBehaviour
 		manPressed.image.color = Color.white;
 		woManPressed.image.color = Color.white;
 		CharacterType characterType = manChoice ? CharacterType.Man : CharacterType.WoMan;
-		Manager.Fire.CreateCharacter(name, characterType, characterPosition);
+		Manager.Fire.CreateCharacter(name, characterType, characterPosition, -25, 4, -7, "LittleForestScene");
 		panelController.SetActivePanel(PanelController.Panel.Main);
 		nickName.text = "";
 	}

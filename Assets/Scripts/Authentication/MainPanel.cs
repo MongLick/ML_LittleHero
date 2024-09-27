@@ -24,9 +24,6 @@ public class MainPanel : MonoBehaviour
 	[SerializeField] TMP_Text leftNickName;
 	[SerializeField] TMP_Text rightNickName;
 
-	private string userID;
-	public string UserID { get { return userID; } }
-
 	private void Awake()
 	{
 		logoutButton.onClick.AddListener(Logout);
@@ -51,8 +48,16 @@ public class MainPanel : MonoBehaviour
 			return;
 		}
 
-		userID = Manager.Fire.Auth.CurrentUser.UserId;
-		LoadCharacterData(userID);
+		Manager.Fire.UserID = Manager.Fire.Auth.CurrentUser.UserId;
+		LoadCharacterData(Manager.Fire.UserID);
+		pressed1.image.color = Color.white;
+		pressed2.image.color = Color.white;
+		startButton.gameObject.SetActive(false);
+	}
+
+	private void OnDisable()
+	{
+		startButton.gameObject.SetActive(false);
 	}
 
 	public void LoadCharacterData(string userId)
@@ -129,7 +134,7 @@ public class MainPanel : MonoBehaviour
 
 	public void OnLeftButtonPressed()
 	{
-		pressed1.image.color = Color.white;
+		pressed1.image.color = Color.green;
 		pressed2.image.color = Color.white;
 		heroPanel.SetCharacterPosition("Left");
 		panelController.SetActivePanel(PanelController.Panel.Hero);
@@ -138,14 +143,14 @@ public class MainPanel : MonoBehaviour
 	public void OnRightButtonPressed()
 	{
 		pressed1.image.color = Color.white;
-		pressed2.image.color = Color.white;
+		pressed2.image.color = Color.green;
 		heroPanel.SetCharacterPosition("Right");
 		panelController.SetActivePanel(PanelController.Panel.Hero);
 	}
 
 	public void UIOffChange1()
 	{
-		leftNickName .text = "";
+		leftNickName.text = "";
 		manAnimator1.gameObject.SetActive(false);
 		woManAnimator1.gameObject.SetActive(false);
 		creation1.gameObject.SetActive(true);
@@ -182,11 +187,51 @@ public class MainPanel : MonoBehaviour
 	{
 		pressed1.image.color = Color.white;
 		pressed2.image.color = Color.white;
-		Manager.Scene.LoadScene("LittleForestScene");
+
+		if (Manager.Fire.IsLeft)
+		{
+			Manager.Fire.DB
+			.GetReference("UserData")
+			.Child(Manager.Fire.UserID)
+			.Child("Left")
+			.Child("scene")
+			.GetValueAsync()
+			.ContinueWithOnMainThread(task =>
+			{
+				if (task.IsCompleted && task.Result != null)
+				{
+					DataSnapshot snapshot = task.Result;
+					string sceneName = snapshot.Value.ToString();
+
+					Manager.Scene.LoadScene(sceneName);
+				}
+			});
+		}
+		else
+		{
+			Manager.Fire.DB
+			.GetReference("UserData")
+			.Child(Manager.Fire.UserID)
+			.Child("Right")
+			.Child("scene")
+			.GetValueAsync()
+			.ContinueWithOnMainThread(task =>
+			{
+				if (task.IsCompleted && task.Result != null)
+				{
+					DataSnapshot snapshot = task.Result;
+					string sceneName = snapshot.Value.ToString();
+
+					Manager.Scene.LoadScene(sceneName);
+				}
+			});
+		}
 	}
 
 	private void Creation()
 	{
+		pressed1.image.color = Color.white;
+		pressed2.image.color = Color.white;
 		panelController.SetActivePanel(PanelController.Panel.Hero);
 	}
 
@@ -224,6 +269,8 @@ public class MainPanel : MonoBehaviour
 		}
 		pressed1.image.color = Color.green;
 		pressed2.image.color = Color.white;
+		startButton.gameObject.SetActive(true);
+		Manager.Fire.IsLeft = true;
 	}
 
 	private void Pressed2()
@@ -246,5 +293,7 @@ public class MainPanel : MonoBehaviour
 		}
 		pressed1.image.color = Color.white;
 		pressed2.image.color = Color.green;
+		startButton.gameObject.SetActive(true);
+		Manager.Fire.IsLeft = false;
 	}
 }

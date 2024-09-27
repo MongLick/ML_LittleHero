@@ -13,8 +13,19 @@ MonoBehaviour:
   m_Name: Main Camera Blends
   m_EditorClassIdentifier: 
   m_CustomBlends:
-  - m_From: TPSCamera
-    m_To: Virtual Camera
+  - m_From: '**ANY CAMERA**'
+    m_To: GameCamera
+    m_Blend:
+      m_Style: 1
+      m_Time: 0
+      m_CustomCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 0
+  - m_From: '**ANY CAMERA**'
+    m_To: GameOverCamera
     m_Blend:
       m_Style: 1
       m_Time: 2

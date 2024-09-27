@@ -18,6 +18,17 @@ public class FirebaseManager : Singleton<FirebaseManager>
 	private bool isValid;
 	public bool IsValid { get { return isValid; } }
 
+	private bool isLeft;
+	public bool IsLeft { get { return isLeft; }  set { isLeft = value; } }
+
+	private string userID;
+	public string UserID { get { return userID; } set { userID = value; } }
+
+	[SerializeField] GameObject manPrefab;
+	public GameObject ManPrefab { get { return manPrefab; } }
+	[SerializeField] GameObject woManPrefab;
+	public GameObject WoManPrefab { get { return woManPrefab; } }
+
 	protected override void Awake()
 	{
 		base.Awake();
@@ -48,11 +59,11 @@ public class FirebaseManager : Singleton<FirebaseManager>
 		}
 	}
 
-	public void CreateCharacter(string nickname, CharacterType type, string position)
+	public void CreateCharacter(string nickname, CharacterType type, string position, float x, float y, float z, string scene)
 	{
 		FirebaseUser user = auth.CurrentUser;
 		string userID = user.UserId;
-		UserData userData = new UserData(nickname, type, position);
+		UserData userData = new UserData(nickname, type, position, x, y, z, scene);
 		string json = JsonUtility.ToJson(userData);
 		Manager.Fire.DB
 			.GetReference("UserData")
