@@ -3,10 +3,13 @@ using Firebase.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class LittleForestScene : BaseScene
 {
+	private GameObject characterInstance;
+
 	private void OnEnable()
 	{
 		if(Manager.Fire.IsLeft)
@@ -30,13 +33,17 @@ public class LittleForestScene : BaseScene
 
 					if(type == "0")
 					{
-						GameObject characterInstance = Instantiate(Manager.Fire.ManPrefab, new Vector3(posX, posY, posZ), Quaternion.identity);
+						characterInstance = Instantiate(Manager.Fire.ManPrefab, new Vector3(posX, posY, posZ), Quaternion.identity);
 					}
 					else
 					{
-						GameObject characterInstance = Instantiate(Manager.Fire.WoManPrefab, new Vector3(posX, posY, posZ), Quaternion.identity);
+						characterInstance = Instantiate(Manager.Fire.WoManPrefab, new Vector3(posX, posY, posZ), Quaternion.identity);
 					}
-					
+					TMP_Text nicknameUI = characterInstance.GetComponentInChildren<TMP_Text>();
+					if (nicknameUI != null)
+					{
+						nicknameUI.text = nickName;
+					}
 				}
 			});
 		}
@@ -61,11 +68,17 @@ public class LittleForestScene : BaseScene
 
 					if (type == "0")
 					{
-						GameObject characterInstance = Instantiate(Manager.Fire.ManPrefab, new Vector3(posX, posY, posZ), Quaternion.identity);
+						characterInstance = Instantiate(Manager.Fire.ManPrefab, new Vector3(posX, posY, posZ), Quaternion.identity);
 					}
 					else
 					{
-						GameObject characterInstance = Instantiate(Manager.Fire.WoManPrefab, new Vector3(posX, posY, posZ), Quaternion.identity);
+						characterInstance = Instantiate(Manager.Fire.WoManPrefab, new Vector3(posX, posY, posZ), Quaternion.identity);
+					}
+
+					TMP_Text nicknameUI = characterInstance.GetComponentInChildren<TMP_Text>();
+					if (nicknameUI != null)
+					{
+						nicknameUI.text = nickName;
 					}
 				}
 			});

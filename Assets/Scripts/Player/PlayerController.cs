@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 using static PlayerState;
 using UnityEngine.Playables;
 using Cinemachine;
+using TMPro;
 
 public class PlayerController : MonoBehaviour, IDamageable
 {
