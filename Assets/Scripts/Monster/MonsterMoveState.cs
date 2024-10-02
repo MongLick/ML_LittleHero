@@ -20,7 +20,10 @@ public class MonsterMoveState : BaseState<MonsterStateType>
 
 	public override void Update()
 	{
-		monster.Agent.SetDestination(monster.Target.position);
+		if(monster.Target != null)
+		{
+			monster.Agent.SetDestination(monster.Target.position);
+		}
 
 		if (monster.IsTakeHit)
 		{

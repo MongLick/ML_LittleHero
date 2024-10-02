@@ -8,14 +8,24 @@ using static PlayerState;
 using UnityEngine.Playables;
 using Cinemachine;
 using TMPro;
+using UnityEngine.EventSystems;
+using System.Threading;
 
 public class PlayerController : MonoBehaviour, IDamageable
 {
+	private Vector3 move;
+	[SerializeField] MonsterController monster;
+	[SerializeField] float closestDistance;
+	[SerializeField] Collider[] hitColliders;
+	[SerializeField] float detectionRange;
+	[SerializeField] float monsterDistance;
+	private Vector3 playerPosition;
+	private Transform monsterTarget;
 	[SerializeField] float attackCooltime;
 	public float AttackCooltime { get { return attackCooltime; } }
 	[SerializeField] float cooltime;
 	[SerializeField] GameObject attack;
-	public GameObject Attack { get { return attack; }  set { attack = value; } }
+	public GameObject Attack { get { return attack; } set { attack = value; } }
 	[SerializeField] PlayerInput playerInput;
 	public PlayerInput PlayerInput { get { return playerInput; } set { playerInput = value; } }
 	[SerializeField] CinemachineVirtualCamera gameOverCamera;
@@ -31,6 +41,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 	[SerializeField] float jumpSpeed;
 	[SerializeField] bool isGround;
 	[SerializeField] LayerMask groundLayer;
+	[SerializeField] LayerMask monsterLayer;
 	[SerializeField] float ySpeedMax;
 	[SerializeField] float rotationSpeed;
 
@@ -57,6 +68,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 	public bool IsStunned { get { return isStunned; } set { isStunned = value; } }
 	private bool isDie;
 	public bool IsDie { get { return isDie; } set { isDie = value; } }
+	private bool isAutoAttack;
 
 	private Coroutine attackRoutine;
 	public Coroutine AttackRoutine { get { return attackRoutine; } set { attackRoutine = value; } }
@@ -106,6 +118,14 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	private void OnAttack(InputValue value)
 	{
+		if (!isAttack && (!EventSystem.current.IsPointerOverGameObject()))
+		{
+			isAttack = true;
+		}
+	}
+
+	public void AttackButton()
+	{
 		if (!isAttack)
 		{
 			isAttack = true;
@@ -114,7 +134,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	private void OnBlock(InputValue value)
 	{
-		if(value.isPressed)
+		if (value.isPressed)
 		{
 			isBlock = true;
 		}
@@ -126,12 +146,12 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	private void Move()
 	{
-		Vector3 move = new Vector3(moveDir.x, 0, moveDir.z).normalized;
+		move = new Vector3(moveDir.x, 0, moveDir.z).normalized;
 		if (move != Vector3.zero)
 		{
 			Quaternion rotation = Quaternion.LookRotation(move, Vector3.up);
 			transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * rotationSpeed);
-			animator.SetBool("Move",true);
+			animator.SetBool("Move", true);
 		}
 		else
 		{
@@ -151,6 +171,20 @@ public class PlayerController : MonoBehaviour, IDamageable
 		}
 
 		controller.Move(Vector3.up * ySpeed * Time.deltaTime);
+	}
+
+	public void AutoAttackButton()
+	{
+		if (isAutoAttack)
+		{
+			isAutoAttack = false;
+			moveDir = Vector3.zero;
+		}
+		else
+		{
+			isAutoAttack = true;
+			StartCoroutine(AutoAttackCoroutine());
+		}
 	}
 
 	private void OnTriggerEnter(Collider other)
@@ -192,7 +226,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	public void TakeDamage(int damage, bool isStunAttack)
 	{
-		if(!isBlock)
+		if (!isBlock)
 		{
 			hp -= damage;
 			isAttack = false;
@@ -209,8 +243,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 		{
 			isTakeHit = true;
 		}
-		
-		if(hp <= 0)
+
+		if (hp <= 0)
 		{
 			isDie = true;
 		}
@@ -224,5 +258,68 @@ public class PlayerController : MonoBehaviour, IDamageable
 	public void Attackfalse()
 	{
 		attack.SetActive(false);
+	}
+
+	private IEnumerator AutoAttackCoroutine()
+	{
+		while (isAutoAttack)
+		{
+			hitColliders = Physics.OverlapSphere(transform.position, detectionRange, monsterLayer);
+
+			monsterTarget = null;
+			closestDistance = float.MaxValue;
+
+			foreach (Collider collider in hitColliders)
+			{
+				monster = collider.GetComponent<MonsterController>();
+				if (monster != null && monster.Hp > 0)
+				{
+					float distance = Vector3.Distance(transform.position, collider.transform.position);
+					if (distance < closestDistance)
+					{
+						closestDistance = distance;
+						monsterTarget = collider.transform;
+					}
+				}
+			}
+
+			if (monsterTarget != null)
+			{
+				while (isAutoAttack)
+				{
+					if (monsterTarget.GetComponent<MonsterController>().Hp <= 0)
+					{
+						monsterTarget = null;
+						break;
+					}
+					MoveTowardsMonster();
+					yield return null;
+				}
+			}
+			yield return null;
+		}
+	}
+
+	private void MoveTowardsMonster()
+	{
+		if (monsterTarget != null)
+		{
+			Vector3 directionToMonster = (monsterTarget.position - transform.position).normalized;
+			float distance = Vector3.Distance(transform.position, monsterTarget.position);
+
+			if (distance > monsterDistance)
+			{
+				moveDir.x = directionToMonster.x;
+				moveDir.z = directionToMonster.z;
+			}
+			else
+			{
+				isAttack = true;
+				moveDir = Vector3.zero;
+
+				Quaternion rotation = Quaternion.LookRotation(directionToMonster);
+				transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * rotationSpeed);
+			}
+		}
 	}
 }

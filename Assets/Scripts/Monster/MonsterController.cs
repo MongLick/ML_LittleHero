@@ -29,6 +29,7 @@ public class MonsterController : MonoBehaviour, IDamageable
 	[SerializeField] MonsterStateType currentState;
 	[SerializeField] int damage;
 	[SerializeField] int hp;
+	public int Hp { get { return hp; } }
 	[SerializeField] float moveDetectionRadius;
 	public float MoveDetectionRadius { get { return moveDetectionRadius; } set { moveDetectionRadius = value; } }
 	[SerializeField] float attackDetectionRadius;
@@ -178,7 +179,7 @@ public class MonsterController : MonoBehaviour, IDamageable
 	{
 		spawnDistance = Vector3.Distance(transform.position, spawnPos.position);
 
-		if (spawnDistance > maxDistance)
+		if (spawnDistance > maxDistance || target == null)
 		{
 			isReturn = true;
 		}
