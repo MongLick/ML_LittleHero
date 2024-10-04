@@ -12,6 +12,7 @@ public class PlayerMenuUI : MonoBehaviour
 	[SerializeField] EquipmentUI equipmentUI;
 	[SerializeField] InventoryUI inventoryUI;
 	[SerializeField] SkillUI skillUI;
+	[SerializeField] PlayerSettingUI playerSettingUI;
 
 	private void Awake()
 	{

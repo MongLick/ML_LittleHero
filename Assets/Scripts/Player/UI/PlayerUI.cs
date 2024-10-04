@@ -7,8 +7,8 @@ public class PlayerUI : MonoBehaviour
 {
 	[SerializeField] Button menuButton;
 	[SerializeField] Button settingButton;
-	[SerializeField] PlayerMenuUI playerMenu;
-	[SerializeField] PlayerSettingUI playerSetting;
+	[SerializeField] PlayerMenuUI playerMenuUI;
+	[SerializeField] PlayerSettingUI playerSettingUI;
 
 	private void Awake()
 	{
@@ -18,13 +18,13 @@ public class PlayerUI : MonoBehaviour
 
 	private void Menu()
 	{
-		playerMenu.gameObject.SetActive(true);
-		playerSetting.gameObject.SetActive(false);
+		playerMenuUI.gameObject.SetActive(true);
+		playerSettingUI.gameObject.SetActive(false);
 	}
 
 	private void Setting()
 	{
-		playerSetting.gameObject.SetActive(true);
-		playerMenu.gameObject.SetActive(false);
+		playerSettingUI.gameObject.SetActive(true);
+		playerMenuUI.gameObject.SetActive(false);
 	}
 }

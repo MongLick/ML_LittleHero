@@ -23,8 +23,4 @@ public class UserData
 	}
 }
 
-public enum CharacterType
-{
-	Man,
-	WoMan
-}
+public enum CharacterType { Man, WoMan }
