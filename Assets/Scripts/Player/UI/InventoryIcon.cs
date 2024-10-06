@@ -1,38 +1,27 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
+using static EquipmentSlot;
 
 public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+	public SlotType slotType;
 	private Transform canvas;
 	private Transform previousParent;
 	private RectTransform rect;
 	private CanvasGroup canvasGroup;
+	public string itemName;
+	public InventorySlot parentSlot;
 
 	private void Awake()
 	{
 		canvas = FindObjectOfType<Canvas>().transform;
 		rect = GetComponent<RectTransform>();
 		canvasGroup = GetComponent<CanvasGroup>();
+		parentSlot = GetComponentInParent<InventorySlot>();
 	}
-
-	/*public void AddItem(ItemData newItem)
-	{
-		item = newItem;
-		icon.sprite = item.itemIcon;
-		icon.enabled = true;
-	}
-
-	public void ClearSlot()
-	{
-		item = null;
-		icon.sprite = null;
-		icon.enabled = false;
-	}*/
 
 	public void OnBeginDrag(PointerEventData eventData)
 	{
-		previousParent = transform.parent;
 		transform.SetParent(canvas);
 		transform.SetAsLastSibling();
 		canvasGroup.alpha = 0.5f;
@@ -48,11 +37,16 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 	{
 		if (transform.parent == canvas)
 		{
-			transform.SetParent(previousParent);
-			rect.position = previousParent.GetComponent<RectTransform>().position;
+			ReturnToInventory();
 		}
 
 		canvasGroup.alpha = 1.0f;
 		canvasGroup.blocksRaycasts = true;
+	}
+
+	public void ReturnToInventory()
+	{
+		transform.SetParent(parentSlot.transform);
+		rect.position = parentSlot.GetComponent<RectTransform>().position;
 	}
 }

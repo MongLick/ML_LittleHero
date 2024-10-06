@@ -2,22 +2,36 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class EquipmentSlot : MonoBehaviour
+public class EquipmentSlot : MonoBehaviour, IDropHandler
 {
-	public Image icon;
-	private ItemData item;
+	public enum SlotType { Weapon, Shield, Cloak }
 
-	public void AddItem(ItemData newItem)
-	{
-		item = newItem;
-		icon.sprite = item.itemIcon;
-		icon.enabled = true;
-	}
+	public SlotType slotType;
 
-	public void ClearSlot()
+	public void OnDrop(PointerEventData eventData)
 	{
-		item = null;
-		icon.sprite = null;
-		icon.enabled = false;
+		InventoryIcon draggedItem = eventData.pointerDrag.GetComponent<InventoryIcon>();
+
+		if (draggedItem != null)
+		{
+			if (draggedItem.slotType == slotType)
+			{
+				draggedItem.transform.SetParent(transform);
+				draggedItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+
+				PlayerEquipment playerEquipment = GetComponentInParent<PlayerEquipment>();
+				if (playerEquipment != null)
+				{
+					string weapon = (slotType == SlotType.Weapon) ? draggedItem.itemName : "";
+					string shield = (slotType == SlotType.Shield) ? draggedItem.itemName : "";
+					string cloak = (slotType == SlotType.Cloak) ? draggedItem.itemName : "";
+					playerEquipment.EquipItem(weapon, shield, cloak);
+				}
+			}
+			else
+			{
+				draggedItem.ReturnToInventory();
+			}
+		}
 	}
 }
