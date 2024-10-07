@@ -7,31 +7,66 @@ public class EquipmentSlot : MonoBehaviour, IDropHandler
 	public enum SlotType { Weapon, Shield, Cloak }
 
 	public SlotType slotType;
+	public InventoryIcon currentItem;
+	private PlayerEquipment playerEquipment;
+
+	private void Start()
+	{
+		playerEquipment = GetComponentInParent<PlayerEquipment>();
+	}
 
 	public void OnDrop(PointerEventData eventData)
 	{
-		InventoryIcon draggedItem = eventData.pointerDrag.GetComponent<InventoryIcon>();
+		InventoryIcon droppedItem = eventData.pointerDrag.GetComponent<InventoryIcon>();
 
-		if (draggedItem != null)
+		if (droppedItem == null || droppedItem.slotType != slotType)
 		{
-			if (draggedItem.slotType == slotType)
-			{
-				draggedItem.transform.SetParent(transform);
-				draggedItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+			droppedItem?.ReturnToInventory();
+			return;
+		}
 
-				PlayerEquipment playerEquipment = GetComponentInParent<PlayerEquipment>();
-				if (playerEquipment != null)
-				{
-					string weapon = (slotType == SlotType.Weapon) ? draggedItem.itemName : "";
-					string shield = (slotType == SlotType.Shield) ? draggedItem.itemName : "";
-					string cloak = (slotType == SlotType.Cloak) ? draggedItem.itemName : "";
-					playerEquipment.EquipItem(weapon, shield, cloak);
-				}
-			}
-			else
-			{
-				draggedItem.ReturnToInventory();
-			}
+		if (currentItem != null)
+		{
+			currentItem.ReturnToInventory();
+			currentItem = null;
+		}
+
+		EquipItem(droppedItem);
+	}
+
+	private void EquipItem(InventoryIcon item)
+	{
+		item.transform.SetParent(transform);
+		item.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+		currentItem = item;
+
+		if (slotType == SlotType.Weapon)
+		{
+			playerEquipment.EquipWeapon(item.itemName);
+		}
+		else if (slotType == SlotType.Shield)
+		{
+			playerEquipment.EquipShield(item.itemName);
+		}
+		else if (slotType == SlotType.Cloak)
+		{
+			playerEquipment.EquipCloak(item.itemName);
+		}
+	}
+
+	public void UnequipItem()
+	{
+		if (slotType == SlotType.Weapon)
+		{
+			playerEquipment.EquipWeapon("");
+		}
+		else if (slotType == SlotType.Shield)
+		{
+			playerEquipment.EquipShield("");
+		}
+		else if (slotType == SlotType.Cloak)
+		{
+			playerEquipment.EquipCloak("");
 		}
 	}
 }

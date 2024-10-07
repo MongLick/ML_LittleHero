@@ -40,6 +40,14 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 			ReturnToInventory();
 		}
 
+		EquipmentSlot equipmentSlot = transform.parent.GetComponent<EquipmentSlot>();
+
+		if (equipmentSlot != null)
+		{
+			equipmentSlot.currentItem = null;
+			equipmentSlot.UnequipItem();
+		}
+
 		canvasGroup.alpha = 1.0f;
 		canvasGroup.blocksRaycasts = true;
 	}

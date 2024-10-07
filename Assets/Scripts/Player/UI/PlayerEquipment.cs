@@ -1,6 +1,7 @@
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class PlayerEquipment : MonoBehaviourPun, IPunObservable
@@ -16,25 +17,55 @@ public class PlayerEquipment : MonoBehaviourPun, IPunObservable
 	public string equippedShield = "";
 	public string equippedCloak = "";
 
-	public void EquipItem(string weapon, string shield, string cloak)
+	public void EquipWeapon(string weapon)
 	{
-		if (equippedWeapon != weapon)
-		{
-			equippedWeapon = weapon;
-		}
-
-		if (equippedShield != shield)
-		{
-			equippedShield = shield;
-		}
-
-		if (equippedCloak != cloak)
-		{
-			equippedCloak = cloak;
-		}
-
-		UpdateEquipmentVisuals();
+		equippedWeapon = weapon;
+		UpdateWeapon();
 	}
+
+	public void EquipShield(string shield)
+	{
+		equippedShield = shield;
+		UpdateShield();
+	}
+
+	public void EquipCloak(string cloak)
+	{
+		equippedCloak = cloak;
+		UpdateCloak();
+	}
+
+	private void UpdateWeapon()
+	{
+		if (equippedWeapon == "sword1")
+		{
+			swordObject1.SetActive(true);
+			swordObject2.SetActive(false);
+		}
+		else if(equippedWeapon == "sword2")
+		{
+			swordObject1.SetActive(false);
+			swordObject2.SetActive(true);
+		}
+		else
+		{
+			swordObject1.SetActive(false);
+			swordObject2.SetActive(false);
+		}
+	}
+
+	private void UpdateShield()
+	{
+		shieldObject1.SetActive(equippedShield == "shield1");
+		shieldObject2.SetActive(equippedShield == "shield2");
+	}
+
+	private void UpdateCloak()
+	{
+		cloakObject1.SetActive(equippedCloak == "cloak1");
+		cloakObject2.SetActive(equippedCloak == "cloak2");
+	}
+
 
 	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
@@ -50,41 +81,9 @@ public class PlayerEquipment : MonoBehaviourPun, IPunObservable
 			equippedShield = (string)stream.ReceiveNext();
 			equippedCloak = (string)stream.ReceiveNext();
 
-			UpdateEquipmentVisuals();
-		}
-	}
-
-	private void UpdateEquipmentVisuals()
-	{
-		if(equippedWeapon == "sword1")
-		{
-			swordObject1.SetActive(true);
-			swordObject2.SetActive(false);
-		}
-		if(equippedWeapon == "sword2")
-		{
-			swordObject1.SetActive(false);
-			swordObject2.SetActive(true);
-		}
-		if (equippedShield == "shield1")
-		{
-			shieldObject1.SetActive(true);
-			shieldObject2.SetActive(false);
-		}
-		if (equippedShield == "shield2")
-		{
-			shieldObject1.SetActive(false);
-			shieldObject2.SetActive(true);
-		}
-		if (equippedCloak == "cloak1")
-		{
-			cloakObject1.SetActive(true);
-			cloakObject2.SetActive(false);
-		}
-		if (equippedCloak == "cloak2")
-		{
-			cloakObject1.SetActive(false);
-			cloakObject2.SetActive(true);
+			UpdateWeapon();
+			UpdateShield();
+			UpdateCloak();
 		}
 	}
 }
