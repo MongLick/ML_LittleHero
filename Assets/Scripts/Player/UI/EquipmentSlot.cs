@@ -19,9 +19,9 @@ public class EquipmentSlot : MonoBehaviour, IDropHandler
 	{
 		InventoryIcon droppedItem = eventData.pointerDrag.GetComponent<InventoryIcon>();
 
-		if (droppedItem == null || droppedItem.slotType != slotType)
+		if (droppedItem.slotType != slotType)
 		{
-			droppedItem?.ReturnToInventory();
+			droppedItem.ReturnToInventory();
 			return;
 		}
 
@@ -32,6 +32,11 @@ public class EquipmentSlot : MonoBehaviour, IDropHandler
 		}
 
 		EquipItem(droppedItem);
+
+		if (currentItem == null)
+		{
+			UnequipItem();
+		}
 	}
 
 	private void EquipItem(InventoryIcon item)
@@ -39,6 +44,7 @@ public class EquipmentSlot : MonoBehaviour, IDropHandler
 		item.transform.SetParent(transform);
 		item.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
 		currentItem = item;
+		currentItem.isEquipment = true;
 
 		if (slotType == SlotType.Weapon)
 		{

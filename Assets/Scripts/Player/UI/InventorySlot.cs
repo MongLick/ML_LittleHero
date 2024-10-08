@@ -6,7 +6,7 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IDropHandler, 
 {
 	private Image image;
 	private RectTransform rect;
-	private InventoryIcon currentItem;
+	public InventoryIcon currentItem;
 
 	private void Awake()
 	{
@@ -26,29 +26,33 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IDropHandler, 
 
 	public void OnDrop(PointerEventData eventData)
 	{
-		if (eventData.pointerDrag != null)
+		InventoryIcon draggedItem = eventData.pointerDrag.GetComponent<InventoryIcon>();
+		InventorySlot draggedSlot = draggedItem.parentSlot;
+		InventoryIcon tempItem = currentItem;
+
+		if (draggedItem == null || draggedSlot == null) return;
+
+		if (tempItem != null)
 		{
-			InventoryIcon draggedItem = eventData.pointerDrag.GetComponent<InventoryIcon>();
-			if (draggedItem != null)
-			{
-				InventorySlot draggedSlot = draggedItem.parentSlot;
+			tempItem.parentSlot.currentItem = null;
+		}
 
-				InventoryIcon tempItem = currentItem;
+		draggedItem.transform.SetParent(transform);
+		draggedItem.GetComponent<RectTransform>().position = rect.position;
 
-				draggedItem.transform.SetParent(transform);
-				draggedItem.GetComponent<RectTransform>().position = rect.position;
+		currentItem = draggedItem;
+		draggedItem.parentSlot = this;
 
-				if (tempItem != null)
-				{
-					tempItem.transform.SetParent(draggedSlot.transform);
-					tempItem.GetComponent<RectTransform>().position = draggedSlot.GetComponent<RectTransform>().position;
-					tempItem.parentSlot = draggedSlot;
-				}
-
-				currentItem = draggedItem;
-				draggedSlot.currentItem = tempItem;
-				draggedItem.parentSlot = this;
-			}
+		if (tempItem == null)
+		{
+			draggedSlot.currentItem = null;
+		}
+		else
+		{
+			tempItem.transform.SetParent(draggedSlot.transform);
+			tempItem.GetComponent<RectTransform>().position = draggedSlot.GetComponent<RectTransform>().position;
+			draggedSlot.currentItem = tempItem;
+			tempItem.parentSlot = draggedSlot;
 		}
 	}
 

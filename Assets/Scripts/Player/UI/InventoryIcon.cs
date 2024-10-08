@@ -11,6 +11,9 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 	private CanvasGroup canvasGroup;
 	public string itemName;
 	public InventorySlot parentSlot;
+	public EquipmentSlot equipmentSlot;
+	public bool isEquipment;
+	[SerializeField] InventoryUI InventoryUI;
 
 	private void Awake()
 	{
@@ -40,12 +43,20 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 			ReturnToInventory();
 		}
 
-		EquipmentSlot equipmentSlot = transform.parent.GetComponent<EquipmentSlot>();
+		equipmentSlot = transform.parent.GetComponent<EquipmentSlot>();
 
 		if (equipmentSlot != null)
 		{
-			equipmentSlot.currentItem = null;
-			equipmentSlot.UnequipItem();
+			if (parentSlot != null)
+			{
+				parentSlot.currentItem = null;
+				parentSlot = null;
+			}
+			isEquipment = true;
+		}
+		else
+		{
+			isEquipment = false;
 		}
 
 		canvasGroup.alpha = 1.0f;
@@ -54,7 +65,33 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
 	public void ReturnToInventory()
 	{
-		transform.SetParent(parentSlot.transform);
-		rect.position = parentSlot.GetComponent<RectTransform>().position;
+		if (InventoryUI == null)
+		{
+			InventoryUI = FindObjectOfType<InventoryUI>();
+			if (InventoryUI == null)
+			{
+				return;
+			}
+		}
+
+		InventorySlot[] inventorySlots = InventoryUI.InventorySlots;
+
+		for (int i = 0; i < inventorySlots.Length; i++)
+		{
+			InventorySlot slot = inventorySlots[i];
+
+			if (slot.currentItem == null)
+			{
+				transform.SetParent(slot.transform);
+				rect.position = slot.GetComponent<RectTransform>().position;
+				if (parentSlot != null)
+				{
+					parentSlot.currentItem = null;
+				}
+				slot.currentItem = this;
+				parentSlot = slot;
+				return;
+			}
+		}
 	}
 }

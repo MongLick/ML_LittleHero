@@ -56,14 +56,40 @@ public class PlayerEquipment : MonoBehaviourPun, IPunObservable
 
 	private void UpdateShield()
 	{
-		shieldObject1.SetActive(equippedShield == "shield1");
-		shieldObject2.SetActive(equippedShield == "shield2");
+		if (equippedShield == "shield1")
+		{
+			shieldObject1.SetActive(true);
+			shieldObject2.SetActive(false);
+		}
+		else if (equippedShield == "shield2")
+		{
+			shieldObject1.SetActive(false);
+			shieldObject2.SetActive(true);
+		}
+		else
+		{
+			shieldObject1.SetActive(false);
+			shieldObject2.SetActive(false);
+		}
 	}
 
 	private void UpdateCloak()
 	{
-		cloakObject1.SetActive(equippedCloak == "cloak1");
-		cloakObject2.SetActive(equippedCloak == "cloak2");
+		if (equippedCloak == "cloak1")
+		{
+			cloakObject1.SetActive(true);
+			cloakObject2.SetActive(false);
+		}
+		else if (equippedCloak == "cloak2")
+		{
+			cloakObject1.SetActive(false);
+			cloakObject2.SetActive(true);
+		}
+		else
+		{
+			cloakObject1.SetActive(false);
+			cloakObject2.SetActive(false);
+		}
 	}
 
 
@@ -80,10 +106,6 @@ public class PlayerEquipment : MonoBehaviourPun, IPunObservable
 			equippedWeapon = (string)stream.ReceiveNext();
 			equippedShield = (string)stream.ReceiveNext();
 			equippedCloak = (string)stream.ReceiveNext();
-
-			UpdateWeapon();
-			UpdateShield();
-			UpdateCloak();
 		}
 	}
 }
