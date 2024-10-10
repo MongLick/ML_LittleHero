@@ -23,6 +23,30 @@ public class MainPanel : MonoBehaviour
 	[SerializeField] Animator woManAnimator2;
 	[SerializeField] TMP_Text leftNickName;
 	[SerializeField] TMP_Text rightNickName;
+	[SerializeField] GameObject man1Weapon1;
+	[SerializeField] GameObject man1Weapon2;
+	[SerializeField] GameObject man1Shield1;
+	[SerializeField] GameObject man1Shield2;
+	[SerializeField] GameObject man1Cloak1;
+	[SerializeField] GameObject man1Cloak2;
+	[SerializeField] GameObject man2Weapon1;
+	[SerializeField] GameObject man2Weapon2;
+	[SerializeField] GameObject man2Shield1;
+	[SerializeField] GameObject man2Shield2;
+	[SerializeField] GameObject man2Cloak1;
+	[SerializeField] GameObject man2Cloak2;
+	[SerializeField] GameObject woMan1Weapon1;
+	[SerializeField] GameObject woMan1Weapon2;
+	[SerializeField] GameObject woMan1Shield1;
+	[SerializeField] GameObject woMan1Shield2;
+	[SerializeField] GameObject woMan1Cloak1;
+	[SerializeField] GameObject woMan1Cloak2;
+	[SerializeField] GameObject woMan2Weapon1;
+	[SerializeField] GameObject woMan2Weapon2;
+	[SerializeField] GameObject woMan2Shield1;
+	[SerializeField] GameObject woMan2Shield2;
+	[SerializeField] GameObject woMan2Cloak1;
+	[SerializeField] GameObject woMan2Cloak2;
 
 	private void Awake()
 	{
@@ -74,17 +98,110 @@ public class MainPanel : MonoBehaviour
 				DataSnapshot leftSnapshot = task.Result;
 				string nickName = leftSnapshot.Child("nickName").Value.ToString();
 				string type = leftSnapshot.Child("type").Value.ToString();
+				string Weapon = leftSnapshot.Child("weaponSlot").Value.ToString();
+				string Shield = leftSnapshot.Child("shieldSlot").Value.ToString();
+				string Cloak = leftSnapshot.Child("cloakSlot").Value.ToString();
 
 				leftNickName.text = nickName;
 				if (type == "0")
 				{
 					manAnimator1.gameObject.SetActive(true);
 					woManAnimator1.gameObject.SetActive(false);
+					if (Weapon == "sword1")
+					{
+						man1Weapon1.SetActive(true);
+						man1Weapon2.SetActive(false);
+					}
+					else if (Weapon == "sword2")
+					{
+						man1Weapon1.SetActive(false);
+						man1Weapon2.SetActive(true);
+					}
+					else
+					{
+						man1Weapon1.SetActive(false);
+						man1Weapon2.SetActive(false);
+					}
+					if (Shield == "shield1")
+					{
+						man1Shield1.SetActive(true);
+						man1Shield2.SetActive(false);
+					}
+					else if (Shield == "shield2")
+					{
+						man1Shield1.SetActive(false);
+						man1Shield2.SetActive(true);
+					}
+					else
+					{
+						man1Shield1.SetActive(false);
+						man1Shield2.SetActive(false);
+					}
+					if (Cloak == "cloak1")
+					{
+						man1Cloak1.SetActive(true);
+						man1Cloak2.SetActive(false);
+					}
+					else if (Cloak == "cloak2")
+					{
+						man1Cloak1.SetActive(false);
+						man1Cloak2.SetActive(true);
+					}
+					else
+					{
+						man1Cloak1.SetActive(false);
+						man1Cloak2.SetActive(false);
+					}
 				}
 				else if (type == "1")
 				{
 					woManAnimator1.gameObject.SetActive(true);
 					manAnimator1.gameObject.SetActive(false);
+					if (Weapon == "sword1")
+					{
+						woMan1Weapon1.SetActive(true);
+						woMan1Weapon2.SetActive(false);
+					}
+					else if (Weapon == "sword2")
+					{
+						woMan1Weapon1.SetActive(false);
+						woMan1Weapon2.SetActive(true);
+					}
+					else
+					{
+						woMan1Weapon1.SetActive(false);
+						woMan1Weapon2.SetActive(false);
+					}
+					if (Shield == "shield1")
+					{
+						woMan1Shield1.SetActive(true);
+						woMan1Shield2.SetActive(false);
+					}
+					else if (Shield == "shield2")
+					{
+						woMan1Shield1.SetActive(false);
+						woMan1Shield2.SetActive(true);
+					}
+					else
+					{
+						woMan1Shield1.SetActive(false);
+						woMan1Shield2.SetActive(false);
+					}
+					if (Cloak == "cloak1")
+					{
+						woMan1Cloak1.SetActive(true);
+						woMan1Cloak2.SetActive(false);
+					}
+					else if (Cloak == "cloak2")
+					{
+						woMan1Cloak1.SetActive(false);
+						woMan1Cloak2.SetActive(true);
+					}
+					else
+					{
+						woMan1Cloak1.SetActive(false);
+						woMan1Cloak2.SetActive(false);
+					}
 				}
 
 				creation1.gameObject.SetActive(false);
@@ -109,17 +226,110 @@ public class MainPanel : MonoBehaviour
 					DataSnapshot rightSnapshot = task.Result;
 					string nickName = rightSnapshot.Child("nickName").Value.ToString();
 					string type = rightSnapshot.Child("type").Value.ToString();
+					string Weapon = rightSnapshot.Child("weaponSlot").Value.ToString();
+					string Shield = rightSnapshot.Child("shieldSlot").Value.ToString();
+					string Cloak = rightSnapshot.Child("cloakSlot").Value.ToString();
 
 					rightNickName.text = nickName;
 					if (type == "0")
 					{
 						manAnimator2.gameObject.SetActive(true);
 						woManAnimator2.gameObject.SetActive(false);
+						if (Weapon == "sword1")
+						{
+							man2Weapon1.SetActive(true);
+							man2Weapon2.SetActive(false);
+						}
+						else if (Weapon == "sword2")
+						{
+							man2Weapon1.SetActive(false);
+							man2Weapon2.SetActive(true);
+						}
+						else
+						{
+							man2Weapon1.SetActive(false);
+							man2Weapon2.SetActive(false);
+						}
+						if (Shield == "shield1")
+						{
+							man2Shield1.SetActive(true);
+							man2Shield2.SetActive(false);
+						}
+						else if (Shield == "shield2")
+						{
+							man2Shield1.SetActive(false);
+							man2Shield2.SetActive(true);
+						}
+						else
+						{
+							man2Shield1.SetActive(false);
+							man2Shield2.SetActive(false);
+						}
+						if (Cloak == "cloak1")
+						{
+							man2Cloak1.SetActive(true);
+							man2Cloak2.SetActive(false);
+						}
+						else if (Cloak == "cloak2")
+						{
+							man2Cloak1.SetActive(false);
+							man2Cloak2.SetActive(true);
+						}
+						else
+						{
+							man2Cloak1.SetActive(false);
+							man2Cloak2.SetActive(false);
+						}
 					}
 					else if (type == "1")
 					{
 						woManAnimator2.gameObject.SetActive(true);
 						manAnimator2.gameObject.SetActive(false);
+						if (Weapon == "sword1")
+						{
+							woMan2Weapon1.SetActive(true);
+							woMan2Weapon2.SetActive(false);
+						}
+						else if (Weapon == "sword2")
+						{
+							woMan2Weapon1.SetActive(false);
+							woMan2Weapon2.SetActive(true);
+						}
+						else
+						{
+							woMan2Weapon1.SetActive(false);
+							woMan2Weapon2.SetActive(false);
+						}
+						if (Shield == "shield1")
+						{
+							woMan2Shield1.SetActive(true);
+							woMan2Shield2.SetActive(false);
+						}
+						else if (Shield == "shield2")
+						{
+							woMan2Shield1.SetActive(false);
+							woMan2Shield2.SetActive(true);
+						}
+						else
+						{
+							woMan2Shield1.SetActive(false);
+							woMan2Shield2.SetActive(false);
+						}
+						if (Cloak == "cloak1")
+						{
+							woMan2Cloak1.SetActive(true);
+							woMan2Cloak2.SetActive(false);
+						}
+						else if (Cloak == "cloak2")
+						{
+							woMan2Cloak1.SetActive(false);
+							woMan2Cloak2.SetActive(true);
+						}
+						else
+						{
+							woMan2Cloak1.SetActive(false);
+							woMan2Cloak2.SetActive(false);
+						}
 					}
 					creation2.gameObject.SetActive(false);
 					delete2.gameObject.SetActive(true);

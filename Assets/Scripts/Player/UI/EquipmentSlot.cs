@@ -1,10 +1,11 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 public class EquipmentSlot : MonoBehaviour, IDropHandler
 {
-	public enum SlotType { Weapon, Shield, Cloak }
+	public enum SlotType { Weapon, Shield, Cloak}
 
 	public SlotType slotType;
 	public InventoryIcon currentItem;
@@ -28,15 +29,9 @@ public class EquipmentSlot : MonoBehaviour, IDropHandler
 		if (currentItem != null)
 		{
 			currentItem.ReturnToInventory();
-			currentItem = null;
 		}
 
 		EquipItem(droppedItem);
-
-		if (currentItem == null)
-		{
-			UnequipItem();
-		}
 	}
 
 	private void EquipItem(InventoryIcon item)
@@ -49,14 +44,38 @@ public class EquipmentSlot : MonoBehaviour, IDropHandler
 		if (slotType == SlotType.Weapon)
 		{
 			playerEquipment.EquipWeapon(item.itemName);
+			if (Manager.Fire.IsLeft)
+			{
+				Manager.Fire.UpdateWeaponSlot("Left", item.itemName);
+			}
+			else
+			{
+				Manager.Fire.UpdateWeaponSlot("Right", item.itemName);
+			}
 		}
 		else if (slotType == SlotType.Shield)
 		{
 			playerEquipment.EquipShield(item.itemName);
+			if (Manager.Fire.IsLeft)
+			{
+				Manager.Fire.UpdateShieldSlot("Left", item.itemName);
+			}
+			else
+			{
+				Manager.Fire.UpdateShieldSlot("Right", item.itemName);
+			}
 		}
 		else if (slotType == SlotType.Cloak)
 		{
 			playerEquipment.EquipCloak(item.itemName);
+			if (Manager.Fire.IsLeft)
+			{
+				Manager.Fire.UpdateCloakSlot("Left", item.itemName);
+			}
+			else
+			{
+				Manager.Fire.UpdateCloakSlot("Right", item.itemName);
+			}
 		}
 	}
 
@@ -65,14 +84,38 @@ public class EquipmentSlot : MonoBehaviour, IDropHandler
 		if (slotType == SlotType.Weapon)
 		{
 			playerEquipment.EquipWeapon("");
+			if (Manager.Fire.IsLeft)
+			{
+				Manager.Fire.UpdateWeaponSlot("Left", "");
+			}
+			else
+			{
+				Manager.Fire.UpdateWeaponSlot("Right", "");
+			}
 		}
 		else if (slotType == SlotType.Shield)
 		{
 			playerEquipment.EquipShield("");
+			if (Manager.Fire.IsLeft)
+			{
+				Manager.Fire.UpdateShieldSlot("Left", "");
+			}
+			else
+			{
+				Manager.Fire.UpdateShieldSlot("Right", "");
+			}
 		}
 		else if (slotType == SlotType.Cloak)
 		{
 			playerEquipment.EquipCloak("");
+			if (Manager.Fire.IsLeft)
+			{
+				Manager.Fire.UpdateCloakSlot("Left", "");
+			}
+			else
+			{
+				Manager.Fire.UpdateCloakSlot("Right", "");
+			}
 		}
 	}
 }

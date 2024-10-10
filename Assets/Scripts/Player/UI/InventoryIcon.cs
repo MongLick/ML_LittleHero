@@ -57,6 +57,17 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 		else
 		{
 			isEquipment = false;
+			EquipmentSlot[] equipmentSlots = FindObjectsOfType<EquipmentSlot>();
+
+			foreach (EquipmentSlot slot in equipmentSlots)
+			{
+				if (slot.slotType == slotType && slot.currentItem != null && slot.currentItem.itemName == itemName)
+				{
+					slot.currentItem = null;
+					slot.UnequipItem();
+					break;
+				}
+			}
 		}
 
 		canvasGroup.alpha = 1.0f;

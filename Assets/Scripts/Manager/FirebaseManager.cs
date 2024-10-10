@@ -2,7 +2,10 @@ using Firebase;
 using Firebase.Auth;
 using Firebase.Database;
 using Firebase.Extensions;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
+using static UserData;
 
 public class FirebaseManager : Singleton<FirebaseManager>
 {
@@ -59,11 +62,11 @@ public class FirebaseManager : Singleton<FirebaseManager>
 		}
 	}
 
-	public void CreateCharacter(string nickname, CharacterType type, string position, float x, float y, float z, string scene)
+	public void CreateCharacter(string nickName, CharacterType type, string position, float x, float y, float z, string scene, int health, int mana, int gold, string weaponSlot, string shieldSlot, string cloakSlot, List<string> inventory)
 	{
 		FirebaseUser user = auth.CurrentUser;
 		string userID = user.UserId;
-		UserData userData = new UserData(nickname, type, position, x, y, z, scene);
+		UserData userData = new UserData(nickName, type, position, x, y, z, scene, health, mana, gold, weaponSlot, shieldSlot, cloakSlot, inventory);
 		string json = JsonUtility.ToJson(userData);
 		Manager.Fire.DB
 			.GetReference("UserData")
@@ -74,5 +77,45 @@ public class FirebaseManager : Singleton<FirebaseManager>
 			{
 				
 			});
+	}
+
+	public void UpdateWeaponSlot(string position, string weapon)
+	{
+		FirebaseUser user = auth.CurrentUser;
+		string userID = user.UserId;
+		DatabaseReference reference = Manager.Fire.DB
+		.GetReference("UserData")
+		.Child(userID)
+		.Child(position);
+		reference.Child("weaponSlot").SetValueAsync(weapon).ContinueWithOnMainThread(task =>
+		{
+			
+		});
+	}
+	public void UpdateShieldSlot(string position, string shield)
+	{
+		FirebaseUser user = auth.CurrentUser;
+		string userID = user.UserId;
+		DatabaseReference reference = Manager.Fire.DB
+		.GetReference("UserData")
+		.Child(userID)
+		.Child(position);
+		reference.Child("shieldSlot").SetValueAsync(shield).ContinueWithOnMainThread(task =>
+		{
+
+		});
+	}
+	public void UpdateCloakSlot(string position, string cloak)
+	{
+		FirebaseUser user = auth.CurrentUser;
+		string userID = user.UserId;
+		DatabaseReference reference = Manager.Fire.DB
+		.GetReference("UserData")
+		.Child(userID)
+		.Child(position);
+		reference.Child("cloakSlot").SetValueAsync(cloak).ContinueWithOnMainThread(task =>
+		{
+
+		});
 	}
 }

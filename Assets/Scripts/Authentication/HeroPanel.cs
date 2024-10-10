@@ -1,15 +1,15 @@
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UserData;
 
 public class HeroPanel : MonoBehaviour
 {
-    [SerializeField] PanelController panelController;
-    [SerializeField] Button manPressed;
-    [SerializeField] Button woManPressed;
-    [SerializeField] TMP_InputField nickName;
+	[SerializeField] PanelController panelController;
+	[SerializeField] Button manPressed;
+	[SerializeField] Button woManPressed;
+	[SerializeField] TMP_InputField nickName;
 	[SerializeField] Button cancelButton;
 	[SerializeField] Button confirmButton;
 	[SerializeField] Animator manAnimator;
@@ -77,7 +77,7 @@ public class HeroPanel : MonoBehaviour
 		manPressed.image.color = Color.white;
 		woManPressed.image.color = Color.white;
 		CharacterType characterType = manChoice ? CharacterType.Man : CharacterType.WoMan;
-		Manager.Fire.CreateCharacter(name, characterType, characterPosition, -25, 4, -7, "LittleForestScene");
+		Manager.Fire.CreateCharacter(name, characterType, characterPosition, -25, 4, -7, "LittleForestScene", 100, 100, 0, null, null, null, new List<string>(new string[16]));
 		panelController.SetActivePanel(PanelController.Panel.Main);
 		nickName.text = "";
 	}
