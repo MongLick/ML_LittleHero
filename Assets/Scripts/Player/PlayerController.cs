@@ -118,7 +118,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	private void OnAttack(InputValue value)
 	{
-		if (!isAttack && (!EventSystem.current.IsPointerOverGameObject()))
+		if (!isAttack && !EventSystem.current.IsPointerOverGameObject())
 		{
 			isAttack = true;
 		}
