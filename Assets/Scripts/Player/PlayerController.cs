@@ -30,8 +30,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 	public PlayerInput PlayerInput { get { return playerInput; } set { playerInput = value; } }
 	[SerializeField] CinemachineVirtualCamera gameOverCamera;
 	public CinemachineVirtualCamera GameOverCamera { get { return gameOverCamera; } set { gameOverCamera = value; } }
-	[SerializeField] float hp;
-	public float HP { get { return hp; } }
 	[SerializeField] StateMachine<PlayerStateType> playerState;
 	[SerializeField] PlayerStateType currentState;
 	[SerializeField] CharacterController controller;
@@ -228,7 +226,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 	{
 		if (!isBlock)
 		{
-			hp -= damage;
+			Manager.Data.UserData.Health -= damage;
 			isAttack = false;
 			if (isStunAttack && !isStunned)
 			{
@@ -244,7 +242,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 			isTakeHit = true;
 		}
 
-		if (hp <= 0)
+		if (Manager.Data.UserData.Health <= 0)
 		{
 			isDie = true;
 		}

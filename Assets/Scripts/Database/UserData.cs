@@ -12,7 +12,9 @@ public class UserData
 	public float posZ;
 	public string scene;
 	public int health;
+	public int maxHealth;
 	public int mana;
+	public int maxMana;
 	public int gold;
 	public string weaponSlot;
 	public string shieldSlot;
@@ -31,7 +33,9 @@ public class UserData
 			this.posZ = z;
 			this.scene = scene;
 			this.health = health;
+			this.maxHealth = health;
 			this.mana = mana;
+			this.maxMana = mana;
 			this.gold = gold;
 			this.weaponSlot = weapon;
 			this.shieldSlot = shield;
@@ -41,4 +45,9 @@ public class UserData
 	}
 
 	public enum CharacterType { Man, WoMan }
+
+	public event Action<int> OnHealthChanged;
+	public int Health { get { return health; } set { { health = value; OnHealthChanged?.Invoke(health); } } }
+	public event Action<int> OnManaChanged;
+	public int Mana { get { return health; } set { { Mana = value; OnManaChanged?.Invoke(Mana); } } }
 }

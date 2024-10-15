@@ -19,6 +19,17 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IDropHandler, 
 		currentItem = GetComponentInChildren<InventoryIcon>();
 	}
 
+	public void AddItem(InventoryIcon newItem)
+	{
+		if (currentItem == null)
+		{
+			currentItem = newItem;
+			newItem.parentSlot = this;
+			newItem.transform.SetParent(transform);
+			newItem.GetComponent<RectTransform>().position = GetComponent<RectTransform>().position;
+		}
+	}
+
 	public void OnPointerEnter(PointerEventData eventData)
 	{
 		image.color = Color.yellow;

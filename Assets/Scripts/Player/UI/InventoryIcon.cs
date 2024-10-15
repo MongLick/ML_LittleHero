@@ -4,6 +4,7 @@ using static EquipmentSlot;
 
 public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+	public enum SlotType { Weapon, Shield, Cloak, hpPotion, mpPotion }
 	public SlotType slotType;
 	private Transform canvas;
 	private Transform previousParent;
@@ -13,7 +14,7 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 	public InventorySlot parentSlot;
 	public EquipmentSlot equipmentSlot;
 	public bool isEquipment;
-	[SerializeField] InventoryUI InventoryUI;
+	public InventoryUI InventoryUI;
 
 	private void Awake()
 	{

@@ -27,7 +27,6 @@ public class MonsterController : MonoBehaviour, IDamageable
 	public Animator Animator { get { return animator; } }
 	[SerializeField] StateMachine<MonsterStateType> monsterState;
 	[SerializeField] MonsterStateType currentState;
-	[SerializeField] int damage;
 	[SerializeField] int hp;
 	public int Hp { get { return hp; } }
 	[SerializeField] float moveDetectionRadius;
@@ -104,18 +103,6 @@ public class MonsterController : MonoBehaviour, IDamageable
 			{
 				isAttackCooltime = false;
 				cooltime = 0;
-			}
-		}
-	}
-
-	private void OnTriggerEnter(Collider other)
-	{
-		if (playerLayer.Contain(other.gameObject.layer))
-		{
-			IDamageable damageable = other.GetComponent<IDamageable>();
-			if(damageable != null)
-			{
-				damageable.TakeDamage(damage, true);
 			}
 		}
 	}

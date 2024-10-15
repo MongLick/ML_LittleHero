@@ -1,12 +1,9 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using static UnityEditor.Progress;
+using static InventoryIcon;
 
 public class EquipmentSlot : MonoBehaviour, IDropHandler
 {
-	public enum SlotType { Weapon, Shield, Cloak}
-
 	public SlotType slotType;
 	public InventoryIcon currentItem;
 	private PlayerEquipment playerEquipment;

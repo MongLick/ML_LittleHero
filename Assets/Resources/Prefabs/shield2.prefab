@@ -103,3 +103,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotType: 1
   itemName: shield2
+  parentSlot: {fileID: 0}
+  equipmentSlot: {fileID: 0}
+  isEquipment: 0
+  InventoryUI: {fileID: 0}

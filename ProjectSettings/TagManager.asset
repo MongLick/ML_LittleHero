@@ -10,6 +10,7 @@ TagManager:
   - ShieldSlot
   - CloakSlot
   - EquipmentUI
+  - InventoryUI
   layers:
   - Default
   - TransparentFX

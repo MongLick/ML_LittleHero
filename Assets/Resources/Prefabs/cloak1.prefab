@@ -103,3 +103,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotType: 2
   itemName: cloak1
+  parentSlot: {fileID: 0}
+  equipmentSlot: {fileID: 0}
+  isEquipment: 0
+  InventoryUI: {fileID: 0}
