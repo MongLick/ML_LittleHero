@@ -76,6 +76,11 @@ public class PlayerController : MonoBehaviour, IDamageable
 	public Coroutine StunnedRoutine { get { return stunnedRoutine; } set { stunnedRoutine = value; } }
 	private Coroutine takeHitRoutine;
 	public Coroutine TakeHitRoutine { get { return takeHitRoutine; } set { takeHitRoutine = value; } }
+	public InventoryUI inventoryUI;
+	public QuickSlot quickSlot;
+	[SerializeField] float range;
+	public float Range { get { return range; } }
+	[SerializeField] Collider[] colliders = new Collider[20];
 
 	private void Awake()
 	{
@@ -96,6 +101,15 @@ public class PlayerController : MonoBehaviour, IDamageable
 		Move();
 		JumpMove();
 		CoolTimeCheck();
+
+		/*if (Input.GetKeyDown(KeyCode.G))
+		{
+			AddPotion("hpPotion");
+		}
+		if (Input.GetKeyDown(KeyCode.Alpha1))
+		{
+			quickSlot.UsePotion();
+		}*/
 	}
 
 	private void OnMove(InputValue value)
@@ -142,6 +156,11 @@ public class PlayerController : MonoBehaviour, IDamageable
 		}
 	}
 
+	private void OnInteract(InputValue value)
+	{
+		Interact();
+	}
+
 	private void Move()
 	{
 		move = new Vector3(moveDir.x, 0, moveDir.z).normalized;
@@ -182,6 +201,21 @@ public class PlayerController : MonoBehaviour, IDamageable
 		{
 			isAutoAttack = true;
 			StartCoroutine(AutoAttackCoroutine());
+		}
+	}
+
+	private void Interact()
+	{
+		int size = Physics.OverlapSphereNonAlloc(transform.position, range, colliders);
+
+		for (int i = 0; i < size; i++)
+		{
+			IInteractable interactable = colliders[i].GetComponent<IInteractable>();
+			if (interactable != null)
+			{
+				interactable.Interact(this);
+				break;
+			}
 		}
 	}
 
@@ -317,6 +351,56 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 				Quaternion rotation = Quaternion.LookRotation(directionToMonster);
 				transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * rotationSpeed);
+			}
+		}
+	}
+
+
+	private void AddPotion(string potionName)
+	{
+		InventoryIcon existingPotion = FindPotionInInventory(potionName);
+		if (existingPotion != null)
+		{
+			existingPotion.UpdateQuantity(1);
+		}
+		else
+		{
+			CreateNewPotionIcon(potionName);
+		}
+	}
+
+	private InventoryIcon FindPotionInInventory(string potionName)
+	{
+		InventorySlot[] slots = inventoryUI.InventorySlots;
+
+		foreach (InventorySlot slot in slots)
+		{
+			if (slot.currentItem != null && slot.currentItem.itemName == potionName)
+			{
+				return slot.currentItem as InventoryIcon;
+			}
+		}
+		return null;
+	}
+
+	private void CreateNewPotionIcon(string potionName)
+	{
+		GameObject potionPrefab = Resources.Load<GameObject>("Prefabs/hpPotion");
+		GameObject potionObject = Instantiate(potionPrefab);
+		InventoryIcon potionIcon = potionObject.GetComponent<InventoryIcon>();
+
+		potionIcon.itemName = potionName;
+		potionIcon.quantity = 1;
+		InventorySlot[] inventorySlots = inventoryUI.InventorySlots;
+
+		for (int i = 0; i < inventorySlots.Length; i++)
+		{
+			if (inventorySlots[i].currentItem == null)
+			{
+				potionObject.transform.SetParent(inventorySlots[i].transform);
+				potionObject.GetComponent<RectTransform>().position = inventorySlots[i].GetComponent<RectTransform>().position;
+				inventorySlots[i].currentItem = potionIcon;
+				return;
 			}
 		}
 	}

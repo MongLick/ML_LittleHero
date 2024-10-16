@@ -62,11 +62,11 @@ public class FirebaseManager : Singleton<FirebaseManager>
 		}
 	}
 
-	public void CreateCharacter(string nickName, CharacterType type, string position, float x, float y, float z, string scene, int health, int mana, int gold, string weaponSlot, string shieldSlot, string cloakSlot, List<string> inventory)
+	public void CreateCharacter(string nickName, CharacterType type, string position, float x, float y, float z, string scene, int health, int mana, int gold, string weaponSlot, string shieldSlot, string cloakSlot, List<string> inventory, Dictionary<string, QuestData> quests)
 	{
 		FirebaseUser user = auth.CurrentUser;
 		string userID = user.UserId;
-		UserData userData = new UserData(nickName, type, position, x, y, z, scene, health, mana, gold, weaponSlot, shieldSlot, cloakSlot, inventory);
+		UserData userData = new UserData(nickName, type, position, x, y, z, scene, health, mana, gold, weaponSlot, shieldSlot, cloakSlot, inventory, quests);
 		string json = JsonUtility.ToJson(userData);
 		Manager.Fire.DB
 			.GetReference("UserData")
@@ -116,6 +116,64 @@ public class FirebaseManager : Singleton<FirebaseManager>
 		reference.Child("cloakSlot").SetValueAsync(cloak).ContinueWithOnMainThread(task =>
 		{
 
+		});
+	}
+
+	public void AddQuest(string position, string questID, string questName)
+	{
+		FirebaseUser user = auth.CurrentUser;
+		string userID = user.UserId;
+
+		QuestData newQuest = new QuestData(questID, questName, false);
+		DatabaseReference reference = Manager.Fire.DB
+			.GetReference("UserData")
+			.Child(userID)
+			.Child(position)
+			.Child("quests")
+			.Child(questID);
+
+		string json = JsonUtility.ToJson(newQuest);
+		reference.SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
+		{
+
+		});
+	}
+
+	public void LoadQuestData(string position, string questID, System.Action<QuestData> callback)
+	{
+		FirebaseUser user = auth.CurrentUser;
+		string userID = user.UserId;
+
+		DatabaseReference reference = Manager.Fire.DB
+			.GetReference("UserData")
+			.Child(userID)
+			.Child(position)
+			.Child("quests")
+			.Child(questID);
+
+		reference.GetValueAsync().ContinueWithOnMainThread(task =>
+		{
+			if (task.IsFaulted)
+			{
+				Debug.LogError("퀘스트 데이터 로드 오류: " + task.Exception);
+				callback(null);
+				return;
+			}
+
+			if (task.IsCompleted)
+			{
+				DataSnapshot snapshot = task.Result;
+				if (snapshot.Exists)
+				{
+					string json = snapshot.GetRawJsonValue();
+					QuestData questData = JsonUtility.FromJson<QuestData>(json);
+					callback(questData);
+				}
+				else
+				{
+					callback(null);
+				}
+			}
 		});
 	}
 }

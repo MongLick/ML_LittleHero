@@ -5,10 +5,26 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LittleForestScene : BaseScene
 {
 	private GameObject characterInstance;
+	[SerializeField] TMP_Text talkText;
+	public TMP_Text TalkText { get { return talkText; } set { talkText = value; } }
+	[SerializeField] Image talkBackImage;
+	public Image TalkBackImage { get { return talkBackImage; } set { talkBackImage = value; } }
+	[SerializeField] LayerMask playerLayer;
+	public LayerMask PlayerLayer { get { return playerLayer; } set { playerLayer = value; } }
+	[SerializeField] Button talkButton;
+	public Button TalkButton { get { return talkButton; } set { talkButton = value; } }
+	[SerializeField] Button closeButton;
+	public Button CloseButton { get { return closeButton; } set { closeButton = value; } }
+
+	private void Awake()
+	{
+		closeButton.onClick.AddListener(Close);
+	}
 
 	private void OnEnable()
 	{
@@ -53,7 +69,7 @@ public class LittleForestScene : BaseScene
 					}
 					EquipItems(weapon, shield, cloak);
 					UserData.CharacterType characterType = (type == "0") ? UserData.CharacterType.Man : UserData.CharacterType.WoMan;
-					Manager.Data.UserData = new UserData(nickName, characterType, "Left", posX, posY, posZ, "LittleForestScene", health, mana, gold, weapon, shield, cloak, new List<string>());
+					Manager.Data.UserData = new UserData(nickName, characterType, "Left", posX, posY, posZ, "LittleForestScene", health, mana, gold, weapon, shield, cloak, new List<string>(), new Dictionary<string, QuestData>());
 				}
 			});
 		}
@@ -97,7 +113,7 @@ public class LittleForestScene : BaseScene
 						nicknameUI.text = nickName;
 					}
 					UserData.CharacterType characterType = (type == "0") ? UserData.CharacterType.Man : UserData.CharacterType.WoMan;
-					Manager.Data.UserData = new UserData(nickName, characterType, "Right", posX, posY, posZ, "LittleForestScene", health, mana, gold, weapon, shield, cloak, new List<string>());
+					Manager.Data.UserData = new UserData(nickName, characterType, "Right", posX, posY, posZ, "LittleForestScene", health, mana, gold, weapon, shield, cloak, new List<string>(), new Dictionary<string, QuestData>());
 					EquipItems(weapon, shield, cloak);
 				}
 			});
@@ -114,6 +130,7 @@ public class LittleForestScene : BaseScene
 		GameObject equipmentUI = GameObject.Find("PlayerCanvas/EquipmentUI");
 		GameObject inventoryUI = GameObject.Find("PlayerCanvas/InventoryUI");
 		InventoryUI inventory = inventoryUI.GetComponent<InventoryUI>();
+		Manager.Inven.InventoryUI = inventory;
 		PlayerEquipment playerEquipment = characterInstance.GetComponent<PlayerEquipment>();
 
 		if (equipmentUI != null)
@@ -192,5 +209,10 @@ public class LittleForestScene : BaseScene
 	private GameObject FindItemPrefab(string itemName)
 	{
 		return Resources.Load<GameObject>($"Prefabs/{itemName}");
+	}
+
+	private void Close()
+	{
+		talkBackImage.gameObject.SetActive(false);
 	}
 }

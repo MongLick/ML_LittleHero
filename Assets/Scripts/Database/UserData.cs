@@ -20,9 +20,10 @@ public class UserData
 	public string shieldSlot;
 	public string cloakSlot;
 	public List<string> inventory;
+	public Dictionary<string, QuestData> quests;
 
 	public UserData(string nickName, CharacterType type, string position, float x, float y, float z, string scene,
-					int health, int mana, int gold, string weapon, string shield, string cloak, List<string> inventory)
+					int health, int mana, int gold, string weapon, string shield, string cloak, List<string> inventory, Dictionary<string, QuestData> quests)
 	{
 		{
 			this.nickName = nickName;
@@ -41,6 +42,7 @@ public class UserData
 			this.shieldSlot = shield;
 			this.cloakSlot = cloak;
 			this.inventory = inventory ?? new List<string>(new string[16]);
+			quests = quests ?? new Dictionary<string, QuestData>();
 		}
 	}
 
@@ -50,4 +52,19 @@ public class UserData
 	public int Health { get { return health; } set { { health = value; OnHealthChanged?.Invoke(health); } } }
 	public event Action<int> OnManaChanged;
 	public int Mana { get { return health; } set { { Mana = value; OnManaChanged?.Invoke(Mana); } } }
+}
+
+[Serializable]
+public class QuestData
+{
+	public string questID;
+	public string questName;
+	public bool isCompleted;
+
+	public QuestData(string questID, string questName, bool isCompleted)
+	{
+		this.questID = questID;
+		this.questName = questName;
+		this.isCompleted = isCompleted;
+	}
 }

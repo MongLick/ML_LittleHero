@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using static EquipmentSlot;
@@ -14,7 +15,9 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 	public InventorySlot parentSlot;
 	public EquipmentSlot equipmentSlot;
 	public bool isEquipment;
-	public InventoryUI InventoryUI;
+	public InventoryUI InventoryUI; 
+	public int quantity;
+	public TMP_Text quantityText;
 
 	private void Awake()
 	{
@@ -22,6 +25,7 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 		rect = GetComponent<RectTransform>();
 		canvasGroup = GetComponent<CanvasGroup>();
 		parentSlot = GetComponentInParent<InventorySlot>();
+		UpdateQuantityText();
 	}
 
 	public void OnBeginDrag(PointerEventData eventData)
@@ -104,6 +108,20 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 				parentSlot = slot;
 				return;
 			}
+		}
+	}
+
+	public void UpdateQuantity(int amount)
+	{
+		quantity += amount;
+		UpdateQuantityText();
+	}
+
+	private void UpdateQuantityText()
+	{
+		if (quantityText != null)
+		{
+			quantityText.text = quantity > 1 ? quantity.ToString() : "";
 		}
 	}
 }
