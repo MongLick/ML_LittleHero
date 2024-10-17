@@ -62,7 +62,7 @@ public class FirebaseManager : Singleton<FirebaseManager>
 		}
 	}
 
-	public void CreateCharacter(string nickName, CharacterType type, string position, float x, float y, float z, string scene, int health, int mana, int gold, string weaponSlot, string shieldSlot, string cloakSlot, List<string> inventory, Dictionary<string, QuestData> quests)
+	public void CreateCharacter(string nickName, CharacterType type, string position, float x, float y, float z, string scene, int health, int mana, int gold, string weaponSlot, string shieldSlot, string cloakSlot, Dictionary<int, InventorySlotData> inventory, Dictionary<string, QuestData> quests)
 	{
 		FirebaseUser user = auth.CurrentUser;
 		string userID = user.UserId;
@@ -175,5 +175,26 @@ public class FirebaseManager : Singleton<FirebaseManager>
 				}
 			}
 		});
+	}
+
+	public void SaveItemToDatabase(int slotIndex, string itemName)
+	{
+		string userID = Manager.Fire.UserID;
+		string position = Manager.Fire.IsLeft ? "Left" : "Right";
+
+		Manager.Fire.DB
+			.GetReference("UserData")
+			.Child(userID)
+			.Child(position)
+			.Child("inventory")
+			.Child(slotIndex.ToString())
+			.SetValueAsync(new Dictionary<string, object>
+			{
+			{ "itemName", itemName }
+			})
+			.ContinueWithOnMainThread(task =>
+			{
+				
+			});
 	}
 }

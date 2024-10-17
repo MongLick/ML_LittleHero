@@ -1,9 +1,7 @@
 using Firebase.Database;
 using Firebase.Extensions;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class EquipmentNPC : MonoBehaviour
 {
@@ -76,6 +74,7 @@ public class EquipmentNPC : MonoBehaviour
 								newItem.GetComponent<RectTransform>().localPosition = Vector3.zero;
 								inventorySlots[i].currentItem = newItem;
 								addedItems++;
+								Manager.Fire.SaveItemToDatabase(i, itemName);
 								break;
 							}
 						}
@@ -100,7 +99,6 @@ public class EquipmentNPC : MonoBehaviour
 							string shield = LefttSnapshot.Child("shieldSlot").Value?.ToString();
 							string cloak = LefttSnapshot.Child("cloakSlot").Value?.ToString();
 
-							Debug.Log(weapon);
 							if (string.IsNullOrEmpty(weapon) || string.IsNullOrEmpty(shield) || string.IsNullOrEmpty(cloak))
 							{
 								scene.TalkText.text = "아직 장비를 착용하지 않았어. 무기, 방패, 망토 장비를 착용해봐.";

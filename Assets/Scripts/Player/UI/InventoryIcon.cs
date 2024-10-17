@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -54,10 +55,13 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 		{
 			if (parentSlot != null)
 			{
+				Manager.Fire.SaveItemToDatabase(Array.IndexOf(Manager.Inven.InventoryUI.InventorySlots, parentSlot), null);
 				parentSlot.currentItem = null;
 				parentSlot = null;
+
+				equipmentSlot.currentItem = this;
+				isEquipment = true;
 			}
-			isEquipment = true;
 		}
 		else
 		{
@@ -70,6 +74,7 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 				{
 					slot.currentItem = null;
 					slot.UnequipItem();
+					//Manager.Fire.SaveItemToDatabase(Array.IndexOf(Manager.Inven.InventoryUI.InventorySlots, slot), "");
 					break;
 				}
 			}
@@ -102,10 +107,13 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 				rect.position = slot.GetComponent<RectTransform>().position;
 				if (parentSlot != null)
 				{
+					Manager.Fire.SaveItemToDatabase(Array.IndexOf(Manager.Inven.InventoryUI.InventorySlots, parentSlot), "");
 					parentSlot.currentItem = null;
 				}
 				slot.currentItem = this;
 				parentSlot = slot;
+				int index = Array.IndexOf(Manager.Inven.InventoryUI.InventorySlots, parentSlot);
+				Manager.Fire.SaveItemToDatabase(index, this.itemName);
 				return;
 			}
 		}

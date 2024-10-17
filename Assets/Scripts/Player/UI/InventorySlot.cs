@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -27,6 +28,7 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IDropHandler, 
 			newItem.parentSlot = this;
 			newItem.transform.SetParent(transform);
 			newItem.GetComponent<RectTransform>().position = GetComponent<RectTransform>().position;
+			Manager.Fire.SaveItemToDatabase(Array.IndexOf(Manager.Inven.InventoryUI.InventorySlots, this), newItem.itemName);
 		}
 	}
 
@@ -45,6 +47,8 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IDropHandler, 
 
 		if (tempItem != null)
 		{
+			int currentSlotIndex = Array.IndexOf(Manager.Inven.InventoryUI.InventorySlots, this);
+			Manager.Fire.SaveItemToDatabase(currentSlotIndex, tempItem.itemName);
 			tempItem.parentSlot.currentItem = null;
 		}
 
@@ -65,6 +69,8 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IDropHandler, 
 			draggedSlot.currentItem = tempItem;
 			tempItem.parentSlot = draggedSlot;
 		}
+		Manager.Fire.SaveItemToDatabase(Array.IndexOf(Manager.Inven.InventoryUI.InventorySlots, draggedSlot), draggedSlot.currentItem != null ? draggedSlot.currentItem.itemName : null);
+		Manager.Fire.SaveItemToDatabase(Array.IndexOf(Manager.Inven.InventoryUI.InventorySlots, this), currentItem != null ? currentItem.itemName : "");
 	}
 
 	public void OnPointerExit(PointerEventData eventData)

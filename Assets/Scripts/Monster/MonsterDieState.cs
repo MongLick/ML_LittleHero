@@ -1,3 +1,4 @@
+using ExitGames.Client.Photon;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
@@ -27,6 +28,6 @@ public class MonsterDieState : BaseState<MonsterStateType>
 	{
 		monster.Animator.SetTrigger("Die");
 		yield return new WaitForSeconds(monster.DieDelay);
-		monster.gameObject.SetActive(false);
+		monster.PooledObject.Release();
 	}
 }

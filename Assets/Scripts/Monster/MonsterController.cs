@@ -8,6 +8,8 @@ using static MonsterState;
 
 public class MonsterController : MonoBehaviour, IDamageable
 {
+	[SerializeField] PooledObject pooledObject;
+	public PooledObject PooledObject { get { return pooledObject; } }
 	[SerializeField] MonsterController monsterCon;
 	public MonsterController MonsterCon { get { return monsterCon; } set { monsterCon = value; } }
 	[SerializeField] float attackCooltime;
@@ -22,13 +24,15 @@ public class MonsterController : MonoBehaviour, IDamageable
 	[SerializeField] Transform target;
 	public Transform Target { get { return target; } }
 	[SerializeField] Transform spawnPos;
-	public Transform SpawnPos { get { return spawnPos; } }
+	public Transform SpawnPos { get { return spawnPos; } set { spawnPos = value; } }
 	[SerializeField] Animator animator;
 	public Animator Animator { get { return animator; } }
 	[SerializeField] StateMachine<MonsterStateType> monsterState;
 	[SerializeField] MonsterStateType currentState;
 	[SerializeField] int hp;
-	public int Hp { get { return hp; } }
+	public int Hp { get { return hp; } set { hp = value; } }
+	[SerializeField] int maxHp;
+	public int MaxHp { get { return maxHp; } }
 	[SerializeField] float moveDetectionRadius;
 	public float MoveDetectionRadius { get { return moveDetectionRadius; } set { moveDetectionRadius = value; } }
 	[SerializeField] float attackDetectionRadius;

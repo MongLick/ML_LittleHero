@@ -28,6 +28,11 @@ public class LittleForestScene : BaseScene
 
 	private void OnEnable()
 	{
+		LoadCharacterData();
+	}
+
+	private void LoadCharacterData()
+	{
 		if (Manager.Fire.IsLeft)
 		{
 			Manager.Fire.DB
@@ -67,9 +72,27 @@ public class LittleForestScene : BaseScene
 					{
 						nicknameUI.text = nickName;
 					}
-					EquipItems(weapon, shield, cloak);
 					UserData.CharacterType characterType = (type == "0") ? UserData.CharacterType.Man : UserData.CharacterType.WoMan;
-					Manager.Data.UserData = new UserData(nickName, characterType, "Left", posX, posY, posZ, "LittleForestScene", health, mana, gold, weapon, shield, cloak, new List<string>(), new Dictionary<string, QuestData>());
+					Manager.Data.UserData = new UserData(nickName, characterType, "Left", posX, posY, posZ, "LittleForestScene", health, mana, gold, weapon, shield, cloak, new Dictionary<int, InventorySlotData>(), new Dictionary<string, QuestData>());
+					EquipItems(weapon, shield, cloak);
+					var inventoryData = leftSnapshot.Child("inventory");
+
+					foreach (var item in inventoryData.Children)
+					{
+						int slotIndex = int.Parse(item.Key);
+						string itemName = item.Child("itemName").Value.ToString();
+
+						if (slotIndex < Manager.Inven.InventoryUI.InventorySlots.Length)
+						{
+							InventorySlot slot = Manager.Inven.InventoryUI.InventorySlots[slotIndex];
+
+							if (!string.IsNullOrEmpty(itemName))
+							{
+								InventoryIcon newIcon = Instantiate(FindItemPrefab(itemName)).GetComponent<InventoryIcon>();
+								slot.AddItem(newIcon);
+							}
+						}
+					}
 				}
 			});
 		}
@@ -113,8 +136,26 @@ public class LittleForestScene : BaseScene
 						nicknameUI.text = nickName;
 					}
 					UserData.CharacterType characterType = (type == "0") ? UserData.CharacterType.Man : UserData.CharacterType.WoMan;
-					Manager.Data.UserData = new UserData(nickName, characterType, "Right", posX, posY, posZ, "LittleForestScene", health, mana, gold, weapon, shield, cloak, new List<string>(), new Dictionary<string, QuestData>());
+					Manager.Data.UserData = new UserData(nickName, characterType, "Right", posX, posY, posZ, "LittleForestScene", health, mana, gold, weapon, shield, cloak, new Dictionary<int, InventorySlotData>(), new Dictionary<string, QuestData>());
 					EquipItems(weapon, shield, cloak);
+					var inventoryData = rightSnapshot.Child("inventory");
+
+					foreach (var item in inventoryData.Children)
+					{
+						int slotIndex = int.Parse(item.Key);
+						string itemName = item.Child("itemName").Value.ToString();
+
+						if (slotIndex < Manager.Inven.InventoryUI.InventorySlots.Length)
+						{
+							InventorySlot slot = Manager.Inven.InventoryUI.InventorySlots[slotIndex];
+
+							if (!string.IsNullOrEmpty(itemName))
+							{
+								InventoryIcon newIcon = Instantiate(FindItemPrefab(itemName)).GetComponent<InventoryIcon>();
+								slot.AddItem(newIcon);
+							}
+						}
+					}
 				}
 			});
 		}
