@@ -26,8 +26,10 @@ public class MonsterDieState : BaseState<MonsterStateType>
 
 	private IEnumerator DieCoroutine()
 	{
+		monster.OnMonsterDie();
 		monster.Animator.SetTrigger("Die");
 		yield return new WaitForSeconds(monster.DieDelay);
+		monster.OnDieEvent?.Invoke(monster);
 		monster.PooledObject.Release();
 	}
 }

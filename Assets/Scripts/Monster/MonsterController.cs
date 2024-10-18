@@ -1,13 +1,20 @@
+using Firebase.Database;
+using Firebase.Extensions;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 using UnityEngine.Playables;
 using static MonsterState;
 
 public class MonsterController : MonoBehaviour, IDamageable
 {
+	public enum CharacterType { Mushroom, Cactus }
+	[SerializeField] CharacterType type;
+	[SerializeField] UnityEvent<MonsterController> onDieEvent;
+	public UnityEvent<MonsterController> OnDieEvent { get { return onDieEvent; } set { onDieEvent = value; } }
 	[SerializeField] PooledObject pooledObject;
 	public PooledObject PooledObject { get { return pooledObject; } }
 	[SerializeField] MonsterController monsterCon;
@@ -18,7 +25,7 @@ public class MonsterController : MonoBehaviour, IDamageable
 	[SerializeField] GameObject attack;
 	public GameObject Attack { get { return attack; } set { attack = value; } }
 	[SerializeField] BoxCollider boxCollider;
-	public BoxCollider BoxCollider { get { return boxCollider; }  set { BoxCollider = value; }}
+	public BoxCollider BoxCollider { get { return boxCollider; } set { BoxCollider = value; } }
 	[SerializeField] NavMeshAgent agent;
 	public NavMeshAgent Agent { get { return agent; } }
 	[SerializeField] Transform target;
@@ -40,9 +47,9 @@ public class MonsterController : MonoBehaviour, IDamageable
 	[SerializeField] float maxDistance;
 	public float MaxDistance { get { return maxDistance; } }
 	[SerializeField] float spawnDistance;
-	public float SpawnDistance { get {return spawnDistance; } set { spawnDistance = value; } }
+	public float SpawnDistance { get { return spawnDistance; } set { spawnDistance = value; } }
 	[SerializeField] LayerMask playerLayer;
-	public LayerMask PlayerLayer { get { return playerLayer; }}
+	public LayerMask PlayerLayer { get { return playerLayer; } }
 	[SerializeField] float attackDelay;
 	public float AttackDelay { get { return attackDelay; } }
 	[SerializeField] float takeHitDelay;
@@ -140,13 +147,21 @@ public class MonsterController : MonoBehaviour, IDamageable
 	private void MoveCheck()
 	{
 		Collider[] players = Physics.OverlapSphere(transform.position, moveDetectionRadius, playerLayer);
+		bool foundAlivePlayer = false;
 
-		if (players.Length > 0)
+		foreach (Collider playerCollider in players)
 		{
-			isMove = true;
-			target = players[0].transform;
+			PlayerController player = playerCollider.GetComponent<PlayerController>();
+			if (player != null && !player.IsDie)
+			{
+				foundAlivePlayer = true;
+				target = player.transform;
+				isMove = true;
+				break;
+			}
 		}
-		else
+
+		if (!foundAlivePlayer)
 		{
 			isMove = false;
 			target = null;
@@ -156,7 +171,19 @@ public class MonsterController : MonoBehaviour, IDamageable
 	private void AttackCheck()
 	{
 		Collider[] players = Physics.OverlapSphere(transform.position, attackDetectionRadius, playerLayer);
-		if (players.Length > 0)
+		bool foundAlivePlayer = false;
+
+		foreach (Collider playerCollider in players)
+		{
+			PlayerController player = playerCollider.GetComponent<PlayerController>();
+			if (player != null && !player.IsDie)
+			{
+				foundAlivePlayer = true;
+				break;
+			}
+		}
+
+		if (foundAlivePlayer)
 		{
 			isAttack = true;
 		}
@@ -195,5 +222,45 @@ public class MonsterController : MonoBehaviour, IDamageable
 	public void Attackfalse()
 	{
 		attack.SetActive(false);
+	}
+
+	public void Initialize()
+	{
+		hp = maxHp;
+		isDie = false;
+		isMove = false;
+		animator.SetBool("Move", false);
+		monsterState.ChangeState(MonsterStateType.Idle);
+	}
+
+	public void OnMonsterDie()
+	{
+		string questID = "secondQuest";
+		Manager.Fire.DB
+		.GetReference("UserData")
+		.Child(Manager.Fire.UserID)
+		.Child(Manager.Fire.IsLeft ? "Left" : "Right")
+		.Child("quests")
+		.Child(questID)
+		.GetValueAsync()
+		.ContinueWithOnMainThread(task =>
+		{
+			if (task.IsCompleted && task.Result != null)
+			{
+				DataSnapshot questSnapshot = task.Result;
+				int collectedMushrooms = (int)questSnapshot.Child("mushroomCount").Value;
+				int collectedCacti = (int)questSnapshot.Child("cactusCount").Value;
+				if (type == CharacterType.Mushroom)
+				{
+					collectedMushrooms++;
+					questSnapshot.Reference.Child("mushroomCount").SetValueAsync(collectedMushrooms);
+				}
+				else if (type == CharacterType.Cactus)
+				{
+					collectedCacti++;
+					questSnapshot.Reference.Child("cactusCount").SetValueAsync(collectedCacti);
+				}
+			}
+		});
 	}
 }

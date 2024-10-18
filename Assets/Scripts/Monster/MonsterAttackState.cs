@@ -30,9 +30,12 @@ public class MonsterAttackState : BaseState<MonsterStateType>
 
 	public override void Update()
 	{
-		Vector3 direction = (monster.Target.position - monster.transform.position).normalized;
-		Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-		monster.transform.rotation = Quaternion.Slerp(monster.transform.rotation, lookRotation, Time.deltaTime * 5f);
+		if (monster.Target != null)
+		{
+			Vector3 direction = (monster.Target.position - monster.transform.position).normalized;
+			Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+			monster.transform.rotation = Quaternion.Slerp(monster.transform.rotation, lookRotation, Time.deltaTime * 5f);
+		}
 
 		if (monster.IsAttack)
 		{

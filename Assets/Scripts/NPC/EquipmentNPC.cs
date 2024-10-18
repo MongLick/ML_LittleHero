@@ -163,10 +163,39 @@ public class EquipmentNPC : MonoBehaviour
 			}
 			else
 			{
-				scene.TalkText.text = "버섯 몬스터 3마리, 선인장 몬스터 3자리를 잡고 와라.";
 				string secondQuestID = "secondQuest";
-				string secondQuestName = "두 번째 퀘스트";
-				Manager.Fire.AddQuest(position, secondQuestID, secondQuestName);
+				Manager.Fire.DB
+				.GetReference("UserData")
+				.Child(Manager.Fire.UserID)
+				.Child(Manager.Fire.IsLeft ? "Left" : "Right")
+				.Child("quests")
+				.Child(secondQuestID)
+				.GetValueAsync()
+				.ContinueWithOnMainThread(task =>
+				{
+					if (task.IsCompleted && task.Result != null)
+					{
+						DataSnapshot secondQuestSnapshot = task.Result;
+						bool isSecondQuestCompleted = secondQuestSnapshot.Child("isCompleted").Value != null && (bool)secondQuestSnapshot.Child("isCompleted").Value;
+
+						if (isSecondQuestCompleted)
+						{
+							scene.TalkText.text = "완벽하군 이제 물약상인에게 가보도록 해";
+						}
+						else
+						{
+							if (secondQuestSnapshot.Child("questName").Value == null)
+							{
+								scene.TalkText.text = "버섯 몬스터 3마리, 선인장 몬스터 3마리를 잡고 와라.";
+								Manager.Fire.AddQuest(position, secondQuestID, "두 번째 퀘스트");
+							}
+							else
+							{
+								scene.TalkText.text = "버섯 몬스터 3마리, 선인장 몬스터 3마리를 잡고 다시 말을 걸어라";
+							}
+						}
+					}
+				});
 			}
 		});
 	}

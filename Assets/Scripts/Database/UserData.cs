@@ -56,7 +56,7 @@ public class UserData
 	public event Action<int> OnHealthChanged;
 	public int Health { get { return health; } set { { health = value; OnHealthChanged?.Invoke(health); } } }
 	public event Action<int> OnManaChanged;
-	public int Mana { get { return health; } set { { Mana = value; OnManaChanged?.Invoke(Mana); } } }
+	public int Mana { get { return mana; } set { { mana = value; OnManaChanged?.Invoke(Mana); } } }
 }
 
 [Serializable]
@@ -65,12 +65,16 @@ public class QuestData
 	public string questID;
 	public string questName;
 	public bool isCompleted;
+	public int mushroomCount;
+	public int cactusCount;
 
-	public QuestData(string questID, string questName, bool isCompleted)
+	public QuestData(string questID, string questName, bool isCompleted, int mushroomCount = 0, int cactusCount = 0)
 	{
 		this.questID = questID;
 		this.questName = questName;
 		this.isCompleted = isCompleted;
+		this.mushroomCount = mushroomCount;
+		this.cactusCount = cactusCount;
 	}
 }
 

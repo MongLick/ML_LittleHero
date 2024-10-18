@@ -101,15 +101,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 		Move();
 		JumpMove();
 		CoolTimeCheck();
-
-		/*if (Input.GetKeyDown(KeyCode.G))
-		{
-			AddPotion("hpPotion");
-		}
-		if (Input.GetKeyDown(KeyCode.Alpha1))
-		{
-			quickSlot.UsePotion();
-		}*/
 	}
 
 	private void OnMove(InputValue value)
