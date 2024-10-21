@@ -57,6 +57,8 @@ public class UserData
 	public int Health { get { return health; } set { { health = value; OnHealthChanged?.Invoke(health); } } }
 	public event Action<int> OnManaChanged;
 	public int Mana { get { return mana; } set { { mana = value; OnManaChanged?.Invoke(Mana); } } }
+	public event Action OnGoldChanged;
+	public int Gold { get { return gold; } set { { gold = value; OnGoldChanged?.Invoke(); } } }
 }
 
 [Serializable]

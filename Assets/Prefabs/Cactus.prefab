@@ -506,7 +506,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.5, y: 1.5, z: 1.5}
+  m_Size: {x: 3.5, y: 1.5, z: 2.5}
   m_Center: {x: 0, y: 0.5, z: 1}
 --- !u!114 &364828856806070142
 MonoBehaviour:
@@ -775,7 +775,7 @@ MonoBehaviour:
   hp: 5
   maxHp: 5
   moveDetectionRadius: 7
-  attackDetectionRadius: 1.5
+  attackDetectionRadius: 2.5
   maxDistance: 15
   spawnDistance: 0
   playerLayer:
@@ -820,7 +820,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 360
-  m_StoppingDistance: 1.5
+  m_StoppingDistance: 2.5
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1

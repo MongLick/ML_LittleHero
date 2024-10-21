@@ -14,6 +14,7 @@ public class PlayerUI : MonoBehaviour
 	[SerializeField] TMP_Text manaText;
 	[SerializeField] Slider healthSlider;
 	[SerializeField] Slider manaSlider;
+	[SerializeField] TMP_Text glodText;
 
 	private void Awake()
 	{
@@ -31,6 +32,8 @@ public class PlayerUI : MonoBehaviour
 		healthSlider.value = Manager.Data.UserData.maxHealth;
 		manaSlider.maxValue = Manager.Data.UserData.maxMana;
 		manaSlider.value = Manager.Data.UserData.maxMana;
+		Manager.Data.UserData.OnGoldChanged += UpdateGold;
+		UpdateGold();
 	}
 
 	private void Menu()
@@ -55,5 +58,10 @@ public class PlayerUI : MonoBehaviour
 	{
 		manaText.text = $"{newMana}/{Manager.Data.UserData.maxHealth}";
 		manaSlider.value = newMana;
+	}
+
+	private void UpdateGold()
+	{
+		glodText.text = $"{Manager.Data.UserData.Gold}";
 	}
 }

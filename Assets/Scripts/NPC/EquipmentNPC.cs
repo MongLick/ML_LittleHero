@@ -83,83 +83,45 @@ public class EquipmentNPC : MonoBehaviour
 			}
 			else if (!questData.isCompleted)
 			{
-				if (Manager.Fire.IsLeft)
+				Manager.Fire.DB
+				.GetReference("UserData")
+				.Child(Manager.Fire.UserID)
+				.Child(position)
+				.GetValueAsync()
+				.ContinueWithOnMainThread(task =>
 				{
-					Manager.Fire.DB
-					.GetReference("UserData")
-					.Child(Manager.Fire.UserID)
-					.Child("Left")
-					.GetValueAsync()
-					.ContinueWithOnMainThread(task =>
+					if (task.IsCompleted && task.Result != null)
 					{
-						if (task.IsCompleted && task.Result != null)
-						{
-							DataSnapshot LefttSnapshot = task.Result;
-							string weapon = LefttSnapshot.Child("weaponSlot").Value?.ToString();
-							string shield = LefttSnapshot.Child("shieldSlot").Value?.ToString();
-							string cloak = LefttSnapshot.Child("cloakSlot").Value?.ToString();
+						DataSnapshot LefttSnapshot = task.Result;
+						string weapon = LefttSnapshot.Child("weaponSlot").Value?.ToString();
+						string shield = LefttSnapshot.Child("shieldSlot").Value?.ToString();
+						string cloak = LefttSnapshot.Child("cloakSlot").Value?.ToString();
 
-							if (string.IsNullOrEmpty(weapon) || string.IsNullOrEmpty(shield) || string.IsNullOrEmpty(cloak))
-							{
-								scene.TalkText.text = "아직 장비를 착용하지 않았어. 무기, 방패, 망토 장비를 착용해봐.";
-							}
-							else
-							{
-								scene.TalkText.text = "장비를 모두 착용했군! 이제 다음 퀘스트를 진행해도 좋다.";
-								Manager.Fire.DB
+						if (string.IsNullOrEmpty(weapon) || string.IsNullOrEmpty(shield) || string.IsNullOrEmpty(cloak))
+						{
+							scene.TalkText.text = "아직 장비를 착용하지 않았어. 무기, 방패, 망토 장비를 착용해봐.";
+						}
+						else
+						{
+							scene.TalkText.text = "장비를 모두 착용했군! 이제 다음 퀘스트를 진행해도 좋다.";
+							Manager.Fire.DB
 								.GetReference("UserData")
 								.Child(Manager.Fire.UserID)
-								.Child("Left")
+								.Child(position)
 								.Child("quests")
 								.Child(questID)
 								.Child("isCompleted")
 								.SetValueAsync(true)
 								.ContinueWithOnMainThread(task =>
 								{
-
+									string secondQuestID = "secondQuest";
+									string secondQuestName = "두 번째 퀘스트";
+									Manager.Fire.AddQuest(position, secondQuestID, secondQuestName);
+									scene.TalkText.text = "버섯 몬스터 3마리, 선인장 몬스터 3마리를 잡고 와라.";
 								});
-							}
 						}
-					});
-				}
-				else
-				{
-					Manager.Fire.DB
-					.GetReference("UserData")
-					.Child(Manager.Fire.UserID)
-					.Child("Right")
-					.GetValueAsync()
-					.ContinueWithOnMainThread(task =>
-					{
-						if (task.IsCompleted && task.Result != null)
-						{
-							DataSnapshot rightSnapshot = task.Result;
-							string weapon = rightSnapshot.Child("weaponSlot").Value?.ToString();
-							string shield = rightSnapshot.Child("shieldSlot").Value?.ToString();
-							string cloak = rightSnapshot.Child("cloakSlot").Value?.ToString();
-							if (string.IsNullOrEmpty(weapon) || string.IsNullOrEmpty(shield) || string.IsNullOrEmpty(cloak))
-							{
-								scene.TalkText.text = "아직 장비를 착용하지 않았어. 장비를 착용해봐.";
-							}
-							else
-							{
-								scene.TalkText.text = "장비를 모두 착용했군! 이제 다음 퀘스트를 진행해도 좋다.";
-								Manager.Fire.DB
-								.GetReference("UserData")
-								.Child(Manager.Fire.UserID)
-								.Child("Right")
-								.Child("quests")
-								.Child(questID)
-								.Child("isCompleted")
-								.SetValueAsync(true)
-								.ContinueWithOnMainThread(task =>
-								{
-
-								});
-							}
-						}
-					});
-				}
+					}
+				});
 			}
 			else
 			{
@@ -167,7 +129,7 @@ public class EquipmentNPC : MonoBehaviour
 				Manager.Fire.DB
 				.GetReference("UserData")
 				.Child(Manager.Fire.UserID)
-				.Child(Manager.Fire.IsLeft ? "Left" : "Right")
+				.Child(position)
 				.Child("quests")
 				.Child(secondQuestID)
 				.GetValueAsync()
@@ -184,15 +146,7 @@ public class EquipmentNPC : MonoBehaviour
 						}
 						else
 						{
-							if (secondQuestSnapshot.Child("questName").Value == null)
-							{
-								scene.TalkText.text = "버섯 몬스터 3마리, 선인장 몬스터 3마리를 잡고 와라.";
-								Manager.Fire.AddQuest(position, secondQuestID, "두 번째 퀘스트");
-							}
-							else
-							{
-								scene.TalkText.text = "버섯 몬스터 3마리, 선인장 몬스터 3마리를 잡고 다시 말을 걸어라";
-							}
+							scene.TalkText.text = "버섯 몬스터 3마리, 선인장 몬스터 3마리를 잡고 다시 말을 걸어라";
 						}
 					}
 				});

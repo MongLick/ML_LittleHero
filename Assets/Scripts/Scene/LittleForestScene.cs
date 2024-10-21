@@ -93,6 +93,7 @@ public class LittleForestScene : BaseScene
 							}
 						}
 					}
+					Manager.Data.UserData.Gold = gold;
 				}
 			});
 		}
@@ -156,6 +157,8 @@ public class LittleForestScene : BaseScene
 							}
 						}
 					}
+
+					Manager.Data.UserData.Gold = gold;
 				}
 			});
 		}

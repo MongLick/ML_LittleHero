@@ -52,6 +52,7 @@ public class MonsterTakeHitState : BaseState<MonsterStateType>
 
 	private IEnumerator TakeHitCoroutine()
 	{
+		monster.Attack.SetActive(false);
 		monster.Animator.SetTrigger("TakeHit");
 		yield return new WaitForSeconds(monster.TakeHitDelay);
 		monster.IsTakeHit = false;

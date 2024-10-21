@@ -3,8 +3,10 @@ using Firebase.Auth;
 using Firebase.Database;
 using Firebase.Extensions;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static MonsterController;
 using static UserData;
 
 public class FirebaseManager : Singleton<FirebaseManager>
@@ -22,7 +24,7 @@ public class FirebaseManager : Singleton<FirebaseManager>
 	public bool IsValid { get { return isValid; } }
 
 	private bool isLeft;
-	public bool IsLeft { get { return isLeft; }  set { isLeft = value; } }
+	public bool IsLeft { get { return isLeft; } set { isLeft = value; } }
 
 	private string userID;
 	public string UserID { get { return userID; } set { userID = value; } }
@@ -75,7 +77,7 @@ public class FirebaseManager : Singleton<FirebaseManager>
 			.SetRawJsonValueAsync(json)
 			.ContinueWithOnMainThread(task =>
 			{
-				
+
 			});
 	}
 
@@ -89,7 +91,7 @@ public class FirebaseManager : Singleton<FirebaseManager>
 		.Child(position);
 		reference.Child("weaponSlot").SetValueAsync(weapon).ContinueWithOnMainThread(task =>
 		{
-			
+
 		});
 	}
 	public void UpdateShieldSlot(string position, string shield)
@@ -194,7 +196,88 @@ public class FirebaseManager : Singleton<FirebaseManager>
 			})
 			.ContinueWithOnMainThread(task =>
 			{
-				
+
 			});
+	}
+
+	public void OnMonsterDie(MonsterType type)
+	{
+		string questID = "secondQuest";
+
+		Manager.Fire.DB
+			.GetReference("UserData")
+			.Child(Manager.Fire.UserID)
+			.Child(Manager.Fire.IsLeft ? "Left" : "Right")
+			.Child("quests")
+			.Child(questID)
+			.GetValueAsync()
+			.ContinueWithOnMainThread(task =>
+			{
+				if (task.IsCompleted)
+				{
+					if (task.Result != null)
+					{
+						DataSnapshot questSnapshot = task.Result;
+						int mushroomCount = 0;
+						int cactusCount = 0;
+
+						if (questSnapshot.Child("mushroomCount").Value != null)
+						{
+							mushroomCount = int.Parse(questSnapshot.Child("mushroomCount").Value.ToString());
+						}
+
+						if (questSnapshot.Child("cactusCount").Value != null)
+						{
+							cactusCount = int.Parse(questSnapshot.Child("cactusCount").Value.ToString());
+						}
+
+						if (type == MonsterType.Mushroom)
+						{
+							mushroomCount++;
+							questSnapshot.Child("mushroomCount").Reference.SetValueAsync(mushroomCount);
+						}
+						else if (type == MonsterType.Cactus)
+						{
+							cactusCount++;
+							questSnapshot.Child("cactusCount").Reference.SetValueAsync(cactusCount);
+						}
+
+						if (mushroomCount >= 3 && cactusCount >= 3)
+						{
+							questSnapshot.Child("isCompleted").Reference.SetValueAsync(true);
+						}
+					}
+				}
+			});
+	}
+
+	public void UpdateGoldInDatabase(int newGold)
+	{
+		Manager.Fire.DB
+		.GetReference("UserData")
+		.Child(Manager.Fire.UserID)
+		.Child(Manager.Fire.IsLeft ? "Left" : "Right")
+		.Child("gold")
+		.GetValueAsync()
+		.ContinueWithOnMainThread(task =>
+		{
+			if (task.IsCompleted && !task.IsFaulted)
+			{
+				DataSnapshot goldSnapshot = task.Result;
+				int currentGold = int.Parse(goldSnapshot.Value.ToString());
+				int updatedGold = currentGold + newGold;
+
+				Manager.Fire.DB
+					.GetReference("UserData")
+					.Child(Manager.Fire.UserID)
+					.Child(Manager.Fire.IsLeft ? "Left" : "Right")
+					.Child("gold")
+					.SetValueAsync(updatedGold)
+					.ContinueWithOnMainThread(updateTask =>
+					{
+
+					});
+			}
+		});
 	}
 }

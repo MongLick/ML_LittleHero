@@ -11,8 +11,9 @@ using static MonsterState;
 
 public class MonsterController : MonoBehaviour, IDamageable
 {
-	public enum CharacterType { Mushroom, Cactus }
-	[SerializeField] CharacterType type;
+	public enum MonsterType { Mushroom, Cactus }
+	[SerializeField] MonsterType type;
+	public MonsterType Type { get { return type; } }
 	[SerializeField] UnityEvent<MonsterController> onDieEvent;
 	public UnityEvent<MonsterController> OnDieEvent { get { return onDieEvent; } set { onDieEvent = value; } }
 	[SerializeField] PooledObject pooledObject;
@@ -230,37 +231,7 @@ public class MonsterController : MonoBehaviour, IDamageable
 		isDie = false;
 		isMove = false;
 		animator.SetBool("Move", false);
+		boxCollider.enabled = true;
 		monsterState.ChangeState(MonsterStateType.Idle);
-	}
-
-	public void OnMonsterDie()
-	{
-		string questID = "secondQuest";
-		Manager.Fire.DB
-		.GetReference("UserData")
-		.Child(Manager.Fire.UserID)
-		.Child(Manager.Fire.IsLeft ? "Left" : "Right")
-		.Child("quests")
-		.Child(questID)
-		.GetValueAsync()
-		.ContinueWithOnMainThread(task =>
-		{
-			if (task.IsCompleted && task.Result != null)
-			{
-				DataSnapshot questSnapshot = task.Result;
-				int collectedMushrooms = (int)questSnapshot.Child("mushroomCount").Value;
-				int collectedCacti = (int)questSnapshot.Child("cactusCount").Value;
-				if (type == CharacterType.Mushroom)
-				{
-					collectedMushrooms++;
-					questSnapshot.Reference.Child("mushroomCount").SetValueAsync(collectedMushrooms);
-				}
-				else if (type == CharacterType.Cactus)
-				{
-					collectedCacti++;
-					questSnapshot.Reference.Child("cactusCount").SetValueAsync(collectedCacti);
-				}
-			}
-		});
 	}
 }

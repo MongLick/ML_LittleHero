@@ -1506,7 +1506,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144234c88b6d9e1409fec4496e5233ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 1764813146959633302}
+  currentItem: {fileID: 0}
 --- !u!1 &830514302754345880
 GameObject:
   m_ObjectHideFlags: 0
@@ -1899,7 +1899,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144234c88b6d9e1409fec4496e5233ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 4237310729902446260}
+  currentItem: {fileID: 0}
 --- !u!1 &953936584872696240
 GameObject:
   m_ObjectHideFlags: 0
@@ -2517,6 +2517,10 @@ MonoBehaviour:
   settingButton: {fileID: 1661400241655219176}
   playerMenuUI: {fileID: 1058614650194437127}
   playerSettingUI: {fileID: 4408243822429668786}
+  healthText: {fileID: 0}
+  manaText: {fileID: 0}
+  healthSlider: {fileID: 0}
+  manaSlider: {fileID: 0}
 --- !u!1 &1225732858243628021
 GameObject:
   m_ObjectHideFlags: 0
@@ -4854,7 +4858,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144234c88b6d9e1409fec4496e5233ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 8669338225689070761}
+  currentItem: {fileID: 0}
 --- !u!1 &2299898467970187042
 GameObject:
   m_ObjectHideFlags: 0
@@ -5157,7 +5161,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144234c88b6d9e1409fec4496e5233ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 2132812760124290603}
+  currentItem: {fileID: 0}
 --- !u!1 &2421296243848945861
 GameObject:
   m_ObjectHideFlags: 0
@@ -5440,13 +5444,12 @@ MonoBehaviour:
   closestDistance: 3.4028235e+38
   hitColliders: []
   detectionRange: 300
-  monsterDistance: 1
+  monsterDistance: 1.5
   attackCooltime: 0.5
   cooltime: 0
   attack: {fileID: 1621895851606373713}
   playerInput: {fileID: 1682567779185050240}
   gameOverCamera: {fileID: 1818844763979608707}
-  hp: 100
   currentState: 0
   controller: {fileID: 4558170560650598739}
   animator: {fileID: 7145009450000939628}
@@ -5464,6 +5467,30 @@ MonoBehaviour:
   attackDelay: 0.5
   takeHitDelay: 0.3
   stunnedDelay: 2
+  inventoryUI: {fileID: 0}
+  quickSlot: {fileID: 0}
+  range: 0
+  colliders:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!143 &4558170560650598739
 CharacterController:
   m_ObjectHideFlags: 0
@@ -6180,7 +6207,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144234c88b6d9e1409fec4496e5233ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 1761222219777730704}
+  currentItem: {fileID: 0}
 --- !u!1 &2900842158445130329
 GameObject:
   m_ObjectHideFlags: 0
@@ -6451,23 +6478,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   closeButton: {fileID: 1547452040917371763}
-  slots:
-  - {fileID: 2167383580382555935}
-  - {fileID: 1260789736394158148}
-  - {fileID: 2955853827328505372}
-  - {fileID: 4818965327070805499}
-  - {fileID: 1019329753915848917}
-  - {fileID: 1563942046614599676}
-  - {fileID: 443742642524424780}
-  - {fileID: 5415147305290605017}
-  - {fileID: 6615555378677108150}
-  - {fileID: 4666105538666144640}
-  - {fileID: 1481401089391850899}
-  - {fileID: 6473317149476057747}
-  - {fileID: 2407961101935491771}
-  - {fileID: 4750228347042026275}
-  - {fileID: 687511667841704548}
-  - {fileID: 6736107573609815351}
+  inventorySlots: []
 --- !u!1 &2976637602580798574
 GameObject:
   m_ObjectHideFlags: 0
@@ -7305,7 +7316,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144234c88b6d9e1409fec4496e5233ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 661907691460250853}
+  currentItem: {fileID: 0}
 --- !u!1 &3265304495322701739
 GameObject:
   m_ObjectHideFlags: 0
@@ -7473,7 +7484,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144234c88b6d9e1409fec4496e5233ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 6869470248913517648}
+  currentItem: {fileID: 0}
 --- !u!1 &3310987342473664388
 GameObject:
   m_ObjectHideFlags: 0
@@ -7526,6 +7537,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   closeButton: {fileID: 6763518415265340929}
+  equipmentSlots: []
+  inventoryUI: {fileID: 0}
 --- !u!1 &3333732305355825233
 GameObject:
   m_ObjectHideFlags: 0
@@ -7866,7 +7879,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144234c88b6d9e1409fec4496e5233ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 4923819771474186326}
+  currentItem: {fileID: 0}
 --- !u!1 &3454119861647902562
 GameObject:
   m_ObjectHideFlags: 0
@@ -9203,7 +9216,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144234c88b6d9e1409fec4496e5233ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 1990166796869730506}
+  currentItem: {fileID: 0}
 --- !u!1 &4181211935238192901
 GameObject:
   m_ObjectHideFlags: 0
@@ -13516,7 +13529,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144234c88b6d9e1409fec4496e5233ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 3602450101658334024}
+  currentItem: {fileID: 0}
 --- !u!1 &6040643758702555670
 GameObject:
   m_ObjectHideFlags: 0
@@ -13652,7 +13665,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144234c88b6d9e1409fec4496e5233ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 3134937595523013495}
+  currentItem: {fileID: 0}
 --- !u!1 &6119136654802663152
 GameObject:
   m_ObjectHideFlags: 0
@@ -14608,7 +14621,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144234c88b6d9e1409fec4496e5233ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 7417600414251699833}
+  currentItem: {fileID: 0}
 --- !u!1 &6596867282518724905
 GameObject:
   m_ObjectHideFlags: 0
@@ -15691,7 +15704,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144234c88b6d9e1409fec4496e5233ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 1950096827949755949}
+  currentItem: {fileID: 0}
 --- !u!1 &6857744599632172281
 GameObject:
   m_ObjectHideFlags: 0
@@ -16781,7 +16794,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144234c88b6d9e1409fec4496e5233ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 3676908856968689775}
+  currentItem: {fileID: 0}
 --- !u!1 &7351562932656818580
 GameObject:
   m_ObjectHideFlags: 0
@@ -18325,7 +18338,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144234c88b6d9e1409fec4496e5233ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 6019849528805534427}
+  currentItem: {fileID: 0}
 --- !u!1 &8087654125867973010
 GameObject:
   m_ObjectHideFlags: 0
@@ -18578,7 +18591,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144234c88b6d9e1409fec4496e5233ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 5768372149584343278}
+  currentItem: {fileID: 0}
 --- !u!1 &8147176942504637976
 GameObject:
   m_ObjectHideFlags: 0
