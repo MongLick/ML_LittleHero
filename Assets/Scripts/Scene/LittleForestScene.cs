@@ -20,6 +20,8 @@ public class LittleForestScene : BaseScene
 	public Button TalkButton { get { return talkButton; } set { talkButton = value; } }
 	[SerializeField] Button closeButton;
 	public Button CloseButton { get { return closeButton; } set { closeButton = value; } }
+	[SerializeField] Shop shopBack;
+	public Shop ShopBack { get { return shopBack; } set { shopBack = value; } }
 
 	private void Awake()
 	{
@@ -89,7 +91,17 @@ public class LittleForestScene : BaseScene
 							if (!string.IsNullOrEmpty(itemName))
 							{
 								InventoryIcon newIcon = Instantiate(FindItemPrefab(itemName)).GetComponent<InventoryIcon>();
-								slot.AddItem(newIcon);
+								
+								if (item.Child("quantity").Exists)
+								{
+									int itemQuantity = int.Parse(item.Child("quantity").Value.ToString());
+									newIcon.quantity = itemQuantity;
+									shopBack.AddPotion(itemName);
+								}
+								else
+								{
+									slot.AddItem(newIcon);
+								}
 							}
 						}
 					}
@@ -153,7 +165,17 @@ public class LittleForestScene : BaseScene
 							if (!string.IsNullOrEmpty(itemName))
 							{
 								InventoryIcon newIcon = Instantiate(FindItemPrefab(itemName)).GetComponent<InventoryIcon>();
-								slot.AddItem(newIcon);
+
+								if (item.Child("quantity").Exists)
+								{
+									int itemQuantity = int.Parse(item.Child("quantity").Value.ToString());
+									newIcon.quantity = itemQuantity;
+									shopBack.AddPotion(itemName);
+								}
+								else
+								{
+									slot.AddItem(newIcon);
+								}
 							}
 						}
 					}

@@ -2,7 +2,6 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using static EquipmentSlot;
 
 public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
@@ -16,7 +15,7 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 	public InventorySlot parentSlot;
 	public EquipmentSlot equipmentSlot;
 	public bool isEquipment;
-	public InventoryUI InventoryUI; 
+	public InventoryUI InventoryUI;
 	public int quantity;
 	public TMP_Text quantityText;
 
@@ -74,7 +73,6 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 				{
 					slot.currentItem = null;
 					slot.UnequipItem();
-					//Manager.Fire.SaveItemToDatabase(Array.IndexOf(Manager.Inven.InventoryUI.InventorySlots, slot), "");
 					break;
 				}
 			}

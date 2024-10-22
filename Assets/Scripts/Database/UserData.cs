@@ -84,9 +84,11 @@ public class QuestData
 public class InventorySlotData
 {
 	public string itemName;
+	public int mumber;
 
-	public InventorySlotData(string itemName = "")
+	public InventorySlotData(string itemName = "", int mumber = 0)
 	{
 		this.itemName = itemName;
+		this.mumber = mumber;
 	}
 }
