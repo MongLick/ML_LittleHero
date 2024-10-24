@@ -12,7 +12,7 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 		InventoryIcon draggedItem = eventData.pointerDrag.GetComponent<InventoryIcon>();
 		if (draggedItem != null)
 		{
-			if (draggedItem.slotType == InventoryIcon.SlotType.hpPotion)
+			if (draggedItem.slotType == InventoryIcon.SlotType.hpPotion || draggedItem.slotType == InventoryIcon.SlotType.mpPotion)
 			{
 				if (currentItem == null)
 				{

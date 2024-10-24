@@ -90,16 +90,14 @@ public class LittleForestScene : BaseScene
 
 							if (!string.IsNullOrEmpty(itemName))
 							{
-								InventoryIcon newIcon = Instantiate(FindItemPrefab(itemName)).GetComponent<InventoryIcon>();
-								
 								if (item.Child("quantity").Exists)
 								{
 									int itemQuantity = int.Parse(item.Child("quantity").Value.ToString());
-									newIcon.quantity = itemQuantity;
-									shopBack.AddPotion(itemName);
+									shopBack.LoadPotion(itemName, slotIndex, itemQuantity);
 								}
 								else
 								{
+									InventoryIcon newIcon = Instantiate(FindItemPrefab(itemName)).GetComponent<InventoryIcon>();
 									slot.AddItem(newIcon);
 								}
 							}
@@ -164,17 +162,18 @@ public class LittleForestScene : BaseScene
 
 							if (!string.IsNullOrEmpty(itemName))
 							{
-								InventoryIcon newIcon = Instantiate(FindItemPrefab(itemName)).GetComponent<InventoryIcon>();
-
-								if (item.Child("quantity").Exists)
+								if (!string.IsNullOrEmpty(itemName))
 								{
-									int itemQuantity = int.Parse(item.Child("quantity").Value.ToString());
-									newIcon.quantity = itemQuantity;
-									shopBack.AddPotion(itemName);
-								}
-								else
-								{
-									slot.AddItem(newIcon);
+									if (item.Child("quantity").Exists)
+									{
+										int itemQuantity = int.Parse(item.Child("quantity").Value.ToString());
+										shopBack.LoadPotion(itemName, slotIndex, itemQuantity);
+									}
+									else
+									{
+										InventoryIcon newIcon = Instantiate(FindItemPrefab(itemName)).GetComponent<InventoryIcon>();
+										slot.AddItem(newIcon);
+									}
 								}
 							}
 						}

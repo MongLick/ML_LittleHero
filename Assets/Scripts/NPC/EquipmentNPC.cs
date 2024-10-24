@@ -7,8 +7,9 @@ public class EquipmentNPC : MonoBehaviour
 {
 	[SerializeField] InteractAdapter interactAdapter;
 	[SerializeField] LittleForestScene scene;
+	private bool isInteract;
 
-	private void Awake()
+private void Awake()
 	{
 		interactAdapter.OnInteracted.AddListener(OnInteract);
 		scene.TalkButton.onClick.AddListener(() => OnInteract(null));
@@ -19,6 +20,7 @@ public class EquipmentNPC : MonoBehaviour
 		if (scene.PlayerLayer.Contain(other.gameObject.layer))
 		{
 			scene.TalkButton.gameObject.SetActive(true);
+			isInteract = true;
 		}
 	}
 
@@ -27,6 +29,7 @@ public class EquipmentNPC : MonoBehaviour
 		if (scene.PlayerLayer.Contain(other.gameObject.layer))
 		{
 			scene.TalkButton.gameObject.SetActive(true);
+			isInteract = true;
 		}
 	}
 
@@ -36,13 +39,19 @@ public class EquipmentNPC : MonoBehaviour
 		{
 			scene.TalkButton.gameObject.SetActive(false);
 			scene.TalkBackImage.gameObject.SetActive(false);
+			isInteract = false;
 		}
 	}
 
 	private void OnInteract(PlayerController player)
 	{
-		scene.TalkButton.gameObject.SetActive(false);
+        if (!isInteract)
+        {
+			return;
+        }
+        scene.TalkButton.gameObject.SetActive(false);
 		scene.TalkBackImage.gameObject.SetActive(true);
+		scene.ShopBack.gameObject.SetActive(false);
 
 		string questID = "firstQuest";
 		string questName = "첫 번째 퀘스트";

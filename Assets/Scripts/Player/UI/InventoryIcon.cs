@@ -123,7 +123,7 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 		UpdateQuantityText();
 	}
 
-	private void UpdateQuantityText()
+	public void UpdateQuantityText()
 	{
 		if (quantityText != null)
 		{

@@ -7,6 +7,7 @@ public class ShopkeeperNPC : MonoBehaviour
 {
     [SerializeField] InteractAdapter interactAdapter;
     [SerializeField] LittleForestScene scene;
+	private bool isInteract;
 
 	private void Awake()
 	{
@@ -19,6 +20,7 @@ public class ShopkeeperNPC : MonoBehaviour
 		if (scene.PlayerLayer.Contain(other.gameObject.layer))
 		{
 			scene.TalkButton.gameObject.SetActive(true);
+			isInteract = true;
 		}
 	}
 
@@ -27,6 +29,7 @@ public class ShopkeeperNPC : MonoBehaviour
 		if (scene.PlayerLayer.Contain(other.gameObject.layer))
 		{
 			scene.TalkButton.gameObject.SetActive(true);
+			isInteract = true;
 		}
 	}
 
@@ -36,12 +39,19 @@ public class ShopkeeperNPC : MonoBehaviour
 		{
 			scene.TalkButton.gameObject.SetActive(false);
 			scene.TalkBackImage.gameObject.SetActive(false);
+			isInteract = false;
 		}
 	}
 
 	private void OnInteract(PlayerController player)
 	{
+		if (!isInteract)
+		{
+			return;
+		}
+
 		scene.TalkButton.gameObject.SetActive(false);
+		scene.TalkBackImage.gameObject.SetActive(false);
 		scene.ShopBack.gameObject.SetActive(true);
 	}
 }
