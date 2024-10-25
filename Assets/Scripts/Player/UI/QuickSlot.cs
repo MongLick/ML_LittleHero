@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -10,29 +11,57 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 	public void OnDrop(PointerEventData eventData)
 	{
 		InventoryIcon draggedItem = eventData.pointerDrag.GetComponent<InventoryIcon>();
-		if (draggedItem != null)
+		if (draggedItem == null) return;
+
+		QuickSlot originalSlot = draggedItem.quickSlot;
+		InventorySlot previousSlot = draggedItem.parentSlot;
+
+		if (draggedItem.slotType == InventoryIcon.SlotType.hpPotion || draggedItem.slotType == InventoryIcon.SlotType.mpPotion)
 		{
-			if (draggedItem.slotType == InventoryIcon.SlotType.hpPotion || draggedItem.slotType == InventoryIcon.SlotType.mpPotion)
+			InventoryIcon tempItem = currentItem;
+
+			if (currentItem == null)
 			{
-				if (currentItem == null)
+				currentItem = draggedItem;
+				draggedItem.transform.SetParent(transform);
+				draggedItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+
+				if (originalSlot != null)
 				{
-					currentItem = draggedItem;
-					draggedItem.transform.SetParent(transform);
-					draggedItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+					originalSlot.currentItem = null;
 				}
-				else
+			}
+			else
+			{
+				currentItem = draggedItem;
+				draggedItem.transform.SetParent(transform);
+				draggedItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+
+				if (originalSlot != null)
 				{
-					InventoryIcon tempItem = currentItem;
-
-					currentItem = draggedItem;
-					currentItem.transform.SetParent(transform);
-					currentItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-
-					tempItem.transform.SetParent(draggedItem.parentSlot.transform);
-					tempItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-
-					tempItem.parentSlot = draggedItem.parentSlot;
+					originalSlot.currentItem = tempItem;
+					if (tempItem != null)
+					{
+						tempItem.transform.SetParent(originalSlot.transform);
+						tempItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+					}
 				}
+				else if (previousSlot != null)
+				{
+					previousSlot.currentItem = tempItem;
+					if (tempItem != null)
+					{
+						tempItem.transform.SetParent(previousSlot.transform);
+						tempItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+					}
+				}
+			}
+
+			draggedItem.quickSlot = this;
+			if (tempItem != null)
+			{
+				tempItem.quickSlot = originalSlot;
+				tempItem.parentSlot = previousSlot;
 			}
 		}
 	}

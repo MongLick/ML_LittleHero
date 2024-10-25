@@ -84,7 +84,7 @@ public class HeroPanel : MonoBehaviour
 			inventory[i] = new InventorySlotData();
 		}
 
-		Manager.Fire.CreateCharacter(name, characterType, characterPosition, -25, 4, -7, "LittleForestScene", 100, 100, 0, null, null, null, inventory, new Dictionary<string, QuestData>());
+		Manager.Fire.CreateCharacter(name, characterType, characterPosition, -25, 4, -7, "LittleForestScene", 100, 100, 0, null, null, null, inventory, new Dictionary<string, QuestData>(), new InventorySlotData[4]);
 		panelController.SetActivePanel(PanelController.Panel.Main);
 		nickName.text = "";
 	}

@@ -21,9 +21,10 @@ public class UserData
 	public string cloakSlot;
 	public Dictionary<int, InventorySlotData> inventory;
 	public Dictionary<string, QuestData> quests;
+	public InventorySlotData[] quickSlots = new InventorySlotData[4];
 
 	public UserData(string nickName, CharacterType type, string position, float x, float y, float z, string scene,
-					int health, int mana, int gold, string weapon, string shield, string cloak, Dictionary<int, InventorySlotData> inventory, Dictionary<string, QuestData> quests)
+					int health, int mana, int gold, string weapon, string shield, string cloak, Dictionary<int, InventorySlotData> inventory, Dictionary<string, QuestData> quests, InventorySlotData[] quickSlots)
 	{
 		{
 			this.nickName = nickName;
@@ -42,12 +43,17 @@ public class UserData
 			this.shieldSlot = shield;
 			this.cloakSlot = cloak;
 			this.inventory = inventory ?? new Dictionary<int, InventorySlotData>();
+
 			for (int i = 0; i < 16; i++)
 			{
 				this.inventory[i] = new InventorySlotData();
 			}
 
 			this.quests = quests ?? new Dictionary<string, QuestData>();
+			for (int i = 0; i < quickSlots.Length; i++)
+			{
+				quickSlots[i] = new InventorySlotData();
+			}
 		}
 	}
 

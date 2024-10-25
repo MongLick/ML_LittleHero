@@ -14,6 +14,7 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 	public string itemName;
 	public InventorySlot parentSlot;
 	public EquipmentSlot equipmentSlot;
+	public QuickSlot quickSlot;
 	public bool isEquipment;
 	public InventoryUI InventoryUI;
 	public int quantity;
@@ -73,6 +74,26 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 				{
 					slot.currentItem = null;
 					slot.UnequipItem();
+					break;
+				}
+			}
+		}
+
+		quickSlot = transform.parent.GetComponent<QuickSlot>();
+
+		if (quickSlot != null)
+		{
+			quickSlot.currentItem = this;
+		}
+		else
+		{
+			QuickSlot[] quickSlot = FindObjectsOfType<QuickSlot>();
+
+			foreach (QuickSlot slot in quickSlot)
+			{
+				if (slot.currentItem != null && slot.currentItem.itemName == itemName)
+				{
+					slot.currentItem = null;
 					break;
 				}
 			}

@@ -43,7 +43,10 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IDropHandler, 
 		InventorySlot draggedSlot = draggedItem.parentSlot;
 		InventoryIcon tempItem = currentItem;
 
-		if (draggedItem == null || draggedSlot == null) return;
+		if (draggedItem == null || draggedSlot == null)
+		{
+			return;
+		}
 
 		if (tempItem != null)
 		{
@@ -72,15 +75,6 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IDropHandler, 
 
 		Manager.Fire.SaveItemToDatabase(Array.IndexOf(Manager.Inven.InventoryUI.InventorySlots, draggedSlot), draggedSlot.currentItem != null ? draggedSlot.currentItem.itemName : null);
 		Manager.Fire.SaveItemToDatabase(Array.IndexOf(Manager.Inven.InventoryUI.InventorySlots, this), currentItem != null ? currentItem.itemName : "");
-
-		if(tempItem != null && tempItem.quantity > 0)
-		{
-			Manager.Fire.SavePotionToDatabase(Array.IndexOf(Manager.Inven.InventoryUI.InventorySlots, draggedSlot), new InventorySlotData { itemName = tempItem.itemName, mumber = tempItem.quantity });
-		}
-		if (currentItem.quantity > 0)
-		{
-			Manager.Fire.SavePotionToDatabase(Array.IndexOf(Manager.Inven.InventoryUI.InventorySlots, this), new InventorySlotData { itemName = currentItem.itemName, mumber = currentItem.quantity });
-		}
 	}
 
 	public void OnPointerExit(PointerEventData eventData)

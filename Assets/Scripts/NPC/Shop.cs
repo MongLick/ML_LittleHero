@@ -55,7 +55,14 @@ public class Shop : MonoBehaviour
 	public void AddPotion(string potionName)
 	{
 		Manager.Fire.UpdateGoldInDatabase(-5);
+
 		InventoryIcon existingPotion = FindPotionInInventory(potionName);
+
+		if (existingPotion == null)
+		{
+			existingPotion = FindPotionInQuickSlots(potionName);
+		}
+
 		if (existingPotion != null)
 		{
 			existingPotion.UpdateQuantity(1);
@@ -65,6 +72,20 @@ public class Shop : MonoBehaviour
 		{
 			CreateNewPotionIcon(potionName);
 		}
+
+	}
+	private InventoryIcon FindPotionInQuickSlots(string potionName)
+	{
+		QuickSlot[] quickSlots = FindObjectsOfType<QuickSlot>();
+
+		foreach (QuickSlot slot in quickSlots)
+		{
+			if (slot.currentItem != null && slot.currentItem.itemName == potionName)
+			{
+				return slot.currentItem as InventoryIcon;
+			}
+		}
+		return null;
 	}
 
 	private InventoryIcon FindPotionInInventory(string potionName)
