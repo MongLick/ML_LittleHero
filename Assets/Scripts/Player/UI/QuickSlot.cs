@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -7,6 +8,7 @@ using UnityEngine.EventSystems;
 public class QuickSlot : MonoBehaviour, IDropHandler
 {
 	public InventoryIcon currentItem;
+	public int slotIndex;
 
 	public void OnDrop(PointerEventData eventData)
 	{
@@ -19,16 +21,18 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 		if (draggedItem.slotType == InventoryIcon.SlotType.hpPotion || draggedItem.slotType == InventoryIcon.SlotType.mpPotion)
 		{
 			InventoryIcon tempItem = currentItem;
-
+			
 			if (currentItem == null)
 			{
 				currentItem = draggedItem;
 				draggedItem.transform.SetParent(transform);
 				draggedItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-
-				if (originalSlot != null)
+				Manager.Fire.SavePotionQuickSlot(slotIndex, new InventorySlotData(draggedItem.itemName, draggedItem.quantity));
+				if (previousSlot != null)
 				{
-					originalSlot.currentItem = null;
+					draggedItem.parentSlot = null;
+					previousSlot.currentItem = null;
+					Manager.Fire.SaveItemToDatabase(Array.IndexOf(Manager.Inven.InventoryUI.InventorySlots, previousSlot), null);
 				}
 			}
 			else
@@ -36,7 +40,6 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 				currentItem = draggedItem;
 				draggedItem.transform.SetParent(transform);
 				draggedItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-
 				if (originalSlot != null)
 				{
 					originalSlot.currentItem = tempItem;
@@ -44,6 +47,8 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 					{
 						tempItem.transform.SetParent(originalSlot.transform);
 						tempItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+						Manager.Fire.SavePotionQuickSlot(originalSlot.slotIndex, new InventorySlotData(tempItem.itemName, tempItem.quantity));
+						Manager.Fire.SavePotionQuickSlot(slotIndex, new InventorySlotData(draggedItem.itemName, draggedItem.quantity));
 					}
 				}
 				else if (previousSlot != null)
@@ -53,6 +58,8 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 					{
 						tempItem.transform.SetParent(previousSlot.transform);
 						tempItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+						int previousSlotIndex = Array.IndexOf(Manager.Inven.InventoryUI.InventorySlots, previousSlot);
+						Manager.Fire.SavePotionToDatabase(previousSlotIndex, new InventorySlotData(tempItem.itemName, tempItem.quantity));
 					}
 				}
 			}

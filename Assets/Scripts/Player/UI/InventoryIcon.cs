@@ -124,14 +124,17 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 			{
 				transform.SetParent(slot.transform);
 				rect.position = slot.GetComponent<RectTransform>().position;
+
 				if (parentSlot != null)
 				{
 					Manager.Fire.SaveItemToDatabase(Array.IndexOf(Manager.Inven.InventoryUI.InventorySlots, parentSlot), "");
 					parentSlot.currentItem = null;
 				}
+
 				slot.currentItem = this;
 				parentSlot = slot;
 				int index = Array.IndexOf(Manager.Inven.InventoryUI.InventorySlots, parentSlot);
+
 				Manager.Fire.SaveItemToDatabase(index, this.itemName);
 				return;
 			}

@@ -302,4 +302,26 @@ public class FirebaseManager : Singleton<FirebaseManager>
 
 			});
 	}
+
+	public void SavePotionQuickSlot(int slotIndex, InventorySlotData inventorySlotData)
+	{
+		string userID = Manager.Fire.UserID;
+		string position = Manager.Fire.IsLeft ? "Left" : "Right";
+
+		Manager.Fire.DB
+			.GetReference("UserData")
+			.Child(userID)
+			.Child(position)
+			.Child("quickSlots")
+			.Child(slotIndex.ToString())
+			.SetValueAsync(new Dictionary<string, object>
+			{
+			{ "itemName", inventorySlotData.itemName },
+			{ "quantity", inventorySlotData.mumber }
+			})
+			.ContinueWithOnMainThread(task =>
+			{
+
+			});
+	}
 }

@@ -9354,6 +9354,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentItem: {fileID: 0}
+  slotIndex: 0
 --- !u!1 &5664442858055712269
 GameObject:
   m_ObjectHideFlags: 0
@@ -10134,6 +10135,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentItem: {fileID: 0}
+  slotIndex: 2
 --- !u!1 &5982080517321919544
 GameObject:
   m_ObjectHideFlags: 0
@@ -11073,6 +11075,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentItem: {fileID: 0}
+  slotIndex: 1
 --- !u!1 &6349832724604918062
 GameObject:
   m_ObjectHideFlags: 0
@@ -12196,6 +12199,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentItem: {fileID: 0}
+  slotIndex: 3
 --- !u!1 &7016324944474095424
 GameObject:
   m_ObjectHideFlags: 0
