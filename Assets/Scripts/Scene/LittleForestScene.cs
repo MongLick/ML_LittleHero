@@ -103,6 +103,24 @@ public class LittleForestScene : BaseScene
 							}
 						}
 					}
+
+					var quickSlotData = leftSnapshot.Child("quickSlots");
+
+					if (quickSlotData.Exists)
+					{
+						foreach (var slot in quickSlotData.Children)
+						{
+							int slotIndex = int.Parse(slot.Key);
+							string itemName = slot.Child("itemName").Value.ToString();
+
+							if (!string.IsNullOrEmpty(itemName))
+							{
+								int itemQuantity = int.Parse(slot.Child("quantity").Value.ToString());
+								LoadQuickSlotItem(itemName, slotIndex, itemQuantity);
+							}
+						}
+					}
+
 					Manager.Data.UserData.Gold = gold;
 				}
 			});
@@ -175,6 +193,24 @@ public class LittleForestScene : BaseScene
 										slot.AddItem(newIcon);
 									}
 								}
+							}
+						}
+					}
+
+					var quickSlotData = rightSnapshot.Child("quickSlots");
+
+					if (quickSlotData.Exists)
+					{
+						foreach (var slot in quickSlotData.Children)
+						{
+							int slotIndex = int.Parse(slot.Key);
+							string itemName = slot.Child("itemName").Value.ToString();
+
+							if (!string.IsNullOrEmpty(itemName))
+							{
+								Debug.Log(itemName);
+								int itemQuantity = int.Parse(slot.Child("quantity").Value.ToString());
+								LoadQuickSlotItem(itemName, slotIndex, itemQuantity);
 							}
 						}
 					}
@@ -268,6 +304,41 @@ public class LittleForestScene : BaseScene
 		{
 			equipmentUI.SetActive(false);
 			inventoryUI.SetActive(false);
+		}
+	}
+
+	private void LoadQuickSlotItem(string itemName, int slotIndex, int itemQuantity)
+	{
+		GameObject potionPrefab;
+
+		if (itemName == "hpPotion")
+		{
+			potionPrefab = Resources.Load<GameObject>("Prefabs/hpPotion");
+		}
+		else if (itemName == "mpPotion")
+		{
+			potionPrefab = Resources.Load<GameObject>("Prefabs/mpPotion");
+		}
+		else
+		{
+			return;
+		}
+
+		QuickSlot[] quickSlots = FindObjectsOfType<QuickSlot>();
+
+		foreach (QuickSlot slot in quickSlots)
+		{
+			if (slot.slotIndex == slotIndex)
+			{
+				GameObject potionObject = Instantiate(potionPrefab, slot.transform);
+				InventoryIcon potionIcon = potionObject.GetComponent<InventoryIcon>();
+
+				potionIcon.quickSlot = slot;
+				potionIcon.quantity = itemQuantity;
+				potionIcon.UpdateQuantityText();
+				slot.currentItem = potionIcon;
+				break; 
+			}
 		}
 	}
 

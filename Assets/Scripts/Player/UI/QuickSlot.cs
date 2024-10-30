@@ -4,11 +4,18 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class QuickSlot : MonoBehaviour, IDropHandler
 {
 	public InventoryIcon currentItem;
 	public int slotIndex;
+	[SerializeField] Button button;
+
+	private void Awake()
+	{
+		button.onClick.AddListener(Use);
+	}
 
 	public void OnDrop(PointerEventData eventData)
 	{
@@ -37,19 +44,20 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 			}
 			else
 			{
-				currentItem = draggedItem;
-				draggedItem.transform.SetParent(transform);
-				draggedItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-				if (originalSlot != null)
-				{
+				if(originalSlot != null)
+{
 					originalSlot.currentItem = tempItem;
 					if (tempItem != null)
 					{
 						tempItem.transform.SetParent(originalSlot.transform);
 						tempItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
 						Manager.Fire.SavePotionQuickSlot(originalSlot.slotIndex, new InventorySlotData(tempItem.itemName, tempItem.quantity));
-						Manager.Fire.SavePotionQuickSlot(slotIndex, new InventorySlotData(draggedItem.itemName, draggedItem.quantity));
 					}
+
+					currentItem = draggedItem;
+					draggedItem.transform.SetParent(transform);
+					draggedItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+					Manager.Fire.SavePotionQuickSlot(slotIndex, new InventorySlotData(draggedItem.itemName, draggedItem.quantity));
 				}
 				else if (previousSlot != null)
 				{
@@ -61,6 +69,11 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 						int previousSlotIndex = Array.IndexOf(Manager.Inven.InventoryUI.InventorySlots, previousSlot);
 						Manager.Fire.SavePotionToDatabase(previousSlotIndex, new InventorySlotData(tempItem.itemName, tempItem.quantity));
 					}
+
+					currentItem = draggedItem;
+					draggedItem.transform.SetParent(transform);
+					draggedItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+					Manager.Fire.SavePotionQuickSlot(slotIndex, new InventorySlotData(draggedItem.itemName, draggedItem.quantity));
 				}
 			}
 
@@ -73,14 +86,49 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 		}
 	}
 
-	public void UsePotion()
+	public void Use()
 	{
 		if (currentItem != null)
 		{
-			currentItem.UpdateQuantity(-1);
-			if (currentItem.quantity <= 0)
+			if(currentItem.slotType == InventoryIcon.SlotType.hpPotion)
 			{
-				currentItem = null;
+				if(Manager.Data.UserData.Health >= Manager.Data.UserData.maxHealth)
+				{
+					return;
+				}
+				currentItem.UpdateQuantity(-1);
+				Manager.Fire.SavePotionQuickSlot(this.slotIndex, new InventorySlotData(currentItem.itemName, currentItem.quantity));
+				Manager.Data.UserData.Health += 20;
+				if(Manager.Data.UserData.Health > Manager.Data.UserData.maxHealth)
+				{
+					Manager.Data.UserData.Health = Manager.Data.UserData.maxHealth;
+				}
+				if (currentItem.quantity <= 0)
+				{
+					Destroy(currentItem.gameObject);
+					currentItem = null;
+					Manager.Fire.SavePotionQuickSlot(this.slotIndex, new InventorySlotData("", 0));
+				}
+			}
+			else if(currentItem.slotType == InventoryIcon.SlotType.mpPotion)
+			{
+				if (Manager.Data.UserData.Mana >= Manager.Data.UserData.maxMana)
+				{
+					return;
+				}
+				currentItem.UpdateQuantity(-1);
+				Manager.Fire.SavePotionQuickSlot(this.slotIndex, new InventorySlotData(currentItem.itemName, currentItem.quantity));
+				Manager.Data.UserData.Mana += 20;
+				if (Manager.Data.UserData.Mana > Manager.Data.UserData.maxMana)
+				{
+					Manager.Data.UserData.Mana = Manager.Data.UserData.maxMana;
+				}
+				if (currentItem.quantity <= 0)
+				{
+					Destroy(currentItem.gameObject);
+					currentItem = null;
+					Manager.Fire.SavePotionQuickSlot(this.slotIndex, new InventorySlotData("", 0));
+				}
 			}
 		}
 	}

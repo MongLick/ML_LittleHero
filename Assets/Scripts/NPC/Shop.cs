@@ -66,14 +66,22 @@ public class Shop : MonoBehaviour
 		if (existingPotion != null)
 		{
 			existingPotion.UpdateQuantity(1);
-			UpdatePotionQuantity(potionName, existingPotion.quantity);
+
+			if (existingPotion.quickSlot != null)
+			{
+				Manager.Fire.SavePotionQuickSlot(existingPotion.quickSlot.slotIndex, new InventorySlotData(potionName, existingPotion.quantity));
+			}
+			else
+			{
+				UpdatePotionQuantity(potionName, existingPotion.quantity);
+			}
 		}
 		else
 		{
 			CreateNewPotionIcon(potionName);
 		}
-
 	}
+
 	private InventoryIcon FindPotionInQuickSlots(string potionName)
 	{
 		QuickSlot[] quickSlots = FindObjectsOfType<QuickSlot>();

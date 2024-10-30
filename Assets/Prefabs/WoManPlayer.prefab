@@ -9355,6 +9355,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentItem: {fileID: 0}
   slotIndex: 0
+  button: {fileID: 816616146959809043}
 --- !u!1 &5664442858055712269
 GameObject:
   m_ObjectHideFlags: 0
@@ -10136,6 +10137,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentItem: {fileID: 0}
   slotIndex: 2
+  button: {fileID: 6302126235147887627}
 --- !u!1 &5982080517321919544
 GameObject:
   m_ObjectHideFlags: 0
@@ -11076,6 +11078,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentItem: {fileID: 0}
   slotIndex: 1
+  button: {fileID: 5727834065470491385}
 --- !u!1 &6349832724604918062
 GameObject:
   m_ObjectHideFlags: 0
@@ -12200,6 +12203,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentItem: {fileID: 0}
   slotIndex: 3
+  button: {fileID: 4345453033833775905}
 --- !u!1 &7016324944474095424
 GameObject:
   m_ObjectHideFlags: 0
