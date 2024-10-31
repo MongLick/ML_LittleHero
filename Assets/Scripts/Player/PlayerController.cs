@@ -16,10 +16,10 @@ public class PlayerController : MonoBehaviour, IDamageable
 	private Vector3 move;
 	[SerializeField] MonsterController monster;
 	[SerializeField] float closestDistance;
+	private Vector3 playerPosition;
 	[SerializeField] Collider[] hitColliders;
 	[SerializeField] float detectionRange;
 	[SerializeField] float monsterDistance;
-	private Vector3 playerPosition;
 	private Transform monsterTarget;
 	[SerializeField] float attackCooltime;
 	public float AttackCooltime { get { return attackCooltime; } }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class EquipmentUI : MonoBehaviour
@@ -17,5 +18,6 @@ public class EquipmentUI : MonoBehaviour
 	private void Close()
 	{
 		gameObject.SetActive(false);
+		EventSystem.current.SetSelectedGameObject(null);
 	}
 }

@@ -11,6 +11,7 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 	public InventoryIcon currentItem;
 	public int slotIndex;
 	[SerializeField] Button button;
+	public GameObject currentSkillObject;
 
 	private void Awake()
 	{
@@ -20,6 +21,7 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 	public void OnDrop(PointerEventData eventData)
 	{
 		InventoryIcon draggedItem = eventData.pointerDrag.GetComponent<InventoryIcon>();
+
 		if (draggedItem == null) return;
 
 		QuickSlot originalSlot = draggedItem.quickSlot;
@@ -28,7 +30,7 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 		if (draggedItem.slotType == InventoryIcon.SlotType.hpPotion || draggedItem.slotType == InventoryIcon.SlotType.mpPotion)
 		{
 			InventoryIcon tempItem = currentItem;
-			
+
 			if (currentItem == null)
 			{
 				currentItem = draggedItem;
@@ -44,8 +46,8 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 			}
 			else
 			{
-				if(originalSlot != null)
-{
+				if (originalSlot != null)
+				{
 					originalSlot.currentItem = tempItem;
 					if (tempItem != null)
 					{
@@ -90,16 +92,16 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 	{
 		if (currentItem != null)
 		{
-			if(currentItem.slotType == InventoryIcon.SlotType.hpPotion)
+			if (currentItem.slotType == InventoryIcon.SlotType.hpPotion)
 			{
-				if(Manager.Data.UserData.Health >= Manager.Data.UserData.maxHealth)
+				if (Manager.Data.UserData.Health >= Manager.Data.UserData.maxHealth)
 				{
 					return;
 				}
 				currentItem.UpdateQuantity(-1);
 				Manager.Fire.SavePotionQuickSlot(this.slotIndex, new InventorySlotData(currentItem.itemName, currentItem.quantity));
 				Manager.Data.UserData.Health += 20;
-				if(Manager.Data.UserData.Health > Manager.Data.UserData.maxHealth)
+				if (Manager.Data.UserData.Health > Manager.Data.UserData.maxHealth)
 				{
 					Manager.Data.UserData.Health = Manager.Data.UserData.maxHealth;
 				}
@@ -110,7 +112,7 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 					Manager.Fire.SavePotionQuickSlot(this.slotIndex, new InventorySlotData("", 0));
 				}
 			}
-			else if(currentItem.slotType == InventoryIcon.SlotType.mpPotion)
+			else if (currentItem.slotType == InventoryIcon.SlotType.mpPotion)
 			{
 				if (Manager.Data.UserData.Mana >= Manager.Data.UserData.maxMana)
 				{
@@ -130,6 +132,44 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 					Manager.Fire.SavePotionQuickSlot(this.slotIndex, new InventorySlotData("", 0));
 				}
 			}
+		}
+	}
+
+	public void SetSkill(string skillName)
+	{
+		QuickSlot[] quickSlots = FindObjectsOfType<QuickSlot>();
+		foreach (QuickSlot slot in quickSlots)
+		{
+			if (slot.currentSkillObject != null && slot.currentSkillObject.name == skillName)
+			{
+				Destroy(slot.currentSkillObject);
+				slot.currentSkillObject = null;
+			}
+		}
+
+		if (currentSkillObject != null)
+		{
+			Destroy(currentSkillObject);
+			currentSkillObject = null;
+		}
+
+		GameObject skillPrefab = null;
+
+		if (skillName == "Fire")
+		{
+			skillPrefab = Resources.Load<GameObject>("Prefabs/Fire");
+		}
+		else if (skillName == "Ice")
+		{
+			skillPrefab = Resources.Load<GameObject>("Prefabs/Ice");
+		}
+
+		if (skillPrefab != null)
+		{
+			currentSkillObject = Instantiate(skillPrefab, transform);
+			currentSkillObject.name = skillName;
+			RectTransform skillRect = currentSkillObject.GetComponent<RectTransform>();
+			skillRect.anchoredPosition = Vector2.zero;
 		}
 	}
 }
