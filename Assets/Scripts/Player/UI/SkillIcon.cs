@@ -10,6 +10,8 @@ public class SkillIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 	public Image skillImage;
 	private Image skillCopy; 
 	private Canvas canvas;
+	public QuickSlot quickSlot;
+	public SkillIcon targetSkillIcon;
 
 	private void Awake()
 	{
@@ -38,8 +40,8 @@ public class SkillIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
 	public void OnEndDrag(PointerEventData eventData)
 	{
-		QuickSlot quickSlot = eventData.pointerEnter?.GetComponent<QuickSlot>();
-		SkillIcon targetSkillIcon = eventData.pointerEnter?.GetComponent<SkillIcon>();
+		quickSlot = eventData.pointerEnter?.GetComponent<QuickSlot>();
+		targetSkillIcon = eventData.pointerEnter?.GetComponent<SkillIcon>();
 
 		if (quickSlot != null)
 		{
@@ -50,11 +52,7 @@ public class SkillIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 			QuickSlot parentQuickSlot = targetSkillIcon.GetComponentInParent<QuickSlot>();
 			if (parentQuickSlot != null)
 			{
-				string currentSkillName = parentQuickSlot.currentSkillObject != null ? parentQuickSlot.currentSkillObject.name : null;
-
 				parentQuickSlot.SetSkill(skillName);
-
-				parentQuickSlot.SetSkill(currentSkillName);
 			}
 		}
 

@@ -11,7 +11,7 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 	public InventoryIcon currentItem;
 	public int slotIndex;
 	[SerializeField] Button button;
-	public GameObject currentSkillObject;
+	public SkillIcon currentSkill;
 
 	private void Awake()
 	{
@@ -21,14 +21,12 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 	public void OnDrop(PointerEventData eventData)
 	{
 		InventoryIcon draggedItem = eventData.pointerDrag.GetComponent<InventoryIcon>();
+		SkillIcon draggedSkill = eventData.pointerDrag.GetComponent<SkillIcon>();		
 
-		if (draggedItem == null) return;
-
-		QuickSlot originalSlot = draggedItem.quickSlot;
-		InventorySlot previousSlot = draggedItem.parentSlot;
-
-		if (draggedItem.slotType == InventoryIcon.SlotType.hpPotion || draggedItem.slotType == InventoryIcon.SlotType.mpPotion)
+		if (draggedItem != null && (draggedItem.slotType == InventoryIcon.SlotType.hpPotion || draggedItem.slotType == InventoryIcon.SlotType.mpPotion))
 		{
+			QuickSlot originalSlot = draggedItem.quickSlot;
+			InventorySlot previousSlot = draggedItem.parentSlot;
 			InventoryIcon tempItem = currentItem;
 
 			if (currentItem == null)
@@ -86,6 +84,43 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 				tempItem.parentSlot = previousSlot;
 			}
 		}
+		else if (draggedSkill != null)
+		{
+			if (!draggedSkill.GetComponentInParent<SkillUI>())
+			{
+				QuickSlot originalSlot = draggedSkill.quickSlot;
+				SkillIcon tempSkill = currentSkill;
+
+				if (currentSkill == null)
+				{
+					currentSkill = draggedSkill;
+					draggedSkill.transform.SetParent(transform);
+					draggedSkill.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+				}
+				else
+				{
+					if (originalSlot != null)
+					{
+						originalSlot.currentSkill = tempSkill;
+						if (tempSkill != null)
+						{
+							tempSkill.transform.SetParent(originalSlot.transform);
+							tempSkill.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+						}
+
+						currentSkill = draggedSkill;
+						draggedSkill.transform.SetParent(transform);
+						draggedSkill.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+					}
+				}
+
+				draggedSkill.quickSlot = this;
+				if (tempSkill != null)
+				{
+					tempSkill.quickSlot = originalSlot;
+				}
+			}
+		}
 	}
 
 	public void Use()
@@ -140,17 +175,17 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 		QuickSlot[] quickSlots = FindObjectsOfType<QuickSlot>();
 		foreach (QuickSlot slot in quickSlots)
 		{
-			if (slot.currentSkillObject != null && slot.currentSkillObject.name == skillName)
+			if (slot.currentSkill != null && slot.currentSkill.name == skillName)
 			{
-				Destroy(slot.currentSkillObject);
-				slot.currentSkillObject = null;
+				Destroy(slot.currentSkill);
+				slot.currentSkill = null;
 			}
 		}
 
-		if (currentSkillObject != null)
+		if (currentSkill != null)
 		{
-			Destroy(currentSkillObject);
-			currentSkillObject = null;
+			Destroy(currentSkill);
+			currentSkill = null;
 		}
 
 		GameObject skillPrefab = null;
@@ -166,9 +201,10 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 
 		if (skillPrefab != null)
 		{
-			currentSkillObject = Instantiate(skillPrefab, transform);
-			currentSkillObject.name = skillName;
-			RectTransform skillRect = currentSkillObject.GetComponent<RectTransform>();
+			currentSkill = Instantiate(skillPrefab, transform).GetComponent<SkillIcon>();
+			currentSkill.name = skillName;
+			currentSkill.quickSlot = this;
+			RectTransform skillRect = currentSkill.GetComponent<RectTransform>();
 			skillRect.anchoredPosition = Vector2.zero;
 		}
 	}
