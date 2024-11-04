@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8644817960915256484}
   - component: {fileID: 2065502500286536597}
   - component: {fileID: 43157818543249112}
-  - component: {fileID: 5323314975023467315}
+  - component: {fileID: 5104241261627270331}
   m_Layer: 5
   m_Name: Fire
   m_TagString: Untagged
@@ -76,7 +76,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5323314975023467315
+--- !u!114 &5104241261627270331
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -89,4 +89,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillName: Fire
+  quickSlot: {fileID: 0}
+  targetSkillIcon: {fileID: 0}
   skillImage: {fileID: 43157818543249112}

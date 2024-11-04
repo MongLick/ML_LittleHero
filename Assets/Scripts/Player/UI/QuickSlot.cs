@@ -21,7 +21,7 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 	public void OnDrop(PointerEventData eventData)
 	{
 		InventoryIcon draggedItem = eventData.pointerDrag.GetComponent<InventoryIcon>();
-		SkillIcon draggedSkill = eventData.pointerDrag.GetComponent<SkillIcon>();		
+		SkillIcon draggedSkill = eventData.pointerDrag.GetComponent<SkillIcon>();
 
 		if (draggedItem != null && (draggedItem.slotType == InventoryIcon.SlotType.hpPotion || draggedItem.slotType == InventoryIcon.SlotType.mpPotion))
 		{
@@ -29,8 +29,40 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 			InventorySlot previousSlot = draggedItem.parentSlot;
 			InventoryIcon tempItem = currentItem;
 
+			if (currentSkill != null && draggedItem.parentSlot != null)
+			{
+				Manager.Fire.SavePotionQuickSlot(slotIndex, new InventorySlotData("", 0));
+				Destroy(currentSkill.gameObject);
+				currentSkill = null;
+			}
+			else if (currentSkill != null && draggedItem.parentSlot == null)
+			{
+				SkillIcon tempSkill = currentSkill;
+
+				originalSlot.currentItem = null;
+				originalSlot.currentSkill = tempSkill;
+				tempSkill.transform.SetParent(originalSlot.transform);
+				tempSkill.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+				tempSkill.quickSlot = originalSlot;
+
+				Manager.Fire.SavePotionQuickSlot(originalSlot.slotIndex, new InventorySlotData(tempSkill.name, 0));
+
+				currentItem = draggedItem;
+				currentSkill = null;
+				draggedItem.transform.SetParent(transform);
+				draggedItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+				draggedItem.quickSlot = this;
+
+				Manager.Fire.SavePotionQuickSlot(slotIndex, new InventorySlotData(draggedItem.itemName, draggedItem.quantity));
+				return;
+			}
+
 			if (currentItem == null)
 			{
+				if (originalSlot != null)
+				{
+					originalSlot.currentItem = null;
+				}
 				currentItem = draggedItem;
 				draggedItem.transform.SetParent(transform);
 				draggedItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
@@ -86,40 +118,52 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 		}
 		else if (draggedSkill != null)
 		{
-			if (!draggedSkill.GetComponentInParent<SkillUI>())
+			QuickSlot originalSlot = draggedSkill.quickSlot;
+			SkillIcon tempSkill = currentSkill;
+
+			if (currentItem != null)
 			{
-				QuickSlot originalSlot = draggedSkill.quickSlot;
-				SkillIcon tempSkill = currentSkill;
+				originalSlot.currentItem = currentItem;
+				originalSlot.currentSkill = null;
+				currentItem.transform.SetParent(originalSlot.transform);
+				currentItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+				currentItem.quickSlot = originalSlot;
 
-				if (currentSkill == null)
-				{
-					currentSkill = draggedSkill;
-					draggedSkill.transform.SetParent(transform);
-					draggedSkill.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-				}
-				else
-				{
-					if (originalSlot != null)
-					{
-						originalSlot.currentSkill = tempSkill;
-						if (tempSkill != null)
-						{
-							tempSkill.transform.SetParent(originalSlot.transform);
-							tempSkill.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-						}
+				Manager.Fire.SavePotionQuickSlot(originalSlot.slotIndex, new InventorySlotData(currentItem.itemName, currentItem.quantity));
 
-						currentSkill = draggedSkill;
-						draggedSkill.transform.SetParent(transform);
-						draggedSkill.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-					}
-				}
-
+				currentSkill = draggedSkill;
+				currentItem = null;
+				draggedSkill.transform.SetParent(transform);
+				draggedSkill.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
 				draggedSkill.quickSlot = this;
-				if (tempSkill != null)
-				{
-					tempSkill.quickSlot = originalSlot;
-				}
+
+				Manager.Fire.SavePotionQuickSlot(this.slotIndex, new InventorySlotData(draggedSkill.name, 0));
+				return;
 			}
+
+			if (currentSkill == null)
+			{
+				currentSkill = draggedSkill;
+				draggedSkill.transform.SetParent(transform);
+				draggedSkill.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+				originalSlot.currentSkill = null;
+				Manager.Fire.SavePotionQuickSlot(this.slotIndex, new InventorySlotData(draggedSkill.name, 0));
+				Manager.Fire.SavePotionQuickSlot(originalSlot.slotIndex, new InventorySlotData("", 0));
+			}
+			else
+			{
+				originalSlot.currentSkill = tempSkill;
+				tempSkill.transform.SetParent(originalSlot.transform);
+				tempSkill.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+				tempSkill.quickSlot = originalSlot;
+				Manager.Fire.SavePotionQuickSlot(originalSlot.slotIndex, new InventorySlotData(tempSkill.name, 0));
+
+				currentSkill = draggedSkill;
+				draggedSkill.transform.SetParent(transform);
+				draggedSkill.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+				Manager.Fire.SavePotionQuickSlot(this.slotIndex, new InventorySlotData(draggedSkill.name, 0));
+			}
+			draggedSkill.quickSlot = this;
 		}
 	}
 
@@ -177,15 +221,10 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 		{
 			if (slot.currentSkill != null && slot.currentSkill.name == skillName)
 			{
-				Destroy(slot.currentSkill);
+				Manager.Fire.SavePotionQuickSlot(slot.slotIndex, new InventorySlotData("", 0));
+				Destroy(slot.currentSkill.gameObject);
 				slot.currentSkill = null;
 			}
-		}
-
-		if (currentSkill != null)
-		{
-			Destroy(currentSkill);
-			currentSkill = null;
 		}
 
 		GameObject skillPrefab = null;
@@ -201,11 +240,25 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 
 		if (skillPrefab != null)
 		{
+			if(currentItem != null)
+			{
+				currentItem.ReturnToInventory();
+				Manager.Fire.SavePotionQuickSlot(this.slotIndex, new InventorySlotData("", 0));
+				currentItem.quickSlot = null;
+				currentItem = null;
+			}
+
+			if (currentSkill != null)
+			{
+				Destroy(currentSkill.gameObject);
+			}
+
 			currentSkill = Instantiate(skillPrefab, transform).GetComponent<SkillIcon>();
-			currentSkill.name = skillName;
-			currentSkill.quickSlot = this;
 			RectTransform skillRect = currentSkill.GetComponent<RectTransform>();
 			skillRect.anchoredPosition = Vector2.zero;
+			currentSkill.name = skillName;
+			currentSkill.quickSlot = this;
+			Manager.Fire.SavePotionQuickSlot(this.slotIndex, new InventorySlotData(currentSkill.name, 0));
 		}
 	}
 }

@@ -7,11 +7,9 @@ using UnityEngine.UI;
 public class SkillIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
 	public string skillName;
-	public Image skillImage;
-	private Image skillCopy; 
 	private Canvas canvas;
 	public QuickSlot quickSlot;
-	public SkillIcon targetSkillIcon;
+	public Image skillImage;
 
 	private void Awake()
 	{
@@ -20,43 +18,24 @@ public class SkillIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
 	public void OnBeginDrag(PointerEventData eventData)
 	{
-		skillCopy = new GameObject("SkillCopy").AddComponent<Image>();
-		skillCopy.sprite = skillImage.sprite;
-		skillCopy.transform.SetParent(canvas.transform);
-		skillCopy.raycastTarget = false;
-
-		RectTransform copyRect = skillCopy.GetComponent<RectTransform>();
-		copyRect.sizeDelta = skillImage.rectTransform.sizeDelta;
-		copyRect.position = skillImage.rectTransform.position;
+		transform.transform.SetParent(canvas.transform);
+		skillImage.raycastTarget = false;
 	}
 
 	public void OnDrag(PointerEventData eventData)
 	{
-		if (skillCopy != null)
-		{
-			skillCopy.transform.position = eventData.position;
-		}
+		transform.position = eventData.position;
 	}
 
 	public void OnEndDrag(PointerEventData eventData)
 	{
-		quickSlot = eventData.pointerEnter?.GetComponent<QuickSlot>();
-		targetSkillIcon = eventData.pointerEnter?.GetComponent<SkillIcon>();
+		skillImage.raycastTarget = true;
+		GameObject droppedObject = eventData.pointerCurrentRaycast.gameObject;
 
-		if (quickSlot != null)
+		if (droppedObject == null || droppedObject.GetComponent<QuickSlot>() == null)
 		{
-			quickSlot.SetSkill(skillName);
+			transform.SetParent(quickSlot.transform);
+			GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
 		}
-		else if (targetSkillIcon != null)
-		{
-			QuickSlot parentQuickSlot = targetSkillIcon.GetComponentInParent<QuickSlot>();
-			if (parentQuickSlot != null)
-			{
-				parentQuickSlot.SetSkill(skillName);
-			}
-		}
-
-		Destroy(skillCopy);
-		skillCopy = null;
 	}
 }

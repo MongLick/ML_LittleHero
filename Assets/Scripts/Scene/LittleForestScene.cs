@@ -309,15 +309,23 @@ public class LittleForestScene : BaseScene
 
 	private void LoadQuickSlotItem(string itemName, int slotIndex, int itemQuantity)
 	{
-		GameObject potionPrefab;
+		GameObject prefab;
 
 		if (itemName == "hpPotion")
 		{
-			potionPrefab = Resources.Load<GameObject>("Prefabs/hpPotion");
+			prefab = Resources.Load<GameObject>("Prefabs/hpPotion");
 		}
 		else if (itemName == "mpPotion")
 		{
-			potionPrefab = Resources.Load<GameObject>("Prefabs/mpPotion");
+			prefab = Resources.Load<GameObject>("Prefabs/mpPotion");
+		}
+		else if(itemName == "Fire")
+		{
+			prefab = Resources.Load<GameObject>("Prefabs/Fire");
+		}
+		else if(itemName == "Ice")
+		{
+			prefab = Resources.Load<GameObject>("Prefabs/Ice");
 		}
 		else
 		{
@@ -330,14 +338,25 @@ public class LittleForestScene : BaseScene
 		{
 			if (slot.slotIndex == slotIndex)
 			{
-				GameObject potionObject = Instantiate(potionPrefab, slot.transform);
-				InventoryIcon potionIcon = potionObject.GetComponent<InventoryIcon>();
+				GameObject prefabObject = Instantiate(prefab, slot.transform);
+				InventoryIcon potionIcon = prefabObject.GetComponent<InventoryIcon>();
+				SkillIcon skillIcon = prefabObject.GetComponent<SkillIcon>();
 
-				potionIcon.quickSlot = slot;
-				potionIcon.quantity = itemQuantity;
-				potionIcon.UpdateQuantityText();
-				slot.currentItem = potionIcon;
-				break; 
+				if (potionIcon != null)
+				{
+					potionIcon.quickSlot = slot;
+					potionIcon.quantity = itemQuantity;
+					potionIcon.UpdateQuantityText();
+					slot.currentItem = potionIcon;
+					break;
+				}
+				if(skillIcon != null)
+				{
+					skillIcon.name = itemName;
+					skillIcon.quickSlot = slot;
+					slot.currentSkill = skillIcon;
+					break;
+				}
 			}
 		}
 	}

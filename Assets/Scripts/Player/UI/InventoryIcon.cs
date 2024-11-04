@@ -108,13 +108,12 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 	{
 		if (InventoryUI == null)
 		{
-			InventoryUI = FindObjectOfType<InventoryUI>();
+			InventoryUI = Manager.Inven.InventoryUI;
 			if (InventoryUI == null)
 			{
 				return;
 			}
 		}
-
 		InventorySlot[] inventorySlots = InventoryUI.InventorySlots;
 
 		for (int i = 0; i < inventorySlots.Length; i++)
