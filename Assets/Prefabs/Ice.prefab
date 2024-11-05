@@ -12,8 +12,9 @@ GameObject:
   - component: {fileID: 1405905254754461017}
   - component: {fileID: 4679666482091885549}
   - component: {fileID: 1828451342882954448}
+  - component: {fileID: 3259275555942189247}
   m_Layer: 0
-  m_Name: CFXR3 Hit Ice B (Air)
+  m_Name: Ice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4925,6 +4926,20 @@ MonoBehaviour:
     perlinColor: 0
     perlinColorSpeed: 1
   fadeOutReference: {fileID: 0}
+--- !u!114 &3259275555942189247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 711924154172952118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 481092cc15e545d48820e7d078f98942, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autoRelease: 1
+  releaseTime: 1
 --- !u!1 &1145730471983990439
 GameObject:
   m_ObjectHideFlags: 0

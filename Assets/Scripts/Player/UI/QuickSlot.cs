@@ -212,6 +212,17 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 				}
 			}
 		}
+		else if(currentSkill != null)
+		{
+			if(currentSkill.skillName == "Fire")
+			{
+
+			}
+			else if(currentSkill.skillName == "Ice")
+			{
+
+			}
+		}
 	}
 
 	public void SetSkill(string skillName)
