@@ -31,6 +31,7 @@ public class LittleForestScene : BaseScene
 	private void OnEnable()
 	{
 		LoadCharacterData();
+		Manager.Game.poolEffect = FindAnyObjectByType<PoolEffect>();
 	}
 
 	private void LoadCharacterData()
@@ -68,7 +69,7 @@ public class LittleForestScene : BaseScene
 					{
 						characterInstance = Instantiate(Manager.Fire.WoManPrefab, new Vector3(posX, posY, posZ), Quaternion.identity);
 					}
-
+					Manager.Game.player = FindAnyObjectByType<PlayerController>();
 					TMP_Text nicknameUI = characterInstance.GetComponentInChildren<TMP_Text>();
 					if (nicknameUI != null)
 					{
@@ -158,7 +159,7 @@ public class LittleForestScene : BaseScene
 					{
 						characterInstance = Instantiate(Manager.Fire.WoManPrefab, new Vector3(posX, posY, posZ), Quaternion.identity);
 					}
-
+					Manager.Game.player = FindAnyObjectByType<PlayerController>();
 					TMP_Text nicknameUI = characterInstance.GetComponentInChildren<TMP_Text>();
 					if (nicknameUI != null)
 					{

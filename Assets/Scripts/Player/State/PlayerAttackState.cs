@@ -1,8 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
-using static MonsterState;
 using static PlayerState;
 
 public class PlayerAttackState : BaseState<PlayerStateType>
@@ -21,7 +18,7 @@ public class PlayerAttackState : BaseState<PlayerStateType>
 			ChangeState(PlayerStateType.Idle);
 			return;
 		}
-		if(player.IsBlock)
+		if (player.IsBlock)
 		{
 			ChangeState(PlayerStateType.Block);
 			return;
@@ -61,24 +58,30 @@ public class PlayerAttackState : BaseState<PlayerStateType>
 
 	private IEnumerator AttackCoroutine()
 	{
-		int attackIndex = Random.Range(0, 3);
-
-		switch (attackIndex)
+		if (!player.IsSkiilAttack)
 		{
-			case 0:
-				player.Animator.SetTrigger("Attack1");
-				break;
-			case 1:
-				player.Animator.SetTrigger("Attack2");
-				break;
-			case 2:
-				player.Animator.SetTrigger("Attack3");
-				break;
+			int attackIndex = Random.Range(0, 2);
+			switch (attackIndex)
+			{
+				case 0:
+					player.Animator.SetTrigger("Attack1");
+					break;
+				case 1:
+					player.Animator.SetTrigger("Attack2");
+					break;
+			}
+		}
+		else
+		{
+			player.Animator.SetTrigger("Attack3");
+			Vector3 effectPosition = player.transform.position + player.transform.forward * player.SkillOffset;
+			Manager.Game.poolEffect.SpawnEffects(player.SkillName, effectPosition);
 		}
 
 		yield return new WaitForSeconds(player.AttackDelay);
 		player.IsAttackCooltime = true;
 		player.IsAttack = false;
+		player.IsSkiilAttack = false;
 		ChangeState(PlayerStateType.Idle);
 	}
 }

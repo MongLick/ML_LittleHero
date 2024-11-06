@@ -208,7 +208,7 @@ public class MonsterController : MonoBehaviour, IDamageable
 	{
 		spawnDistance = Vector3.Distance(transform.position, spawnPos.position);
 
-		if (spawnDistance < 1.5f)
+		if (spawnDistance < 2f)
 		{
 			isReturn = false;
 			isIdle = true;

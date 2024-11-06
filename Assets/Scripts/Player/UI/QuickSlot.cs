@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -12,6 +11,12 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 	public int slotIndex;
 	[SerializeField] Button button;
 	public SkillIcon currentSkill;
+	private Vector3 spawnPosition;
+	[SerializeField] TMP_Text timeText;
+	[SerializeField] Image hideImage;
+	private float coolTime;
+	private float time;
+	private bool isCooldown = false;
 
 	private void Awake()
 	{
@@ -22,6 +27,29 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 	{
 		InventoryIcon draggedItem = eventData.pointerDrag.GetComponent<InventoryIcon>();
 		SkillIcon draggedSkill = eventData.pointerDrag.GetComponent<SkillIcon>();
+
+		if (draggedItem != null && isCooldown)
+		{
+			if(draggedItem.quickSlot != null)
+			{
+				draggedItem.transform.SetParent(draggedItem.quickSlot.transform);
+				draggedItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+			}
+			else
+			{
+				draggedItem.ReturnToInventory();
+			}
+			return;
+		}
+		else if(draggedSkill != null && isCooldown)
+		{
+			if (draggedSkill.quickSlot != null)
+			{
+				draggedSkill.transform.SetParent(draggedSkill.quickSlot.transform);
+				draggedSkill.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+			}
+			return;
+		}
 
 		if (draggedItem != null && (draggedItem.slotType == InventoryIcon.SlotType.hpPotion || draggedItem.slotType == InventoryIcon.SlotType.mpPotion))
 		{
@@ -169,6 +197,11 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 
 	public void Use()
 	{
+		if (isCooldown)
+		{
+			return;
+		}
+
 		if (currentItem != null)
 		{
 			if (currentItem.slotType == InventoryIcon.SlotType.hpPotion)
@@ -211,17 +244,15 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 					Manager.Fire.SavePotionQuickSlot(this.slotIndex, new InventorySlotData("", 0));
 				}
 			}
+			coolTime = 3f;
+			StartCoroutine(SkillTimeCheck());
 		}
-		else if(currentSkill != null)
+		else if (currentSkill != null && !Manager.Game.player.IsAttackCooltime && !Manager.Game.player.IsAttack && !(Manager.Data.UserData.mana <= 0))
 		{
-			if(currentSkill.skillName == "Fire")
-			{
-
-			}
-			else if(currentSkill.skillName == "Ice")
-			{
-
-			}
+			Manager.Data.UserData.Mana -= 20;
+			Manager.Game.player.SkillAttack(currentSkill.skillName);
+			coolTime = 5f;
+			StartCoroutine(SkillTimeCheck());
 		}
 	}
 
@@ -232,6 +263,10 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 		{
 			if (slot.currentSkill != null && slot.currentSkill.name == skillName)
 			{
+				if(slot.isCooldown)
+				{
+					return;
+				}
 				Manager.Fire.SavePotionQuickSlot(slot.slotIndex, new InventorySlotData("", 0));
 				Destroy(slot.currentSkill.gameObject);
 				slot.currentSkill = null;
@@ -251,7 +286,7 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 
 		if (skillPrefab != null)
 		{
-			if(currentItem != null)
+			if (currentItem != null)
 			{
 				currentItem.ReturnToInventory();
 				Manager.Fire.SavePotionQuickSlot(this.slotIndex, new InventorySlotData("", 0));
@@ -271,5 +306,36 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 			currentSkill.quickSlot = this;
 			Manager.Fire.SavePotionQuickSlot(this.slotIndex, new InventorySlotData(currentSkill.name, 0));
 		}
+	}
+
+	private IEnumerator SkillTimeCheck()
+	{
+		isCooldown = true;
+		button.enabled = false;
+		hideImage.gameObject.SetActive(true);
+		hideImage.transform.SetAsLastSibling();
+		timeText.transform.SetAsLastSibling();
+		time = coolTime;
+		timeText.gameObject.SetActive(true);
+		while (time > 0)
+		{
+			timeText.text = time.ToString("00");
+			hideImage.fillAmount = time / coolTime;
+			time -= Time.deltaTime;
+			yield return null;
+		}
+		timeText.gameObject.SetActive(false);
+		hideImage.gameObject.SetActive(false);
+		button.enabled = true;
+		if (currentItem != null)
+		{
+			currentItem.transform.SetAsLastSibling();
+		}
+		else if(currentSkill != null)
+		{
+			currentSkill.transform.SetAsLastSibling();
+		}
+		isCooldown = false;
+		yield return null;
 	}
 }

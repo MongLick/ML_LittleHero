@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 	public CinemachineVirtualCamera GameOverCamera { get { return gameOverCamera; } set { gameOverCamera = value; } }
 	[SerializeField] StateMachine<PlayerStateType> playerState;
 	[SerializeField] PlayerStateType currentState;
+	public PlayerStateType CurrentState { get { return currentState; } set { currentState = value; } }
 	[SerializeField] CharacterController controller;
 	[SerializeField] Animator animator;
 	public Animator Animator { get { return animator; } }
@@ -67,6 +68,14 @@ public class PlayerController : MonoBehaviour, IDamageable
 	private bool isDie;
 	public bool IsDie { get { return isDie; } set { isDie = value; } }
 	private bool isAutoAttack;
+	private bool isSkiilAttack = false;
+	public bool IsSkiilAttack { get { return isSkiilAttack; } set { isSkiilAttack = value; } }
+
+	private string skillName;
+	public string SkillName { get { return skillName; } set { skillName = value; } }
+
+	[SerializeField] float skillOffset;
+	public float SkillOffset { get { return skillOffset; } set { skillOffset = value; } }
 
 	private Coroutine attackRoutine;
 	public Coroutine AttackRoutine { get { return attackRoutine; } set { attackRoutine = value; } }
@@ -344,5 +353,16 @@ public class PlayerController : MonoBehaviour, IDamageable
 				transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * rotationSpeed);
 			}
 		}
+	}
+
+	public void SkillAttack(string skillName)
+	{
+        if (isSkiilAttack && isAttack)
+        {
+			return;
+        }
+        isAttack = true;
+		isSkiilAttack = true;
+		SkillName = skillName;
 	}
 }

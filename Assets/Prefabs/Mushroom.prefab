@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6843927896957126086}
   - component: {fileID: 778541577711425387}
   - component: {fileID: 3210385136987741735}
-  - component: {fileID: 4270554344365767108}
+  - component: {fileID: -5181250073397914122}
   m_Layer: 7
   m_Name: Mushroom
   m_TagString: Untagged
@@ -158,7 +158,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   autoRelease: 0
   releaseTime: 0
---- !u!54 &4270554344365767108
+--- !u!54 &-5181250073397914122
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

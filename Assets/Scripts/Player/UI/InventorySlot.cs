@@ -39,6 +39,13 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IDropHandler, 
 
 	public void OnDrop(PointerEventData eventData)
 	{
+		SkillIcon draggedSkill = eventData.pointerDrag.GetComponent<SkillIcon>();
+
+		if (draggedSkill != null)
+		{
+			return;
+		}
+
 		InventoryIcon draggedItem = eventData.pointerDrag.GetComponent<InventoryIcon>();
 		InventorySlot draggedSlot = draggedItem.parentSlot;
 		InventoryIcon tempItem = currentItem;

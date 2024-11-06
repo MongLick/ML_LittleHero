@@ -13,15 +13,15 @@ public class PoolEffect : MonoBehaviour
 		Manager.Pool.CreatePool(icePrefab, 1, 1);
 	}
 
-	public void SpawnEffects(string prefabName, Transform potion)
+	public void SpawnEffects(string prefabName, Vector3 Position)
 	{
 		if (prefabName == firePrefab.name)
 		{
-			Manager.Pool.GetPool(firePrefab, potion.position, Quaternion.identity);
+			Manager.Pool.GetPool(firePrefab, Position, Quaternion.identity);
 		}
 		else
 		{
-			Manager.Pool.GetPool(icePrefab, potion.position, Quaternion.identity);
+			Manager.Pool.GetPool(icePrefab, Position, Quaternion.identity);
 		}
 	}
 }
