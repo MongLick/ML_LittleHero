@@ -16,7 +16,9 @@ public class ResetPanel : MonoBehaviour
     {
         sendButton.onClick.AddListener(SendResetMail);
         cancelButton.onClick.AddListener(Cancel);
-    }
+		sendButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+		cancelButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+	}
 
     private void SendResetMail()
     {

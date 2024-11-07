@@ -20,6 +20,8 @@ public class PlayerUI : MonoBehaviour
 	{
 		menuButton.onClick.AddListener(Menu);
 		settingButton.onClick.AddListener(Setting);
+		menuButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+		settingButton.onClick.AddListener(Manager.Sound.ButtonSFX);
 	}
 
 	private void Start()

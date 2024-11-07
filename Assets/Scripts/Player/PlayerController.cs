@@ -125,6 +125,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 		{
 			ySpeed = jumpSpeed;
 			animator.SetTrigger("Jump");
+			Manager.Sound.PlaySFX(Manager.Sound.PlayerJump);
 		}
 	}
 
@@ -273,6 +274,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 		}
 		else
 		{
+			Manager.Sound.PlaySFX(Manager.Sound.PlayerBlock);
 			isTakeHit = true;
 		}
 

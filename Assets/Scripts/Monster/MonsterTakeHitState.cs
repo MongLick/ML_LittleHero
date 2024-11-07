@@ -52,6 +52,7 @@ public class MonsterTakeHitState : BaseState<MonsterStateType>
 
 	private IEnumerator TakeHitCoroutine()
 	{
+		Manager.Sound.PlaySFX(Manager.Sound.MonsterTakeHit);
 		monster.Attack.SetActive(false);
 		monster.Animator.SetTrigger("TakeHit");
 		yield return new WaitForSeconds(monster.TakeHitDelay);

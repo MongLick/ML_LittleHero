@@ -14,13 +14,15 @@ public class LoginPanel : MonoBehaviour
     [SerializeField] Button loginButton;
     [SerializeField] Button resetPasswordButton;
 
-
     private void Awake()
     {
         signUpButton.onClick.AddListener(SignUp);
         loginButton.onClick.AddListener(Login);
         resetPasswordButton.onClick.AddListener(ResetPassword);
-    }
+		signUpButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+		loginButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+		resetPasswordButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+	}
 
     public void SignUp()
     {

@@ -18,7 +18,9 @@ public class SignUpPanel : MonoBehaviour
     {
         cancelButton.onClick.AddListener(Cancel);
         signUpButton.onClick.AddListener(SignUp);
-    }
+		cancelButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+		signUpButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+	}
 
     public void SignUp()
     {

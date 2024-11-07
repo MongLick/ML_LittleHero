@@ -10,7 +10,8 @@ public class InfoPanel : MonoBehaviour
     private void Awake()
     {
         closeButton.onClick.AddListener(Close);
-    }
+		closeButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+	}
 
     public void ShowInfo(string message)
     {

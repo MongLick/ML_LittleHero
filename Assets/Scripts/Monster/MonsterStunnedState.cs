@@ -55,6 +55,7 @@ public class MonsterStunnedState : BaseState<MonsterStateType>
 
 	private IEnumerator StunnedCoroutine()
 	{
+		Manager.Sound.PlaySFX(Manager.Sound.MonsterTakeHit);
 		monster.Animator.SetBool("Stunned", true);
 		monster.MonsterCon.enabled = false;
 		yield return new WaitForSeconds(monster.StunnedDelay);

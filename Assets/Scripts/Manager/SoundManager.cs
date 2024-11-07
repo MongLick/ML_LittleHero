@@ -1,15 +1,41 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class SoundManager : Singleton<SoundManager>
 {
-    [SerializeField] AudioSource bgmSource;
+	[Header("AudioSource")]
+	[SerializeField] AudioSource bgmSource;
     [SerializeField] AudioSource sfxSource;
 
     public float BGMVolme { get { return bgmSource.volume; } set { bgmSource.volume = value; } }
     public float SFXVolme { get { return sfxSource.volume; } set { sfxSource.volume = value; } }
 
-    public void PlayBGM(AudioClip clip)
+	[Header("Sound Clips")]
+	[Header("BGM")]
+	[SerializeField] AudioClip titleSoundClip;
+	public AudioClip TitleSoundClip { get { return titleSoundClip; } }
+	[SerializeField] AudioClip littleForestSoundClip;
+	public AudioClip LittleForestSoundClip { get { return littleForestSoundClip; } }
+
+	[Header("UI")]
+	[SerializeField] AudioClip uiButton;
+	public AudioClip UiButton { get { return uiButton; } }
+
+	[Header("Player")]
+	[SerializeField] AudioClip playerJump;
+	public AudioClip PlayerJump { get { return playerJump; } }
+	[SerializeField] AudioClip playerAttack;
+	public AudioClip PlayerAttack { get { return playerAttack; } }
+    [SerializeField] AudioClip playerBlock;
+    public AudioClip PlayerBlock { get { return playerBlock; } }
+
+	[Header("Monster")]
+	[SerializeField] AudioClip monsterTakeHit;
+	public AudioClip MonsterTakeHit { get { return monsterTakeHit; } }
+
+
+	public void PlayBGM(AudioClip clip)
     {
         if (bgmSource.isPlaying)
         {
@@ -39,4 +65,10 @@ public class SoundManager : Singleton<SoundManager>
 
         sfxSource.Stop();
     }
+
+    public void ButtonSFX()
+    {
+        PlaySFX(uiButton);
+		EventSystem.current.SetSelectedGameObject(null);
+	}
 }

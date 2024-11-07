@@ -20,7 +20,10 @@ public class EditPanel : MonoBehaviour
         passApplyButton.onClick.AddListener(PassApply);
         backButton.onClick.AddListener(Back);
         deleteButton.onClick.AddListener(Delete);
-    }
+		passApplyButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+		backButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+		deleteButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+	}
 
     private void PassApply()
     {

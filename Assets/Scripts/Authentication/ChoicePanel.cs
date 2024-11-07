@@ -17,6 +17,9 @@ public class ChoicePanel : MonoBehaviour
 	{
 		cancelButton.onClick.AddListener(Cancel);
 		confirmButton.onClick.AddListener(Confirm);
+		cancelButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+		confirmButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+		creationButton.onClick.AddListener(Manager.Sound.ButtonSFX);
 	}
 
 	public void ShowChoice(bool isLeft)

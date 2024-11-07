@@ -48,6 +48,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bgmSource: {fileID: 2315522860339898961}
   sfxSource: {fileID: 105278731388737427}
+  titleSoundClip: {fileID: 8300000, guid: 90eae78e8ce85a849b5b0ca11b2de641, type: 3}
+  littleForestSoundClip: {fileID: 8300000, guid: 475f4837af487ce4a9e68bb227455e4c,
+    type: 3}
+  uiButton: {fileID: 8300000, guid: 29bde6326b4c34ad8a12da475f79b50a, type: 3}
+  playerJump: {fileID: 8300000, guid: 2c5292ba5cf254919a6b9e2b18e04f49, type: 3}
+  playerAttack: {fileID: 8300000, guid: fe0b1f9aeb45b41b089175aeeabd5d95, type: 3}
+  playerBlock: {fileID: 8300000, guid: d8d04c6f80a1140db85ede568dab1f51, type: 3}
+  monsterTakeHit: {fileID: 8300000, guid: 881e3f52c86c94f26a60718d35627cd8, type: 3}
 --- !u!1 &3112071428299456759
 GameObject:
   m_ObjectHideFlags: 0
@@ -89,7 +97,8 @@ AudioSource:
   m_GameObject: {fileID: 3112071428299456759}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 7992516606719032107, guid: 18a1ff0e3d1418f40bc2583b8bb5b16d, type: 2}
+  OutputAudioMixerGroup: {fileID: 7992516606719032107, guid: 18a1ff0e3d1418f40bc2583b8bb5b16d,
+    type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -217,10 +226,11 @@ AudioSource:
   m_GameObject: {fileID: 3991721827342875635}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 2765914118508064820, guid: 18a1ff0e3d1418f40bc2583b8bb5b16d, type: 2}
+  OutputAudioMixerGroup: {fileID: 2765914118508064820, guid: 18a1ff0e3d1418f40bc2583b8bb5b16d,
+    type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.3
   m_Pitch: 1
   Loop: 1
   Mute: 0

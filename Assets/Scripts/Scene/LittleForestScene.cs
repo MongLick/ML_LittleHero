@@ -3,7 +3,6 @@ using Firebase.Extensions;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,6 +31,7 @@ public class LittleForestScene : BaseScene
 	{
 		LoadCharacterData();
 		Manager.Game.poolEffect = FindAnyObjectByType<PoolEffect>();
+		Manager.Sound.PlayBGM(Manager.Sound.LittleForestSoundClip);
 	}
 
 	private void LoadCharacterData()
@@ -60,6 +60,7 @@ public class LittleForestScene : BaseScene
 					string weapon = leftSnapshot.Child("weaponSlot").Value.ToString();
 					string shield = leftSnapshot.Child("shieldSlot").Value.ToString();
 					string cloak = leftSnapshot.Child("cloakSlot").Value.ToString();
+					int qualityLevel = int.Parse(leftSnapshot.Child("qualityLevel").Value.ToString());
 
 					if (type == "0")
 					{
@@ -76,8 +77,13 @@ public class LittleForestScene : BaseScene
 						nicknameUI.text = nickName;
 					}
 					UserData.CharacterType characterType = (type == "0") ? UserData.CharacterType.Man : UserData.CharacterType.WoMan;
-					Manager.Data.UserData = new UserData(nickName, characterType, "Left", posX, posY, posZ, "LittleForestScene", health, mana, gold, weapon, shield, cloak, new Dictionary<int, InventorySlotData>(), new Dictionary<string, QuestData>(), new InventorySlotData[4]);
+					Manager.Data.UserData = new UserData(nickName, characterType, "Left", posX, posY, posZ, "LittleForestScene", health, mana, gold, weapon, shield, cloak, new Dictionary<int, InventorySlotData>(), new Dictionary<string, QuestData>(), new InventorySlotData[4], qualityLevel);
 					EquipItems(weapon, shield, cloak);
+					QualitySettings.SetQualityLevel(qualityLevel);
+					TMP_Dropdown qualityDropdown = FindObjectOfType<TMP_Dropdown>();
+					GraphicsUI graphicsUI = FindObjectOfType<GraphicsUI>();
+					qualityDropdown.value = qualityLevel;
+					graphicsUI.gameObject.SetActive(false);
 					var inventoryData = leftSnapshot.Child("inventory");
 
 					foreach (var item in inventoryData.Children)
@@ -150,6 +156,7 @@ public class LittleForestScene : BaseScene
 					string weapon = rightSnapshot.Child("weaponSlot").Value.ToString();
 					string shield = rightSnapshot.Child("shieldSlot").Value.ToString();
 					string cloak = rightSnapshot.Child("cloakSlot").Value.ToString();
+					int qualityLevel = int.Parse(rightSnapshot.Child("qualityLevel").Value.ToString());
 
 					if (type == "0")
 					{
@@ -166,8 +173,13 @@ public class LittleForestScene : BaseScene
 						nicknameUI.text = nickName;
 					}
 					UserData.CharacterType characterType = (type == "0") ? UserData.CharacterType.Man : UserData.CharacterType.WoMan;
-					Manager.Data.UserData = new UserData(nickName, characterType, "Right", posX, posY, posZ, "LittleForestScene", health, mana, gold, weapon, shield, cloak, new Dictionary<int, InventorySlotData>(), new Dictionary<string, QuestData>(), new InventorySlotData[4]);
+					Manager.Data.UserData = new UserData(nickName, characterType, "Right", posX, posY, posZ, "LittleForestScene", health, mana, gold, weapon, shield, cloak, new Dictionary<int, InventorySlotData>(), new Dictionary<string, QuestData>(), new InventorySlotData[4], qualityLevel);
 					EquipItems(weapon, shield, cloak);
+					QualitySettings.SetQualityLevel(qualityLevel);
+					TMP_Dropdown qualityDropdown = FindObjectOfType<TMP_Dropdown>();
+					GraphicsUI graphicsUI = FindObjectOfType<GraphicsUI>();
+					qualityDropdown.value = qualityLevel;
+					graphicsUI.gameObject.SetActive(false);
 					var inventoryData = rightSnapshot.Child("inventory");
 
 					foreach (var item in inventoryData.Children)
@@ -320,11 +332,11 @@ public class LittleForestScene : BaseScene
 		{
 			prefab = Resources.Load<GameObject>("Prefabs/mpPotion");
 		}
-		else if(itemName == "Fire")
+		else if (itemName == "Fire")
 		{
 			prefab = Resources.Load<GameObject>("Prefabs/Fire");
 		}
-		else if(itemName == "Ice")
+		else if (itemName == "Ice")
 		{
 			prefab = Resources.Load<GameObject>("Prefabs/Ice");
 		}
@@ -351,7 +363,7 @@ public class LittleForestScene : BaseScene
 					slot.currentItem = potionIcon;
 					break;
 				}
-				if(skillIcon != null)
+				if (skillIcon != null)
 				{
 					skillIcon.name = itemName;
 					skillIcon.quickSlot = slot;

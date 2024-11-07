@@ -20,6 +20,10 @@ public class PlayerMenuUI : MonoBehaviour
 		inventoryButton.onClick.AddListener(Inventory);
 		skillButton.onClick.AddListener(SkillUI);
 		closeButton.onClick.AddListener(Close);
+		equipmentButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+		inventoryButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+		skillButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+		closeButton.onClick.AddListener(Manager.Sound.ButtonSFX);
 	}
 
 	private void Equipment()

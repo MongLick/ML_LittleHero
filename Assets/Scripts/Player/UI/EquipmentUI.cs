@@ -13,6 +13,7 @@ public class EquipmentUI : MonoBehaviour
 	private void Awake()
 	{
 		closeButton.onClick.AddListener(Close);
+		closeButton.onClick.AddListener(Manager.Sound.ButtonSFX);
 	}
 
 	private void Close()

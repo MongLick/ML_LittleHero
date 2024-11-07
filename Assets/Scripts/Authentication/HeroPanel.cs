@@ -25,6 +25,10 @@ public class HeroPanel : MonoBehaviour
 		woManPressed.onClick.AddListener(WoManPressed);
 		cancelButton.onClick.AddListener(Cancel);
 		confirmButton.onClick.AddListener(Confirm);
+		manPressed.onClick.AddListener(Manager.Sound.ButtonSFX);
+		woManPressed.onClick.AddListener(Manager.Sound.ButtonSFX);
+		cancelButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+		confirmButton.onClick.AddListener(Manager.Sound.ButtonSFX);
 	}
 
 	public void SetCharacterPosition(string position)
@@ -84,7 +88,7 @@ public class HeroPanel : MonoBehaviour
 			inventory[i] = new InventorySlotData();
 		}
 
-		Manager.Fire.CreateCharacter(name, characterType, characterPosition, -25, 4, -7, "LittleForestScene", 100, 100, 0, null, null, null, inventory, new Dictionary<string, QuestData>(), new InventorySlotData[4]);
+		Manager.Fire.CreateCharacter(name, characterType, characterPosition, -25, 4, -7, "LittleForestScene", 100, 100, 0, null, null, null, inventory, new Dictionary<string, QuestData>(), new InventorySlotData[4], 2);
 		panelController.SetActivePanel(PanelController.Panel.Main);
 		nickName.text = "";
 	}

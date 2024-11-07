@@ -18,7 +18,9 @@ public class VerifyPanel : MonoBehaviour
     {
         logoutButton.onClick.AddListener(Logout);
         sendButton.onClick.AddListener(SendVerifyMail);
-    }
+		logoutButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+		sendButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+	}
 
 	private void OnEnable()
 	{

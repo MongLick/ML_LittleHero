@@ -58,6 +58,7 @@ public class PlayerAttackState : BaseState<PlayerStateType>
 
 	private IEnumerator AttackCoroutine()
 	{
+		Manager.Sound.PlaySFX(Manager.Sound.PlayerAttack);
 		if (!player.IsSkiilAttack)
 		{
 			int attackIndex = Random.Range(0, 2);

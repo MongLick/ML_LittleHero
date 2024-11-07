@@ -2,6 +2,7 @@ using Firebase;
 using Firebase.Auth;
 using Firebase.Database;
 using Firebase.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
@@ -64,11 +65,11 @@ public class FirebaseManager : Singleton<FirebaseManager>
 		}
 	}
 
-	public void CreateCharacter(string nickName, CharacterType type, string position, float x, float y, float z, string scene, int health, int mana, int gold, string weaponSlot, string shieldSlot, string cloakSlot, Dictionary<int, InventorySlotData> inventory, Dictionary<string, QuestData> quests, InventorySlotData[] quick)
+	public void CreateCharacter(string nickName, CharacterType type, string position, float x, float y, float z, string scene, int health, int mana, int gold, string weaponSlot, string shieldSlot, string cloakSlot, Dictionary<int, InventorySlotData> inventory, Dictionary<string, QuestData> quests, InventorySlotData[] quick, int qualityLevel)
 	{
 		FirebaseUser user = auth.CurrentUser;
 		string userID = user.UserId;
-		UserData userData = new UserData(nickName, type, position, x, y, z, scene, health, mana, gold, weaponSlot, shieldSlot, cloakSlot, inventory, quests, quick);
+		UserData userData = new UserData(nickName, type, position, x, y, z, scene, health, mana, gold, weaponSlot, shieldSlot, cloakSlot, inventory, quests, quick, qualityLevel);
 		string json = JsonUtility.ToJson(userData);
 		Manager.Fire.DB
 			.GetReference("UserData")
@@ -320,6 +321,23 @@ public class FirebaseManager : Singleton<FirebaseManager>
 			{ "quantity", inventorySlotData.mumber }
 			})
 			.ContinueWithOnMainThread(task =>
+			{
+
+			});
+	}
+
+	public void SetQualitySetting(int level)
+	{
+		string userID = Manager.Fire.UserID;
+		string position = Manager.Fire.IsLeft ? "Left" : "Right";
+
+		Manager.Fire.DB
+			.GetReference("UserData")
+			.Child(userID)
+			.Child(position)
+			.Child("qualityLevel")
+			.SetValueAsync(level).
+			ContinueWithOnMainThread(task =>
 			{
 
 			});

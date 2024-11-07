@@ -747,7 +747,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1653,9 +1653,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 5769154004004179699}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 1
+  m_MaxValue: 0.5
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 0.5
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -3493,7 +3493,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uB098\uB294 \uC885\uBBFC\uC774\uB2F9~! \uD06C\uC559~! \uD6C4\uC5D0\uC5D0\uC5D0\uC5E5~!~!\uC5D0\uC5E5\uC5D0\uC5D0\uC5D0\u3154\uC5D0\uC5D0\uC5D0\uC5D0\uC5D0\uC5D0\uC5D0\uC5D0\uC5D0\uC5D0\uC5D0\uC5D0\uC5E5"
+  m_text: "\uC774\uB984 : \uD654\uC5FC \uD3ED\uBC1C\n\uB370\uBBF8\uC9C0 : 2\n\uB9C8\uB098
+    \uC0AC\uC6A9 : 20\n\uCFE8\uD0C0\uC784 : 5\uCD08\n\uD6A8\uACFC : \uC2A4\uD134"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5dc0ec251247686408e540abf7d67be6, type: 2}
   m_sharedMaterial: {fileID: 9022146586916268346, guid: 5dc0ec251247686408e540abf7d67be6,
@@ -3750,6 +3751,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   closeButton: {fileID: 2142449810385385033}
+  logoutButton: {fileID: 6101498177430407300}
 --- !u!1 &2097056504523993199
 GameObject:
   m_ObjectHideFlags: 0
@@ -3802,6 +3804,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   closeButton: {fileID: 8244374478431120788}
+  qualityDropdown: {fileID: 3383742711614290724}
 --- !u!1 &2214582665371045290
 GameObject:
   m_ObjectHideFlags: 0
@@ -5071,7 +5074,7 @@ RectTransform:
   m_Father: {fileID: 4316990177324078522}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -6032,7 +6035,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uB098\uB294 \uC885\uBBFC\uC774\uB2F9~! \uD06C\uC559~! \uD6C4\uC5D0\uC5D0\uC5D0\uC5E5~!~!\uC5D0\uC5E5\uC5D0\uC5D0\uC5D0\u3154\uC5D0\uC5D0\uC5D0\uC5D0\uC5D0\uC5D0\uC5D0\uC5D0\uC5D0\uC5D0\uC5D0\uC5D0\uC5E5"
+  m_text: "\uC774\uB984 : \uC5BC\uC74C \uD3ED\uBC1C\n\uB370\uBBF8\uC9C0 : 2\n\uB9C8\uB098
+    \uC0AC\uC6A9 : 20\n\uCFE8\uD0C0\uC784 : 5\uCD08\n\uD6A8\uACFC : \uC2A4\uD134"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5dc0ec251247686408e540abf7d67be6, type: 2}
   m_sharedMaterial: {fileID: 9022146586916268346, guid: 5dc0ec251247686408e540abf7d67be6,
@@ -7312,6 +7316,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   closeButton: {fileID: 3876393272168958446}
+  bgmVolumeSlider: {fileID: 6762604557384160836}
+  sfxVolumeSlider: {fileID: 1576410786588817724}
+  bGMOnButton: {fileID: 2609678081185604857}
+  bGMOffButton: {fileID: 1545017812145835996}
+  sFXOnButton: {fileID: 8891332727708491523}
+  sFXOffButton: {fileID: 7596630598725952368}
 --- !u!1 &4317564952295549677
 GameObject:
   m_ObjectHideFlags: 0
@@ -8096,7 +8106,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: ea7134547a5488b41a6bb5243b4ec2f1, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -10222,8 +10232,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 9000159832204899620}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -12826,8 +12836,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 7985227557710219207}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -13705,7 +13715,7 @@ RectTransform:
   m_Father: {fileID: 2129989112979720783}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -14866,7 +14876,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uB192\uC74C"
+  m_text: "\uB0AE\uC74C"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5dc0ec251247686408e540abf7d67be6, type: 2}
   m_sharedMaterial: {fileID: 9022146586916268346, guid: 5dc0ec251247686408e540abf7d67be6,
@@ -15356,11 +15366,11 @@ MonoBehaviour:
   m_Value: 0
   m_Options:
     m_Options:
-    - m_Text: "\uB192\uC74C"
+    - m_Text: "\uB0AE\uC74C"
       m_Image: {fileID: 0}
     - m_Text: "\uC911\uAC04"
       m_Image: {fileID: 0}
-    - m_Text: "\uB0AE\uC74C"
+    - m_Text: "\uB192\uC74C"
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:

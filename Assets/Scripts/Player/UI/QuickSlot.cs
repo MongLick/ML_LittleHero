@@ -21,6 +21,7 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 	private void Awake()
 	{
 		button.onClick.AddListener(Use);
+		button.onClick.AddListener(Manager.Sound.ButtonSFX);
 	}
 
 	public void OnDrop(PointerEventData eventData)

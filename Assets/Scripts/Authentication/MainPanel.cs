@@ -63,6 +63,16 @@ public class MainPanel : MonoBehaviour
 		creation2.onClick.AddListener(OnRightButtonPressed);
 		delete2.onClick.AddListener(Delete2);
 		pressed2.onClick.AddListener(Pressed2);
+
+		logoutButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+		editButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+		startButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+		creation1.onClick.AddListener(Manager.Sound.ButtonSFX);
+		creation2.onClick.AddListener(Manager.Sound.ButtonSFX);
+		delete1.onClick.AddListener(Manager.Sound.ButtonSFX);
+		delete2.onClick.AddListener(Manager.Sound.ButtonSFX);
+		pressed1.onClick.AddListener(Manager.Sound.ButtonSFX);
+		pressed2.onClick.AddListener(Manager.Sound.ButtonSFX);
 	}
 
 	private void OnEnable()

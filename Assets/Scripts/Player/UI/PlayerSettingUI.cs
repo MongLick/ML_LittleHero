@@ -20,6 +20,10 @@ public class PlayerSettingUI : MonoBehaviour
 		soundButton.onClick.AddListener(Sound);
 		graphicButton.onClick.AddListener(Graphics);
 		closeButton.onClick.AddListener(Close);
+		logoutButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+		soundButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+		graphicButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+		closeButton.onClick.AddListener(Manager.Sound.ButtonSFX);
 	}
 
 	private void Logout()
