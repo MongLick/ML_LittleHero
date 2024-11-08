@@ -10,6 +10,7 @@ using Cinemachine;
 using TMPro;
 using UnityEngine.EventSystems;
 using System.Threading;
+using Photon.Pun;
 
 public class PlayerController : MonoBehaviour, IDamageable
 {
@@ -28,6 +29,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 	public GameObject Attack { get { return attack; } set { attack = value; } }
 	[SerializeField] PlayerInput playerInput;
 	public PlayerInput PlayerInput { get { return playerInput; } set { playerInput = value; } }
+	[SerializeField] CinemachineVirtualCamera playerCamera;
 	[SerializeField] CinemachineVirtualCamera gameOverCamera;
 	public CinemachineVirtualCamera GameOverCamera { get { return gameOverCamera; } set { gameOverCamera = value; } }
 	[SerializeField] StateMachine<PlayerStateType> playerState;
@@ -91,8 +93,17 @@ public class PlayerController : MonoBehaviour, IDamageable
 	public float Range { get { return range; } }
 	[SerializeField] Collider[] colliders = new Collider[20];
 
+	[SerializeField] PhotonView view;
+
 	private void Awake()
 	{
+		if (view.IsMine == false)
+		{
+			playerInput.enabled = false;
+			playerCamera.gameObject.SetActive(false);
+			gameOverCamera.gameObject.SetActive(false);
+		}
+
 		playerState = new StateMachine<PlayerStateType>();
 		playerState.AddState(PlayerStateType.Idle, new PlayerIdleState(this));
 		playerState.AddState(PlayerStateType.Attack, new PlayerAttackState(this));
@@ -105,6 +116,11 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	private void Update()
 	{
+		if (view.IsMine == false)
+		{
+			return;
+		}
+
 		playerState.Update();
 		currentState = playerState.GetCurrentState();
 		Move();
@@ -359,11 +375,11 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	public void SkillAttack(string skillName)
 	{
-        if (isSkiilAttack && isAttack)
-        {
+		if (isSkiilAttack && isAttack)
+		{
 			return;
-        }
-        isAttack = true;
+		}
+		isAttack = true;
 		isSkiilAttack = true;
 		SkillName = skillName;
 	}

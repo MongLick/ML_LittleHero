@@ -3768,7 +3768,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &5911469972131018248
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7041,6 +7041,9 @@ GameObject:
   - component: {fileID: -3528172684879286764}
   - component: {fileID: -2657541954488268351}
   - component: {fileID: 2839740681257389933}
+  - component: {fileID: 3174971035778067892}
+  - component: {fileID: -885519035463516773}
+  - component: {fileID: -997015509857198915}
   m_Layer: 3
   m_Name: WoManPlayer
   m_TagString: Untagged
@@ -7147,6 +7150,7 @@ MonoBehaviour:
   cooltime: 0
   attack: {fileID: 4920711051019604285}
   playerInput: {fileID: 1207083965055460475}
+  playerCamera: {fileID: 8523509314562117391}
   gameOverCamera: {fileID: 8568784522396150190}
   currentState: 0
   controller: {fileID: -3528172684879286764}
@@ -7190,6 +7194,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  view: {fileID: 3174971035778067892}
 --- !u!143 &-3528172684879286764
 CharacterController:
   m_ObjectHideFlags: 0
@@ -7264,6 +7269,97 @@ MonoBehaviour:
   equippedWeapon: 
   equippedShield: 
   equippedCloak: 
+--- !u!114 &3174971035778067892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4087923640566889997}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 2839740681257389933}
+  - {fileID: -885519035463516773}
+  - {fileID: -997015509857198915}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &-885519035463516773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4087923640566889997}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
+--- !u!114 &-997015509857198915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4087923640566889997}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 9
+    SynchronizeType: 0
+    Name: Jump
+  - Type: 9
+    SynchronizeType: 0
+    Name: Attack1
+  - Type: 9
+    SynchronizeType: 0
+    Name: Attack2
+  - Type: 9
+    SynchronizeType: 0
+    Name: Attack3
+  - Type: 4
+    SynchronizeType: 0
+    Name: Block
+  - Type: 9
+    SynchronizeType: 0
+    Name: TakeHit
+  - Type: 4
+    SynchronizeType: 0
+    Name: TakeHitBlock
+  - Type: 9
+    SynchronizeType: 0
+    Name: Die
+  - Type: 4
+    SynchronizeType: 0
+    Name: Stunned
+  - Type: 4
+    SynchronizeType: 0
+    Name: Move
+  m_SynchronizeLayers:
+  - SynchronizeType: 0
+    LayerIndex: 0
+  - SynchronizeType: 0
+    LayerIndex: 1
 --- !u!1 &4299380375549492191
 GameObject:
   m_ObjectHideFlags: 0
@@ -10772,6 +10868,7 @@ MonoBehaviour:
   healthSlider: {fileID: 6182655019740021638}
   manaSlider: {fileID: 3491550691646530247}
   glodText: {fileID: 7745470894087712325}
+  PhotonView: {fileID: 3174971035778067892}
 --- !u!1 &6165827504000388987
 GameObject:
   m_ObjectHideFlags: 0

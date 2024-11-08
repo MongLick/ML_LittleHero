@@ -1,42 +1,57 @@
+using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 
-public class PanelController : MonoBehaviour
+public class PanelController : MonoBehaviourPunCallbacks
 {
-    public enum Panel { Login, SignUp, Verify, Reset, Main, Edit, Hero }
+	public enum Panel { Login, SignUp, Verify, Reset, Main, Edit, Hero }
 
-    [SerializeField] InfoPanel infoPanel;
-    [SerializeField] LoginPanel loginPanel;
-    [SerializeField] SignUpPanel signUpPanel;
-    [SerializeField] ResetPanel resetPanel;
-    [SerializeField] VerifyPanel verifyPanel;
-    [SerializeField] MainPanel mainPanel;
-    [SerializeField] EditPanel editPanel;
-    [SerializeField] HeroPanel heroPanel;
-    [SerializeField] ChoicePanel choicePanel;
+	[SerializeField] InfoPanel infoPanel;
+	[SerializeField] LoginPanel loginPanel;
+	[SerializeField] SignUpPanel signUpPanel;
+	[SerializeField] ResetPanel resetPanel;
+	[SerializeField] VerifyPanel verifyPanel;
+	[SerializeField] MainPanel mainPanel;
+	[SerializeField] EditPanel editPanel;
+	[SerializeField] HeroPanel heroPanel;
+	[SerializeField] ChoicePanel choicePanel;
 
-    private void Start()
-    {
-        SetActivePanel(Panel.Login);
-    }
+	private ClientState state;
 
-    public void SetActivePanel(Panel panel)
-    {
-        loginPanel.gameObject.SetActive(panel == Panel.Login);
-        signUpPanel.gameObject.SetActive(panel == Panel.SignUp);
-        resetPanel.gameObject.SetActive(panel == Panel.Reset);
-        mainPanel.gameObject.SetActive(panel == Panel.Main);
-        editPanel.gameObject.SetActive(panel == Panel.Edit);
-        verifyPanel.gameObject.SetActive(panel == Panel.Verify);
+	private void Update()
+	{
+		ClientState curState = PhotonNetwork.NetworkClientState;
+		if (state == curState)
+		{
+			return;
+		}
+		state = curState;
+		Debug.Log(state);
+	}
+
+	private void Start()
+	{
+		SetActivePanel(Panel.Login);
+	}
+
+	public void SetActivePanel(Panel panel)
+	{
+		loginPanel.gameObject.SetActive(panel == Panel.Login);
+		signUpPanel.gameObject.SetActive(panel == Panel.SignUp);
+		resetPanel.gameObject.SetActive(panel == Panel.Reset);
+		mainPanel.gameObject.SetActive(panel == Panel.Main);
+		editPanel.gameObject.SetActive(panel == Panel.Edit);
+		verifyPanel.gameObject.SetActive(panel == Panel.Verify);
 		heroPanel.gameObject.SetActive(panel == Panel.Hero);
 	}
 
-    public void ShowInfo(string message)
-    {
-        infoPanel.ShowInfo(message);
-    }
+	public void ShowInfo(string message)
+	{
+		infoPanel.ShowInfo(message);
+	}
 
-    public void ShowChoice(bool isLeft)
-    {
-        choicePanel.ShowChoice(isLeft);
-    }
+	public void ShowChoice(bool isLeft)
+	{
+		choicePanel.ShowChoice(isLeft);
+	}
 }

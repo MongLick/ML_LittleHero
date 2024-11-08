@@ -1,4 +1,5 @@
 using Firebase.Extensions;
+using Photon.Pun;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -67,6 +68,12 @@ public class LoginPanel : MonoBehaviour
 
 			SetInteractable(true);
 		});
+
+        if (email != null)
+        {
+            PhotonNetwork.LocalPlayer.NickName = email;
+            PhotonNetwork.ConnectUsingSettings();
+        }
     }
 
     private void SetInteractable(bool interactable)

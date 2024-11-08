@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -15,9 +16,15 @@ public class PlayerUI : MonoBehaviour
 	[SerializeField] Slider healthSlider;
 	[SerializeField] Slider manaSlider;
 	[SerializeField] TMP_Text glodText;
+	[SerializeField] PhotonView PhotonView;
 
 	private void Awake()
 	{
+		if(PhotonView.IsMine == false)
+		{
+			return;
+		}
+
 		menuButton.onClick.AddListener(Menu);
 		settingButton.onClick.AddListener(Setting);
 		menuButton.onClick.AddListener(Manager.Sound.ButtonSFX);
@@ -26,6 +33,12 @@ public class PlayerUI : MonoBehaviour
 
 	private void Start()
 	{
+		if (!GetComponentInParent<PhotonView>().IsMine)
+		{
+			gameObject.SetActive(false);
+			return;
+		}
+
 		Manager.Data.UserData.OnHealthChanged += UpdateHealthUI;
 		UpdateHealthUI(Manager.Data.UserData.Health);
 		Manager.Data.UserData.OnManaChanged += UpdateManaUI;

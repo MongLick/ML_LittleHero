@@ -1,5 +1,7 @@
 using Firebase.Database;
 using Firebase.Extensions;
+using Photon.Pun;
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -27,11 +29,17 @@ public class LittleForestScene : BaseScene
 		closeButton.onClick.AddListener(Close);
 	}
 
-	private void OnEnable()
+	public override void OnEnable()
 	{
-		LoadCharacterData();
+		base.OnEnable();
+		PhotonNetwork.JoinOrCreateRoom("RPG_MainRoom", new RoomOptions { MaxPlayers = 20 }, TypedLobby.Default);
 		Manager.Game.poolEffect = FindAnyObjectByType<PoolEffect>();
 		Manager.Sound.PlayBGM(Manager.Sound.LittleForestSoundClip);
+	}
+
+	public override void OnJoinedRoom()
+	{
+		LoadCharacterData();
 	}
 
 	private void LoadCharacterData()
@@ -64,12 +72,13 @@ public class LittleForestScene : BaseScene
 
 					if (type == "0")
 					{
-						characterInstance = Instantiate(Manager.Fire.ManPrefab, new Vector3(posX, posY, posZ), Quaternion.identity);
+						characterInstance = PhotonNetwork.Instantiate("ManPlayer", new Vector3(posX, posY, posZ), Quaternion.identity);
 					}
 					else
 					{
-						characterInstance = Instantiate(Manager.Fire.WoManPrefab, new Vector3(posX, posY, posZ), Quaternion.identity);
+						characterInstance = PhotonNetwork.Instantiate("WoManPlayer", new Vector3(posX, posY, posZ), Quaternion.identity);
 					}
+
 					Manager.Game.player = FindAnyObjectByType<PlayerController>();
 					TMP_Text nicknameUI = characterInstance.GetComponentInChildren<TMP_Text>();
 					if (nicknameUI != null)
@@ -160,12 +169,13 @@ public class LittleForestScene : BaseScene
 
 					if (type == "0")
 					{
-						characterInstance = Instantiate(Manager.Fire.ManPrefab, new Vector3(posX, posY, posZ), Quaternion.identity);
+						characterInstance = PhotonNetwork.Instantiate("ManPlayer", new Vector3(posX, posY, posZ), Quaternion.identity);
 					}
 					else
 					{
-						characterInstance = Instantiate(Manager.Fire.WoManPrefab, new Vector3(posX, posY, posZ), Quaternion.identity);
+						characterInstance = PhotonNetwork.Instantiate("WoManPlayer", new Vector3(posX, posY, posZ), Quaternion.identity);
 					}
+
 					Manager.Game.player = FindAnyObjectByType<PlayerController>();
 					TMP_Text nicknameUI = characterInstance.GetComponentInChildren<TMP_Text>();
 					if (nicknameUI != null)
@@ -232,11 +242,6 @@ public class LittleForestScene : BaseScene
 				}
 			});
 		}
-	}
-
-	public override IEnumerator LoadingRoutine()
-	{
-		yield return null;
 	}
 
 	private void EquipItems(string weapon, string shield, string cloak)
@@ -382,5 +387,10 @@ public class LittleForestScene : BaseScene
 	private void Close()
 	{
 		talkBackImage.gameObject.SetActive(false);
+	}
+
+	public override IEnumerator LoadingRoutine()
+	{
+		yield return null;
 	}
 }

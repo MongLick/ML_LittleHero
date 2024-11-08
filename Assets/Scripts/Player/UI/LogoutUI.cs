@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,5 +25,6 @@ public class LogoutUI : MonoBehaviour
 	private void Logout()
 	{
 		Manager.Scene.LoadScene("TitleScene");
+		PhotonNetwork.Disconnect();
 	}
 }

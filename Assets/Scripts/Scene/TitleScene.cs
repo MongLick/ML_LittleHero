@@ -5,8 +5,9 @@ using UnityEngine.UI;
 
 public class TitleScene : BaseScene
 {
-	private void OnEnable()
+	public override void OnEnable()
 	{
+		base.OnEnable();
 		Manager.Sound.PlayBGM(Manager.Sound.TitleSoundClip);
 	}
 

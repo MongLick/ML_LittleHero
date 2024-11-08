@@ -1,5 +1,7 @@
 using Firebase.Database;
 using Firebase.Extensions;
+using Photon.Pun;
+using Photon.Realtime;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -394,6 +396,7 @@ public class MainPanel : MonoBehaviour
 		pressed2.image.color = Color.white;
 		Manager.Fire.Auth.SignOut();
 		panelController.SetActivePanel(PanelController.Panel.Login);
+		PhotonNetwork.Disconnect();
 	}
 
 	private void Edit()
