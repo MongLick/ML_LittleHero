@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class EquipmentUI : MonoBehaviour
 {
 	[SerializeField] Button closeButton;
-	[SerializeField] EquipmentSlot[] equipmentSlots;
+	public EquipmentSlot[] equipmentSlots;
 	[SerializeField] InventoryUI inventoryUI;
 
 	private void Awake()

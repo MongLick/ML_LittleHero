@@ -55,7 +55,7 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 		{
 			if (parentSlot != null)
 			{
-				Manager.Fire.SaveItemToDatabase(Array.IndexOf(Manager.Inven.InventoryUI.InventorySlots, parentSlot), null);
+				Manager.Fire.SaveItemToDatabase(Array.IndexOf(InventoryUI.InventorySlots, parentSlot), null);
 				parentSlot.currentItem = null;
 				parentSlot = null;
 
@@ -106,14 +106,6 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
 	public void ReturnToInventory()
 	{
-		if (InventoryUI == null)
-		{
-			InventoryUI = Manager.Inven.InventoryUI;
-			if (InventoryUI == null)
-			{
-				return;
-			}
-		}
 		InventorySlot[] inventorySlots = InventoryUI.InventorySlots;
 
 		for (int i = 0; i < inventorySlots.Length; i++)
@@ -127,13 +119,13 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
 				if (parentSlot != null)
 				{
-					Manager.Fire.SaveItemToDatabase(Array.IndexOf(Manager.Inven.InventoryUI.InventorySlots, parentSlot), "");
+					Manager.Fire.SaveItemToDatabase(Array.IndexOf(InventoryUI.InventorySlots, parentSlot), "");
 					parentSlot.currentItem = null;
 				}
 
 				slot.currentItem = this;
 				parentSlot = slot;
-				int index = Array.IndexOf(Manager.Inven.InventoryUI.InventorySlots, parentSlot);
+				int index = Array.IndexOf(InventoryUI.InventorySlots, parentSlot);
 
 				if (slotType == SlotType.hpPotion || slotType == SlotType.mpPotion)
 				{

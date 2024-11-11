@@ -87,10 +87,13 @@ public class LittleForestScene : BaseScene
 					}
 					UserData.CharacterType characterType = (type == "0") ? UserData.CharacterType.Man : UserData.CharacterType.WoMan;
 					Manager.Data.UserData = new UserData(nickName, characterType, "Left", posX, posY, posZ, "LittleForestScene", health, mana, gold, weapon, shield, cloak, new Dictionary<int, InventorySlotData>(), new Dictionary<string, QuestData>(), new InventorySlotData[4], qualityLevel);
-					EquipItems(weapon, shield, cloak);
+					PlayerController character = GetComponent<PlayerController>();
+					GraphicsUI graphicsUI = character.graphicsUI;
+					InventoryUI inventoryUI = character.inventoryUI;
+					EquipmentUI equipmentUI = character.equipmentUI;
+					TMP_Dropdown qualityDropdown = character.dropdown;
 					QualitySettings.SetQualityLevel(qualityLevel);
-					TMP_Dropdown qualityDropdown = FindObjectOfType<TMP_Dropdown>();
-					GraphicsUI graphicsUI = FindObjectOfType<GraphicsUI>();
+					EquipItems(weapon, shield, cloak, equipmentUI, inventoryUI);
 					qualityDropdown.value = qualityLevel;
 					graphicsUI.gameObject.SetActive(false);
 					var inventoryData = leftSnapshot.Child("inventory");
@@ -100,9 +103,9 @@ public class LittleForestScene : BaseScene
 						int slotIndex = int.Parse(item.Key);
 						string itemName = item.Child("itemName").Value.ToString();
 
-						if (slotIndex < Manager.Inven.InventoryUI.InventorySlots.Length)
+						if (slotIndex < inventoryUI.InventorySlots.Length)
 						{
-							InventorySlot slot = Manager.Inven.InventoryUI.InventorySlots[slotIndex];
+							InventorySlot slot = inventoryUI.InventorySlots[slotIndex];
 
 							if (!string.IsNullOrEmpty(itemName))
 							{
@@ -183,11 +186,17 @@ public class LittleForestScene : BaseScene
 						nicknameUI.text = nickName;
 					}
 					UserData.CharacterType characterType = (type == "0") ? UserData.CharacterType.Man : UserData.CharacterType.WoMan;
-					Manager.Data.UserData = new UserData(nickName, characterType, "Right", posX, posY, posZ, "LittleForestScene", health, mana, gold, weapon, shield, cloak, new Dictionary<int, InventorySlotData>(), new Dictionary<string, QuestData>(), new InventorySlotData[4], qualityLevel);
-					EquipItems(weapon, shield, cloak);
+					Manager.Data.UserData = new UserData(nickName, characterType, "Left", posX, posY, posZ, "LittleForestScene", health, mana, gold, weapon, shield, cloak, new Dictionary<int, InventorySlotData>(), new Dictionary<string, QuestData>(), new InventorySlotData[4], qualityLevel);
+					PlayerController character = characterInstance.GetComponent<PlayerController>();
+					GraphicsUI graphicsUI = character.graphicsUI;
+					InventoryUI inventoryUI = character.inventoryUI;
+					EquipmentUI equipmentUI = character.equipmentUI;
+					TMP_Dropdown qualityDropdown = character.dropdown;
+					graphicsUI.gameObject.SetActive(true);
+					inventoryUI.gameObject.SetActive(true);
+					equipmentUI.gameObject.SetActive(true);
 					QualitySettings.SetQualityLevel(qualityLevel);
-					TMP_Dropdown qualityDropdown = FindObjectOfType<TMP_Dropdown>();
-					GraphicsUI graphicsUI = FindObjectOfType<GraphicsUI>();
+					EquipItems(weapon, shield, cloak, equipmentUI, inventoryUI);
 					qualityDropdown.value = qualityLevel;
 					graphicsUI.gameObject.SetActive(false);
 					var inventoryData = rightSnapshot.Child("inventory");
@@ -197,9 +206,9 @@ public class LittleForestScene : BaseScene
 						int slotIndex = int.Parse(item.Key);
 						string itemName = item.Child("itemName").Value.ToString();
 
-						if (slotIndex < Manager.Inven.InventoryUI.InventorySlots.Length)
+						if (slotIndex < inventoryUI.InventorySlots.Length)
 						{
-							InventorySlot slot = Manager.Inven.InventoryUI.InventorySlots[slotIndex];
+							InventorySlot slot = inventoryUI.InventorySlots[slotIndex];
 
 							if (!string.IsNullOrEmpty(itemName))
 							{
@@ -244,29 +253,23 @@ public class LittleForestScene : BaseScene
 		}
 	}
 
-	private void EquipItems(string weapon, string shield, string cloak)
+	private void EquipItems(string weapon, string shield, string cloak, EquipmentUI equipmentUI, InventoryUI inventoryUI)
 	{
-		GameObject equipmentUI = GameObject.Find("PlayerCanvas/EquipmentUI");
-		GameObject inventoryUI = GameObject.Find("PlayerCanvas/InventoryUI");
-		InventoryUI inventory = inventoryUI.GetComponent<InventoryUI>();
-		Manager.Inven.InventoryUI = inventory;
 		PlayerEquipment playerEquipment = characterInstance.GetComponent<PlayerEquipment>();
-
 		if (equipmentUI != null)
 		{
-			equipmentUI.SetActive(true);
-			inventoryUI.SetActive(true);
+			equipmentUI.gameObject.SetActive(true);
+			inventoryUI.gameObject.SetActive(true);
 		}
 
 		GameObject weaponPrefab = FindItemPrefab(weapon);
 		if (weaponPrefab != null)
 		{
-			Transform weaponSlot = GameObject.FindGameObjectWithTag("WeaponSlot").transform;
-			EquipmentSlot weaponSlotComponent = weaponSlot.GetComponent<EquipmentSlot>();
+			EquipmentSlot weaponSlotComponent = equipmentUI.equipmentSlots[0];
 
-			if (weaponSlot != null && weaponSlotComponent != null && weapon != null)
+			if (weaponSlotComponent != null && weapon != null)
 			{
-				GameObject weaponInstance = Instantiate(weaponPrefab, weaponSlot.position, Quaternion.identity, weaponSlot);
+				GameObject weaponInstance = Instantiate(weaponPrefab, weaponSlotComponent.transform.position, Quaternion.identity, weaponSlotComponent.transform);
 				playerEquipment.EquipWeapon(weapon);
 
 				InventoryIcon weaponIcon = weaponInstance.GetComponent<InventoryIcon>();
@@ -274,19 +277,18 @@ public class LittleForestScene : BaseScene
 				weaponSlotComponent.currentItem.itemName = weapon;
 				weaponSlotComponent.currentItem.isEquipment = true;
 				weaponSlotComponent.currentItem.equipmentSlot = weaponSlotComponent;
-				weaponSlotComponent.currentItem.InventoryUI = inventory;
+				weaponSlotComponent.currentItem.InventoryUI = inventoryUI;
 			}
 		}
 
 		GameObject shieldPrefab = FindItemPrefab(shield);
 		if (shieldPrefab != null)
 		{
-			Transform shieldSlot = GameObject.FindGameObjectWithTag("ShieldSlot").transform;
-			EquipmentSlot shieldSlotComponent = shieldSlot.GetComponent<EquipmentSlot>();
+			EquipmentSlot shieldSlotComponent = equipmentUI.equipmentSlots[1];
 
-			if (shieldSlot != null && shieldSlotComponent != null && shield != null)
+			if (shieldSlotComponent != null && shield != null)
 			{
-				GameObject shieldInstance = Instantiate(shieldPrefab, shieldSlot.position, Quaternion.identity, shieldSlot);
+				GameObject shieldInstance = Instantiate(shieldPrefab, shieldSlotComponent.transform.position, Quaternion.identity, shieldSlotComponent.transform);
 				playerEquipment.EquipShield(shield);
 
 				InventoryIcon shieldIcon = shieldInstance.GetComponent<InventoryIcon>();
@@ -294,19 +296,18 @@ public class LittleForestScene : BaseScene
 				shieldSlotComponent.currentItem.itemName = shield;
 				shieldSlotComponent.currentItem.isEquipment = true;
 				shieldSlotComponent.currentItem.equipmentSlot = shieldSlotComponent;
-				shieldSlotComponent.currentItem.InventoryUI = inventory;
+				shieldSlotComponent.currentItem.InventoryUI = inventoryUI;
 			}
 		}
 
 		GameObject cloakPrefab = FindItemPrefab(cloak);
 		if (cloakPrefab != null)
 		{
-			Transform cloakSlot = GameObject.FindGameObjectWithTag("CloakSlot").transform;
-			EquipmentSlot cloakSlotComponent = cloakSlot.GetComponent<EquipmentSlot>();
+			EquipmentSlot cloakSlotComponent = equipmentUI.equipmentSlots[2];
 
-			if (cloakSlot != null && cloakSlotComponent != null && cloak != null)
+			if (cloakSlotComponent != null && cloak != null)
 			{
-				GameObject cloakInstance = Instantiate(cloakPrefab, cloakSlot.position, Quaternion.identity, cloakSlot);
+				GameObject cloakInstance = Instantiate(cloakPrefab, cloakSlotComponent.transform.position, Quaternion.identity, cloakSlotComponent.transform);
 				playerEquipment.EquipCloak(cloak);
 
 				InventoryIcon cloakIcon = cloakInstance.GetComponent<InventoryIcon>();
@@ -314,14 +315,14 @@ public class LittleForestScene : BaseScene
 				cloakSlotComponent.currentItem.itemName = cloak;
 				cloakIcon.isEquipment = true;
 				cloakIcon.equipmentSlot = cloakSlotComponent;
-				cloakIcon.InventoryUI = inventory;
+				cloakIcon.InventoryUI = inventoryUI;
 			}
 		}
 
 		if (equipmentUI != null)
 		{
-			equipmentUI.SetActive(false);
-			inventoryUI.SetActive(false);
+			equipmentUI.gameObject.SetActive(false);
+			inventoryUI.gameObject.SetActive(false);
 		}
 	}
 

@@ -1,16 +1,11 @@
+using Cinemachine;
+using Photon.Pun;
 using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEditor.Rendering;
+using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using static PlayerState;
-using UnityEngine.Playables;
-using Cinemachine;
-using TMPro;
-using UnityEngine.EventSystems;
-using System.Threading;
-using Photon.Pun;
 
 public class PlayerController : MonoBehaviour, IDamageable
 {
@@ -88,6 +83,9 @@ public class PlayerController : MonoBehaviour, IDamageable
 	private Coroutine takeHitRoutine;
 	public Coroutine TakeHitRoutine { get { return takeHitRoutine; } set { takeHitRoutine = value; } }
 	public InventoryUI inventoryUI;
+	public GraphicsUI graphicsUI;
+	public EquipmentUI equipmentUI;
+	public TMP_Dropdown dropdown; 
 	public QuickSlot quickSlot;
 	[SerializeField] float range;
 	public float Range { get { return range; } }

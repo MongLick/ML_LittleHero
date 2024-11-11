@@ -7,6 +7,8 @@ public class Shop : MonoBehaviour
 	[SerializeField] Button hpButton;
 	[SerializeField] Button mpButton;
 	[SerializeField] GameObject potionPrefab;
+	[SerializeField] ShopkeeperNPC npc;
+	[SerializeField] InventoryUI inventoryUI;
 
 	private void Awake()
 	{
@@ -84,7 +86,7 @@ public class Shop : MonoBehaviour
 		{
 			if (slot.currentItem != null && slot.currentItem.itemName == potionName)
 			{
-				return slot.currentItem as InventoryIcon;
+				return slot.currentItem;
 			}
 		}
 		return null;
@@ -92,13 +94,14 @@ public class Shop : MonoBehaviour
 
 	private InventoryIcon FindPotionInInventory(string potionName)
 	{
-		InventorySlot[] slots = Manager.Inven.InventoryUI.InventorySlots;
+		inventoryUI =  npc.GetComponent<InventoryUI>();
+		InventorySlot[] slots = inventoryUI.InventorySlots;
 
 		foreach (InventorySlot slot in slots)
 		{
 			if (slot.currentItem != null && slot.currentItem.itemName == potionName)
 			{
-				return slot.currentItem as InventoryIcon;
+				return slot.currentItem;
 			}
 		}
 		return null;
@@ -120,7 +123,7 @@ public class Shop : MonoBehaviour
 
 		potionIcon.itemName = potionName;
 		potionIcon.quantity = 1;
-		InventorySlot[] inventorySlots = Manager.Inven.InventoryUI.InventorySlots;
+		InventorySlot[] inventorySlots = inventoryUI.InventorySlots;
 		for (int i = 0; i < inventorySlots.Length; i++)
 		{
 			if (inventorySlots[i].currentItem == null)
@@ -138,7 +141,7 @@ public class Shop : MonoBehaviour
 
 	private void UpdatePotionQuantity(string potionName, int quantity)
 	{
-		InventorySlot[] slots = Manager.Inven.InventoryUI.InventorySlots;
+		InventorySlot[] slots = inventoryUI.InventorySlots;
 
 		for (int i = 0; i < slots.Length; i++)
 		{
@@ -162,7 +165,7 @@ public class Shop : MonoBehaviour
 			potionPrefab = Resources.Load<GameObject>("Prefabs/mpPotion");
 		}
 
-		InventorySlot[] inventorySlots = Manager.Inven.InventoryUI.InventorySlots;
+		InventorySlot[] inventorySlots = inventoryUI.InventorySlots;
 		InventorySlot slot = inventorySlots[slotIndex];
 
 		GameObject potionObject = Instantiate(potionPrefab, slot.transform);

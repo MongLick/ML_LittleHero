@@ -8,8 +8,9 @@ public class EquipmentNPC : MonoBehaviour
 	[SerializeField] InteractAdapter interactAdapter;
 	[SerializeField] LittleForestScene scene;
 	private bool isInteract;
+	[SerializeField] PlayerController playerController;
 
-private void Awake()
+	private void Awake()
 	{
 		interactAdapter.OnInteracted.AddListener(OnInteract);
 		scene.TalkButton.onClick.AddListener(() => OnInteract(null));
@@ -21,6 +22,7 @@ private void Awake()
 		{
 			scene.TalkButton.gameObject.SetActive(true);
 			isInteract = true;
+			playerController = other.GetComponent<PlayerController>();
 		}
 	}
 
@@ -30,6 +32,10 @@ private void Awake()
 		{
 			scene.TalkButton.gameObject.SetActive(true);
 			isInteract = true;
+			if (playerController == null)
+			{
+				playerController = other.GetComponent<PlayerController>();
+			}
 		}
 	}
 
@@ -40,48 +46,46 @@ private void Awake()
 			scene.TalkButton.gameObject.SetActive(false);
 			scene.TalkBackImage.gameObject.SetActive(false);
 			isInteract = false;
+			playerController = null;
 		}
 	}
 
 	private void OnInteract(PlayerController player)
 	{
-        if (!isInteract)
-        {
+		if (!isInteract)
+		{
 			return;
-        }
-        scene.TalkButton.gameObject.SetActive(false);
+		}
+		scene.TalkButton.gameObject.SetActive(false);
 		scene.TalkBackImage.gameObject.SetActive(true);
 		scene.ShopBack.gameObject.SetActive(false);
 
 		string questID = "firstQuest";
 		string questName = "첫 번째 퀘스트";
 		string position = Manager.Fire.IsLeft ? "Left" : "Right";
-
+		InventoryUI inventoryUI = playerController.inventoryUI;
 		Manager.Fire.LoadQuestData(position, questID, (questData) =>
 		{
 			if (questData == null)
 			{
 				scene.TalkText.text = "새로운 영웅이군 장비를 지급했으니 장비를 착용해봐";
-
 				Manager.Fire.AddQuest(position, questID, questName);
-
 				List<string> itemNames = new List<string> { "cloak1", "cloak2", "shield1", "shield2", "sword1", "sword2" };
-
-				InventorySlot[] inventorySlots = Manager.Inven.InventoryUI.InventorySlots;
 				int addedItems = 0;
-
 				foreach (string itemName in itemNames)
 				{
 					InventoryIcon newItemPrefab = Resources.Load<InventoryIcon>($"Prefabs/{itemName}");
+					Debug.Log(newItemPrefab);
 					if (newItemPrefab != null)
 					{
-						for (int i = 0; i < inventorySlots.Length; i++)
+						for (int i = 0; i < inventoryUI.InventorySlots.Length; i++)
 						{
-							if (inventorySlots[i].currentItem == null)
+							if (inventoryUI.InventorySlots[i].currentItem == null)
 							{
-								InventoryIcon newItem = Instantiate(newItemPrefab, inventorySlots[i].transform);
+								InventoryIcon newItem = Instantiate(newItemPrefab, inventoryUI.InventorySlots[i].transform);
 								newItem.GetComponent<RectTransform>().localPosition = Vector3.zero;
-								inventorySlots[i].currentItem = newItem;
+								newItem.InventoryUI = inventoryUI;
+								inventoryUI.InventorySlots[i].currentItem = newItem;
 								addedItems++;
 								Manager.Fire.SaveItemToDatabase(i, itemName);
 								break;

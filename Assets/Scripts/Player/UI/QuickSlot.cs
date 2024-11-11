@@ -17,6 +17,7 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 	private float coolTime;
 	private float time;
 	private bool isCooldown = false;
+	[SerializeField] InventoryUI inventoryUI;	
 
 	private void Awake()
 	{
@@ -100,7 +101,7 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 				{
 					draggedItem.parentSlot = null;
 					previousSlot.currentItem = null;
-					Manager.Fire.SaveItemToDatabase(Array.IndexOf(Manager.Inven.InventoryUI.InventorySlots, previousSlot), null);
+					Manager.Fire.SaveItemToDatabase(Array.IndexOf(inventoryUI.InventorySlots, previousSlot), null);
 				}
 			}
 			else
@@ -127,7 +128,7 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 					{
 						tempItem.transform.SetParent(previousSlot.transform);
 						tempItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-						int previousSlotIndex = Array.IndexOf(Manager.Inven.InventoryUI.InventorySlots, previousSlot);
+						int previousSlotIndex = Array.IndexOf(inventoryUI.InventorySlots, previousSlot);
 						Manager.Fire.SavePotionToDatabase(previousSlotIndex, new InventorySlotData(tempItem.itemName, tempItem.quantity));
 					}
 

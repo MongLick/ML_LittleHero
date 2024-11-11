@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IDropHandler, IPointerExitHandler
 {
+	[SerializeField] InventoryUI inventoryUI;
 	private Image image;
 	private RectTransform rect;
 	public InventoryIcon currentItem;
@@ -25,10 +26,11 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IDropHandler, 
 		if (currentItem == null)
 		{
 			currentItem = newItem;
+			newItem.InventoryUI = inventoryUI;
 			newItem.parentSlot = this;
 			newItem.transform.SetParent(transform);
 			newItem.GetComponent<RectTransform>().position = GetComponent<RectTransform>().position;
-			Manager.Fire.SaveItemToDatabase(Array.IndexOf(Manager.Inven.InventoryUI.InventorySlots, this), newItem.itemName);
+			Manager.Fire.SaveItemToDatabase(Array.IndexOf(inventoryUI.InventorySlots, this), newItem.itemName);
 		}
 	}
 
@@ -55,8 +57,8 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IDropHandler, 
 			return;
 		}
 
-		int thisSlotIndex = Array.IndexOf(Manager.Inven.InventoryUI.InventorySlots, this);
-		int draggedSlotIndex = Array.IndexOf(Manager.Inven.InventoryUI.InventorySlots, draggedSlot);
+		int thisSlotIndex = Array.IndexOf(inventoryUI.InventorySlots, this);
+		int draggedSlotIndex = Array.IndexOf(inventoryUI.InventorySlots, draggedSlot);
 
 		draggedSlot.currentItem = null;
 		Manager.Fire.SaveItemToDatabase(draggedSlotIndex, null);
