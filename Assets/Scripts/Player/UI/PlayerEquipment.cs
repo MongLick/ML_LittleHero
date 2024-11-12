@@ -1,11 +1,9 @@
 using Photon.Pun;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 
 public class PlayerEquipment : MonoBehaviourPun, IPunObservable
 {
+	[Header("Components")]
 	[SerializeField] GameObject swordObject1;
 	[SerializeField] GameObject swordObject2;
 	[SerializeField] GameObject shieldObject1;
@@ -13,9 +11,10 @@ public class PlayerEquipment : MonoBehaviourPun, IPunObservable
 	[SerializeField] GameObject cloakObject1;
 	[SerializeField] GameObject cloakObject2;
 
-	public string equippedWeapon = "";
-	public string equippedShield = "";
-	public string equippedCloak = "";
+	[Header("Specs")]
+	[SerializeField] string equippedWeapon = "";
+	[SerializeField] string equippedShield = "";
+	[SerializeField] string equippedCloak = "";
 
 	public void EquipWeapon(string weapon)
 	{
@@ -42,7 +41,7 @@ public class PlayerEquipment : MonoBehaviourPun, IPunObservable
 			swordObject1.SetActive(true);
 			swordObject2.SetActive(false);
 		}
-		else if(equippedWeapon == "sword2")
+		else if (equippedWeapon == "sword2")
 		{
 			swordObject1.SetActive(false);
 			swordObject2.SetActive(true);
@@ -106,6 +105,10 @@ public class PlayerEquipment : MonoBehaviourPun, IPunObservable
 			equippedWeapon = (string)stream.ReceiveNext();
 			equippedShield = (string)stream.ReceiveNext();
 			equippedCloak = (string)stream.ReceiveNext();
+
+			UpdateWeapon();
+			UpdateShield();
+			UpdateCloak();
 		}
 	}
 }

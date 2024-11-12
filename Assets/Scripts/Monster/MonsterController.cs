@@ -1,12 +1,6 @@
-using Firebase.Database;
-using Firebase.Extensions;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
-using UnityEngine.Playables;
 using static MonsterState;
 
 public class MonsterController : MonoBehaviour, IDamageable
@@ -14,15 +8,20 @@ public class MonsterController : MonoBehaviour, IDamageable
 	public enum MonsterType { Mushroom, Cactus }
 	[SerializeField] MonsterType type;
 	public MonsterType Type { get { return type; } }
+	[SerializeField] StateMachine<MonsterStateType> monsterState;
+	[SerializeField] MonsterStateType currentState;
+	[SerializeField] LayerMask playerLayer;
+	public LayerMask PlayerLayer { get { return playerLayer; } }
+
+	[Header("UnityEvent")]
 	[SerializeField] UnityEvent<MonsterController> onDieEvent;
 	public UnityEvent<MonsterController> OnDieEvent { get { return onDieEvent; } set { onDieEvent = value; } }
+
+	[Header("Components")]
 	[SerializeField] PooledObject pooledObject;
 	public PooledObject PooledObject { get { return pooledObject; } }
 	[SerializeField] MonsterController monsterCon;
 	public MonsterController MonsterCon { get { return monsterCon; } set { monsterCon = value; } }
-	[SerializeField] float attackCooltime;
-	public float AttackCooltime { get { return attackCooltime; } }
-	[SerializeField] float cooltime;
 	[SerializeField] GameObject attack;
 	public GameObject Attack { get { return attack; } set { attack = value; } }
 	[SerializeField] BoxCollider boxCollider;
@@ -35,12 +34,18 @@ public class MonsterController : MonoBehaviour, IDamageable
 	public Transform SpawnPos { get { return spawnPos; } set { spawnPos = value; } }
 	[SerializeField] Animator animator;
 	public Animator Animator { get { return animator; } }
-	[SerializeField] StateMachine<MonsterStateType> monsterState;
-	[SerializeField] MonsterStateType currentState;
-	[SerializeField] int hp;
-	public int Hp { get { return hp; } set { hp = value; } }
-	[SerializeField] int maxHp;
-	public int MaxHp { get { return maxHp; } }
+
+	[Header("Coroutine")]
+	private Coroutine attackRoutine;
+	public Coroutine AttackRoutine { get { return attackRoutine; } set { attackRoutine = value; } }
+	private Coroutine takeHitRoutine;
+	public Coroutine TakeHitRoutine { get { return takeHitRoutine; } set { takeHitRoutine = value; } }
+	private Coroutine stunnedRoutine;
+	public Coroutine StunnedRoutine { get { return stunnedRoutine; } set { stunnedRoutine = value; } }
+	private Coroutine dieRoutine;
+	public Coroutine DieRoutine { get { return dieRoutine; } set { dieRoutine = value; } }
+
+	[Header("Specs")]
 	[SerializeField] float moveDetectionRadius;
 	public float MoveDetectionRadius { get { return moveDetectionRadius; } set { moveDetectionRadius = value; } }
 	[SerializeField] float attackDetectionRadius;
@@ -49,8 +54,6 @@ public class MonsterController : MonoBehaviour, IDamageable
 	public float MaxDistance { get { return maxDistance; } }
 	[SerializeField] float spawnDistance;
 	public float SpawnDistance { get { return spawnDistance; } set { spawnDistance = value; } }
-	[SerializeField] LayerMask playerLayer;
-	public LayerMask PlayerLayer { get { return playerLayer; } }
 	[SerializeField] float attackDelay;
 	public float AttackDelay { get { return attackDelay; } }
 	[SerializeField] float takeHitDelay;
@@ -59,7 +62,13 @@ public class MonsterController : MonoBehaviour, IDamageable
 	public float StunnedDelay { get { return stunnedDelay; } }
 	[SerializeField] float dieDelay;
 	public float DieDelay { get { return dieDelay; } }
-
+	[SerializeField] float attackCooltime;
+	public float AttackCooltime { get { return attackCooltime; } }
+	[SerializeField] float cooltime;
+	[SerializeField] int hp;
+	public int Hp { get { return hp; } set { hp = value; } }
+	[SerializeField] int maxHp;
+	public int MaxHp { get { return maxHp; } }
 	private bool isAttackCooltime;
 	public bool IsAttackCooltime { get { return isAttackCooltime; } set { isAttackCooltime = value; } }
 	private bool isIdle;
@@ -76,15 +85,6 @@ public class MonsterController : MonoBehaviour, IDamageable
 	public bool IsStunned { get { return isStunned; } set { isStunned = value; } }
 	private bool isDie;
 	public bool IsDie { get { return isDie; } set { isDie = value; } }
-
-	private Coroutine attackRoutine;
-	public Coroutine AttackRoutine { get { return attackRoutine; } set { attackRoutine = value; } }
-	private Coroutine takeHitRoutine;
-	public Coroutine TakeHitRoutine { get { return takeHitRoutine; } set { takeHitRoutine = value; } }
-	private Coroutine stunnedRoutine;
-	public Coroutine StunnedRoutine { get { return stunnedRoutine; } set { stunnedRoutine = value; } }
-	private Coroutine dieRoutine;
-	public Coroutine DieRoutine { get { return dieRoutine; } set { dieRoutine = value; } }
 
 	private void Awake()
 	{

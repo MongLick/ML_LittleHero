@@ -1,13 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class EquipmentUI : MonoBehaviour
 {
+	[Header("Components")]
+	[SerializeField] EquipmentSlot[] equipmentSlots;
+	public EquipmentSlot[] EquipmentSlots { get { return equipmentSlots; } set { equipmentSlots = value; } }
 	[SerializeField] Button closeButton;
-	public EquipmentSlot[] equipmentSlots;
 	[SerializeField] InventoryUI inventoryUI;
 
 	private void Awake()

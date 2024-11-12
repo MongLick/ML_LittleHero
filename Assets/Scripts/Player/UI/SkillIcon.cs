@@ -1,15 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class SkillIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-	public string skillName;
-	private Canvas canvas;
-	public QuickSlot quickSlot;
-	public Image skillImage;
+	[Header("Components")]
+	[SerializeField] Canvas canvas;
+	[SerializeField] Image skillImage;
+	[SerializeField] QuickSlot quickSlot;
+	public QuickSlot QuickSlot { get { return quickSlot; } set { quickSlot = value; } }
+
+	[Header("Specs")]
+	[SerializeField] string skillName;
+	public string SkillName { get { return skillName; } }
 
 	private void Awake()
 	{

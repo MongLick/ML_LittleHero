@@ -76,7 +76,7 @@ public class PlayerAttackState : BaseState<PlayerStateType>
 		{
 			player.Animator.SetTrigger("Attack3");
 			Vector3 effectPosition = player.transform.position + player.transform.forward * player.SkillOffset;
-			Manager.Game.poolEffect.SpawnEffects(player.SkillName, effectPosition);
+			Manager.Game.PoolEffect.SpawnEffects(player.SkillName, effectPosition);
 		}
 
 		yield return new WaitForSeconds(player.AttackDelay);

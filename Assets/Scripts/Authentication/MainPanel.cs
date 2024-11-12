@@ -1,13 +1,13 @@
 using Firebase.Database;
 using Firebase.Extensions;
 using Photon.Pun;
-using Photon.Realtime;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class MainPanel : MonoBehaviour
 {
+	[Header("Components")]
 	[SerializeField] PanelController panelController;
 	[SerializeField] HeroPanel heroPanel;
 	[SerializeField] Button logoutButton;
@@ -222,7 +222,7 @@ public class MainPanel : MonoBehaviour
 			}
 			else
 			{
-				UIOffChange1();
+				UpdateUIForLeftChoice();
 			}
 		});
 
@@ -349,7 +349,7 @@ public class MainPanel : MonoBehaviour
 				}
 				else
 				{
-					UIOffChange2();
+					UpdateUIForRightChoice();
 				}
 			});
 	}
@@ -370,7 +370,7 @@ public class MainPanel : MonoBehaviour
 		panelController.SetActivePanel(PanelController.Panel.Hero);
 	}
 
-	public void UIOffChange1()
+	public void UpdateUIForLeftChoice()
 	{
 		leftNickName.text = "";
 		manAnimator1.gameObject.SetActive(false);
@@ -380,7 +380,7 @@ public class MainPanel : MonoBehaviour
 		pressed1.gameObject.SetActive(false);
 	}
 
-	public void UIOffChange2()
+	public void UpdateUIForRightChoice()
 	{
 		rightNickName.text = "";
 		manAnimator2.gameObject.SetActive(false);

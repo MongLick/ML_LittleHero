@@ -1,6 +1,4 @@
-using Photon.Realtime;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using static MonsterState;
 
@@ -46,7 +44,7 @@ public class MonsterAttackState : BaseState<MonsterStateType>
 		{
 			ChangeState(MonsterStateType.TakeHit);
 		}
-		else if(monster.IsStunned)
+		else if (monster.IsStunned)
 		{
 			ChangeState(MonsterStateType.Stunned);
 		}
@@ -62,7 +60,7 @@ public class MonsterAttackState : BaseState<MonsterStateType>
 		{
 			ChangeState(MonsterStateType.Move);
 		}
-		else if(monster.IsIdle)
+		else if (monster.IsIdle)
 		{
 			ChangeState(MonsterStateType.Idle);
 		}

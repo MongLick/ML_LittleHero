@@ -1,14 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class ShopkeeperNPC : MonoBehaviour
 {
-    [SerializeField] InteractAdapter interactAdapter;
-    [SerializeField] LittleForestScene scene;
-	private bool isInteract;
+	[Header("Components")]
+	[SerializeField] InteractAdapter interactAdapter;
+	[SerializeField] LittleForestScene scene;
 	[SerializeField] PlayerController player;
+	[SerializeField] InventorySlot[] inventorySlots;
+	public InventorySlot[] InventorySlots { get { return inventorySlots; } }
+	[SerializeField] QuickSlot[] quickSlot;
+	public QuickSlot[] QuickSlot { get { return quickSlot; } }
+
+	[Header("Specs")]
+	private bool isInteract;
 
 	private void Awake()
 	{
@@ -20,9 +25,15 @@ public class ShopkeeperNPC : MonoBehaviour
 	{
 		if (scene.PlayerLayer.Contain(other.gameObject.layer))
 		{
-			scene.TalkButton.gameObject.SetActive(true);
-			isInteract = true;
-			player = other.GetComponent<PlayerController>();
+			PhotonView photonView = other.GetComponent<PhotonView>();
+			if (photonView.IsMine)
+			{
+				scene.TalkButton.gameObject.SetActive(true);
+				isInteract = true;
+				player = other.GetComponent<PlayerController>();
+				inventorySlots = player.InventoryUI.InventorySlots;
+				quickSlot = player.QuickSlots;
+			}
 		}
 	}
 
@@ -30,11 +41,17 @@ public class ShopkeeperNPC : MonoBehaviour
 	{
 		if (scene.PlayerLayer.Contain(other.gameObject.layer))
 		{
-			scene.TalkButton.gameObject.SetActive(true);
-			isInteract = true;
 			if (player == null)
 			{
 				player = other.GetComponent<PlayerController>();
+				inventorySlots = player.InventoryUI.InventorySlots;
+				quickSlot = player.QuickSlots;
+			}
+			PhotonView photonView = other.GetComponent<PhotonView>();
+			if (photonView.IsMine)
+			{
+				scene.TalkButton.gameObject.SetActive(true);
+				isInteract = true;
 			}
 		}
 	}
@@ -43,10 +60,16 @@ public class ShopkeeperNPC : MonoBehaviour
 	{
 		if (scene.PlayerLayer.Contain(other.gameObject.layer))
 		{
-			scene.TalkButton.gameObject.SetActive(false);
-			scene.TalkBackImage.gameObject.SetActive(false);
-			isInteract = false;
-			player = null;
+			PhotonView photonView = other.GetComponent<PhotonView>();
+			if (photonView.IsMine)
+			{
+				scene.TalkButton.gameObject.SetActive(false);
+				scene.TalkBackImage.gameObject.SetActive(false);
+				isInteract = false;
+				player = null;
+				inventorySlots = null;
+				quickSlot = null;
+			}
 		}
 	}
 

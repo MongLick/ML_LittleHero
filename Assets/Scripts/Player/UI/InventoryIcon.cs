@@ -7,18 +7,30 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 {
 	public enum SlotType { Weapon, Shield, Cloak, hpPotion, mpPotion }
 	public SlotType slotType;
-	private Transform canvas;
-	private Transform previousParent;
-	private RectTransform rect;
-	private CanvasGroup canvasGroup;
-	public string itemName;
-	public InventorySlot parentSlot;
-	public EquipmentSlot equipmentSlot;
-	public QuickSlot quickSlot;
-	public bool isEquipment;
-	public InventoryUI InventoryUI;
-	public int quantity;
-	public TMP_Text quantityText;
+
+	[Header("Components")]
+	[SerializeField] Transform canvas;
+	[SerializeField] Transform previousParent;
+	[SerializeField] RectTransform rect;
+	[SerializeField] CanvasGroup canvasGroup;
+	[SerializeField] InventorySlot parentSlot;
+	public InventorySlot ParentSlot { get { return parentSlot; } set { parentSlot = value; } }
+	[SerializeField] EquipmentSlot equipmentSlot;
+	public EquipmentSlot EquipmentSlot { get { return equipmentSlot; } set { equipmentSlot = value; } }
+	[SerializeField] QuickSlot quickSlot;
+	public QuickSlot QuickSlot { get { return quickSlot; } set { quickSlot = value; } }
+	[SerializeField] InventoryUI inventoryUI;
+	public InventoryUI InventoryUI { get { return inventoryUI; } set { inventoryUI = value; } }
+	[SerializeField] TMP_Text quantityText;
+	public TMP_Text QuantityText { get { return quantityText; } set { quantityText = value; } }
+
+	[Header("Specs")]
+	[SerializeField] string itemName;
+	public string ItemName { get { return itemName; } set { itemName = value; } }
+	[SerializeField] int quantity;
+	public int Quantity { get { return quantity; } set { quantity = value; } }
+	private bool isEquipment;
+	public bool IsEquipment { get { return isEquipment; } set { isEquipment = value; } }
 
 	private void Awake()
 	{
@@ -56,10 +68,10 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 			if (parentSlot != null)
 			{
 				Manager.Fire.SaveItemToDatabase(Array.IndexOf(InventoryUI.InventorySlots, parentSlot), null);
-				parentSlot.currentItem = null;
+				parentSlot.CurrentItem = null;
 				parentSlot = null;
 
-				equipmentSlot.currentItem = this;
+				equipmentSlot.CurrentItem = this;
 				isEquipment = true;
 			}
 		}
@@ -70,9 +82,9 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
 			foreach (EquipmentSlot slot in equipmentSlots)
 			{
-				if (slot.slotType == slotType && slot.currentItem != null && slot.currentItem.itemName == itemName)
+				if (slot.SlotType == slotType && slot.CurrentItem != null && slot.CurrentItem.itemName == itemName)
 				{
-					slot.currentItem = null;
+					slot.CurrentItem = null;
 					slot.UnequipItem();
 					break;
 				}
@@ -83,7 +95,7 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
 		if (quickSlot != null)
 		{
-			quickSlot.currentItem = this;
+			quickSlot.CurrentItem = this;
 		}
 		else
 		{
@@ -91,10 +103,10 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
 			foreach (QuickSlot slot in quickSlot)
 			{
-				if (slot.currentItem != null && slot.currentItem.itemName == itemName)
+				if (slot.CurrentItem != null && slot.CurrentItem.itemName == itemName)
 				{
-					slot.currentItem = null;
-					Manager.Fire.SavePotionQuickSlot(slot.slotIndex, new InventorySlotData("", 0));
+					slot.CurrentItem = null;
+					Manager.Fire.SavePotionQuickSlot(slot.SlotIndex, new InventorySlotData("", 0));
 					break;
 				}
 			}
@@ -112,7 +124,7 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 		{
 			InventorySlot slot = inventorySlots[i];
 
-			if (slot.currentItem == null)
+			if (slot.CurrentItem == null)
 			{
 				transform.SetParent(slot.transform);
 				rect.position = slot.GetComponent<RectTransform>().position;
@@ -120,10 +132,10 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 				if (parentSlot != null)
 				{
 					Manager.Fire.SaveItemToDatabase(Array.IndexOf(InventoryUI.InventorySlots, parentSlot), "");
-					parentSlot.currentItem = null;
+					parentSlot.CurrentItem = null;
 				}
 
-				slot.currentItem = this;
+				slot.CurrentItem = this;
 				parentSlot = slot;
 				int index = Array.IndexOf(InventoryUI.InventorySlots, parentSlot);
 

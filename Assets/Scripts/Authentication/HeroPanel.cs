@@ -6,29 +6,37 @@ using static UserData;
 
 public class HeroPanel : MonoBehaviour
 {
+	[Header("Components")]
 	[SerializeField] PanelController panelController;
+	[SerializeField] TMP_InputField nickName;
 	[SerializeField] Button manPressed;
 	[SerializeField] Button woManPressed;
-	[SerializeField] TMP_InputField nickName;
 	[SerializeField] Button cancelButton;
 	[SerializeField] Button confirmButton;
 	[SerializeField] Animator manAnimator;
 	[SerializeField] Animator woManAnimator;
 
+	[Header("Specs")]
+	[SerializeField] string characterPosition;
 	private bool manChoice;
 	private bool woManChoice;
-	private string characterPosition;
 
 	private void Awake()
 	{
-		manPressed.onClick.AddListener(ManPressed);
-		woManPressed.onClick.AddListener(WoManPressed);
+		manPressed.onClick.AddListener(() => SelectCharacter(true));
+		woManPressed.onClick.AddListener(() => SelectCharacter(false));
 		cancelButton.onClick.AddListener(Cancel);
 		confirmButton.onClick.AddListener(Confirm);
-		manPressed.onClick.AddListener(Manager.Sound.ButtonSFX);
-		woManPressed.onClick.AddListener(Manager.Sound.ButtonSFX);
-		cancelButton.onClick.AddListener(Manager.Sound.ButtonSFX);
-		confirmButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+
+		AddSoundEffect(manPressed);
+		AddSoundEffect(woManPressed);
+		AddSoundEffect(cancelButton);
+		AddSoundEffect(confirmButton);
+	}
+
+	private void AddSoundEffect(Button button)
+	{
+		button.onClick.AddListener(Manager.Sound.ButtonSFX);
 	}
 
 	public void SetCharacterPosition(string position)
@@ -36,60 +44,73 @@ public class HeroPanel : MonoBehaviour
 		characterPosition = position;
 	}
 
-	private void ManPressed()
+	private void SelectCharacter(bool isMan)
 	{
-		manAnimator.SetBool("Victory", true);
-		woManAnimator.SetBool("Victory", false);
-		manPressed.image.color = Color.green;
-		woManPressed.image.color = Color.white;
-		manChoice = true;
-		woManChoice = false;
-	}
+		manChoice = isMan;
+		woManChoice = !isMan;
 
-	private void WoManPressed()
-	{
-		woManAnimator.SetBool("Victory", true);
-		manAnimator.SetBool("Victory", false);
-		woManPressed.image.color = Color.green;
-		manPressed.image.color = Color.white;
-		manChoice = false;
-		woManChoice = true;
+		manAnimator.SetBool("Victory", manChoice);
+		woManAnimator.SetBool("Victory", woManChoice);
+
+		manPressed.image.color = manChoice ? Color.green : Color.white;
+		woManPressed.image.color = woManChoice ? Color.green : Color.white;
 	}
 
 	private void Cancel()
 	{
-		manPressed.image.color = Color.white;
-		woManPressed.image.color = Color.white;
-		nickName.text = "";
+		ResetSelection();
 		panelController.SetActivePanel(PanelController.Panel.Main);
 	}
 
 	private void Confirm()
 	{
 		string name = nickName.text.Trim();
+
+		if (!ValidateSelection(name)) return;
+
+		CharacterType characterType = manChoice ? CharacterType.Man : CharacterType.WoMan;
+		Dictionary<int, InventorySlotData> inventory = InitializeInventory();
+
+		Manager.Fire.CreateCharacter(name, characterType, characterPosition, -25, 4, -7, "LittleForestScene", 100, 100, 0,
+			null, null, null, inventory, new Dictionary<string, QuestData>(), new InventorySlotData[4], 2);
+
+		ResetSelection();
+		panelController.SetActivePanel(PanelController.Panel.Main);
+	}
+
+	private bool ValidateSelection(string name)
+	{
 		if (!manChoice && !woManChoice)
 		{
 			panelController.ShowInfo("캐릭터를 선택해주세요");
-			return;
+			return false;
 		}
+
 		if (string.IsNullOrEmpty(name))
 		{
 			panelController.ShowInfo("닉네임을 설정해주세요");
-			return;
+			return false;
 		}
 
-		manPressed.image.color = Color.white;
-		woManPressed.image.color = Color.white;
-		CharacterType characterType = manChoice ? CharacterType.Man : CharacterType.WoMan;
+		return true;
+	}
 
+	private Dictionary<int, InventorySlotData> InitializeInventory()
+	{
 		Dictionary<int, InventorySlotData> inventory = new Dictionary<int, InventorySlotData>();
 		for (int i = 0; i < 16; i++)
 		{
 			inventory[i] = new InventorySlotData();
 		}
+		return inventory;
+	}
 
-		Manager.Fire.CreateCharacter(name, characterType, characterPosition, -25, 4, -7, "LittleForestScene", 100, 100, 0, null, null, null, inventory, new Dictionary<string, QuestData>(), new InventorySlotData[4], 2);
-		panelController.SetActivePanel(PanelController.Panel.Main);
+	private void ResetSelection()
+	{
+		manPressed.image.color = Color.white;
+		woManPressed.image.color = Color.white;
 		nickName.text = "";
+		manChoice = false;
+		woManChoice = false;
 	}
 }

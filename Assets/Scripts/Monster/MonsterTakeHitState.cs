@@ -1,6 +1,4 @@
-using Photon.Realtime;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using static MonsterState;
 
@@ -15,7 +13,7 @@ public class MonsterTakeHitState : BaseState<MonsterStateType>
 
 	public override void Enter()
 	{
-		if(monster.TakeHitRoutine != null)
+		if (monster.TakeHitRoutine != null)
 		{
 			monster.StopCoroutine(monster.TakeHitRoutine);
 		}
@@ -24,11 +22,11 @@ public class MonsterTakeHitState : BaseState<MonsterStateType>
 
 	public override void Update()
 	{
-		if(monster.IsTakeHit)
+		if (monster.IsTakeHit)
 		{
 			return;
 		}
-		else if(monster.IsDie)
+		else if (monster.IsDie)
 		{
 			ChangeState(MonsterStateType.Die);
 		}

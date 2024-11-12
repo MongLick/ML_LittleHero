@@ -4,22 +4,28 @@ using UnityEngine.UI;
 
 public class InfoPanel : MonoBehaviour
 {
-    [SerializeField] TMP_Text infoText;
-    [SerializeField] Button closeButton;
+	[Header("Components")]
+	[SerializeField] TMP_Text infoText;
+	[SerializeField] Button closeButton;
 
-    private void Awake()
+	private void Awake()
     {
-        closeButton.onClick.AddListener(Close);
-		closeButton.onClick.AddListener(Manager.Sound.ButtonSFX);
-	}
-
-    public void ShowInfo(string message)
-    {
-        gameObject.SetActive(true);
-        infoText.text = message;
+        AddCloseButtonListeners();
     }
 
-    public void Close()
+    private void AddCloseButtonListeners()
+    {
+        closeButton.onClick.AddListener(Close);
+        closeButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+    }
+
+    public void DisplayMessage(string message)
+    {
+        infoText.text = message;
+        gameObject.SetActive(true);
+    }
+
+    private void Close()
     {
         gameObject.SetActive(false);
     }

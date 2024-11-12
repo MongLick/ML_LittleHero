@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerMenuUI : MonoBehaviour
 {
-    [SerializeField] Button equipmentButton;
+	[Header("Components")]
+	[SerializeField] Button equipmentButton;
 	[SerializeField] Button inventoryButton;
 	[SerializeField] Button skillButton;
 	[SerializeField] Button closeButton;

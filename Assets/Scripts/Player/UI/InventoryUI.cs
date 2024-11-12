@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
 {
+	[Header("Components")]
 	[SerializeField] Button closeButton;
 	[SerializeField] InventorySlot[] inventorySlots;
 	public InventorySlot[] InventorySlots { get { return inventorySlots; } }

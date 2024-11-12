@@ -10,19 +10,20 @@ using UnityEngine.UI;
 
 public class LittleForestScene : BaseScene
 {
-	private GameObject characterInstance;
+	[Header("Components")]
+	[SerializeField] LayerMask playerLayer;
+	public LayerMask PlayerLayer { get { return playerLayer; } set { playerLayer = value; } }
 	[SerializeField] TMP_Text talkText;
 	public TMP_Text TalkText { get { return talkText; } set { talkText = value; } }
 	[SerializeField] Image talkBackImage;
 	public Image TalkBackImage { get { return talkBackImage; } set { talkBackImage = value; } }
-	[SerializeField] LayerMask playerLayer;
-	public LayerMask PlayerLayer { get { return playerLayer; } set { playerLayer = value; } }
 	[SerializeField] Button talkButton;
 	public Button TalkButton { get { return talkButton; } set { talkButton = value; } }
 	[SerializeField] Button closeButton;
 	public Button CloseButton { get { return closeButton; } set { closeButton = value; } }
 	[SerializeField] Shop shopBack;
 	public Shop ShopBack { get { return shopBack; } set { shopBack = value; } }
+	[SerializeField] GameObject characterInstance;
 
 	private void Awake()
 	{
@@ -33,7 +34,7 @@ public class LittleForestScene : BaseScene
 	{
 		base.OnEnable();
 		PhotonNetwork.JoinOrCreateRoom("RPG_MainRoom", new RoomOptions { MaxPlayers = 20 }, TypedLobby.Default);
-		Manager.Game.poolEffect = FindAnyObjectByType<PoolEffect>();
+		Manager.Game.PoolEffect = FindAnyObjectByType<PoolEffect>();
 		Manager.Sound.PlayBGM(Manager.Sound.LittleForestSoundClip);
 	}
 
@@ -79,7 +80,7 @@ public class LittleForestScene : BaseScene
 						characterInstance = PhotonNetwork.Instantiate("WoManPlayer", new Vector3(posX, posY, posZ), Quaternion.identity);
 					}
 
-					Manager.Game.player = FindAnyObjectByType<PlayerController>();
+					Manager.Game.Player = FindAnyObjectByType<PlayerController>();
 					TMP_Text nicknameUI = characterInstance.GetComponentInChildren<TMP_Text>();
 					if (nicknameUI != null)
 					{
@@ -87,11 +88,11 @@ public class LittleForestScene : BaseScene
 					}
 					UserData.CharacterType characterType = (type == "0") ? UserData.CharacterType.Man : UserData.CharacterType.WoMan;
 					Manager.Data.UserData = new UserData(nickName, characterType, "Left", posX, posY, posZ, "LittleForestScene", health, mana, gold, weapon, shield, cloak, new Dictionary<int, InventorySlotData>(), new Dictionary<string, QuestData>(), new InventorySlotData[4], qualityLevel);
-					PlayerController character = GetComponent<PlayerController>();
-					GraphicsUI graphicsUI = character.graphicsUI;
-					InventoryUI inventoryUI = character.inventoryUI;
-					EquipmentUI equipmentUI = character.equipmentUI;
-					TMP_Dropdown qualityDropdown = character.dropdown;
+					PlayerController character = characterInstance.GetComponent<PlayerController>();
+					GraphicsUI graphicsUI = character.GraphicsUI;
+					InventoryUI inventoryUI = character.InventoryUI;
+					EquipmentUI equipmentUI = character.EquipmentUI;
+					TMP_Dropdown qualityDropdown = character.Dropdown;
 					QualitySettings.SetQualityLevel(qualityLevel);
 					EquipItems(weapon, shield, cloak, equipmentUI, inventoryUI);
 					qualityDropdown.value = qualityLevel;
@@ -179,7 +180,7 @@ public class LittleForestScene : BaseScene
 						characterInstance = PhotonNetwork.Instantiate("WoManPlayer", new Vector3(posX, posY, posZ), Quaternion.identity);
 					}
 
-					Manager.Game.player = FindAnyObjectByType<PlayerController>();
+					Manager.Game.Player = FindAnyObjectByType<PlayerController>();
 					TMP_Text nicknameUI = characterInstance.GetComponentInChildren<TMP_Text>();
 					if (nicknameUI != null)
 					{
@@ -188,10 +189,10 @@ public class LittleForestScene : BaseScene
 					UserData.CharacterType characterType = (type == "0") ? UserData.CharacterType.Man : UserData.CharacterType.WoMan;
 					Manager.Data.UserData = new UserData(nickName, characterType, "Left", posX, posY, posZ, "LittleForestScene", health, mana, gold, weapon, shield, cloak, new Dictionary<int, InventorySlotData>(), new Dictionary<string, QuestData>(), new InventorySlotData[4], qualityLevel);
 					PlayerController character = characterInstance.GetComponent<PlayerController>();
-					GraphicsUI graphicsUI = character.graphicsUI;
-					InventoryUI inventoryUI = character.inventoryUI;
-					EquipmentUI equipmentUI = character.equipmentUI;
-					TMP_Dropdown qualityDropdown = character.dropdown;
+					GraphicsUI graphicsUI = character.GraphicsUI;
+					InventoryUI inventoryUI = character.InventoryUI;
+					EquipmentUI equipmentUI = character.EquipmentUI;
+					TMP_Dropdown qualityDropdown = character.Dropdown;
 					graphicsUI.gameObject.SetActive(true);
 					inventoryUI.gameObject.SetActive(true);
 					equipmentUI.gameObject.SetActive(true);
@@ -265,7 +266,7 @@ public class LittleForestScene : BaseScene
 		GameObject weaponPrefab = FindItemPrefab(weapon);
 		if (weaponPrefab != null)
 		{
-			EquipmentSlot weaponSlotComponent = equipmentUI.equipmentSlots[0];
+			EquipmentSlot weaponSlotComponent = equipmentUI.EquipmentSlots[0];
 
 			if (weaponSlotComponent != null && weapon != null)
 			{
@@ -273,18 +274,18 @@ public class LittleForestScene : BaseScene
 				playerEquipment.EquipWeapon(weapon);
 
 				InventoryIcon weaponIcon = weaponInstance.GetComponent<InventoryIcon>();
-				weaponSlotComponent.currentItem = weaponIcon;
-				weaponSlotComponent.currentItem.itemName = weapon;
-				weaponSlotComponent.currentItem.isEquipment = true;
-				weaponSlotComponent.currentItem.equipmentSlot = weaponSlotComponent;
-				weaponSlotComponent.currentItem.InventoryUI = inventoryUI;
+				weaponSlotComponent.CurrentItem = weaponIcon;
+				weaponSlotComponent.CurrentItem.ItemName = weapon;
+				weaponSlotComponent.CurrentItem.IsEquipment = true;
+				weaponSlotComponent.CurrentItem.EquipmentSlot = weaponSlotComponent;
+				weaponSlotComponent.CurrentItem.InventoryUI = inventoryUI;
 			}
 		}
 
 		GameObject shieldPrefab = FindItemPrefab(shield);
 		if (shieldPrefab != null)
 		{
-			EquipmentSlot shieldSlotComponent = equipmentUI.equipmentSlots[1];
+			EquipmentSlot shieldSlotComponent = equipmentUI.EquipmentSlots[1];
 
 			if (shieldSlotComponent != null && shield != null)
 			{
@@ -292,18 +293,18 @@ public class LittleForestScene : BaseScene
 				playerEquipment.EquipShield(shield);
 
 				InventoryIcon shieldIcon = shieldInstance.GetComponent<InventoryIcon>();
-				shieldSlotComponent.currentItem = shieldIcon;
-				shieldSlotComponent.currentItem.itemName = shield;
-				shieldSlotComponent.currentItem.isEquipment = true;
-				shieldSlotComponent.currentItem.equipmentSlot = shieldSlotComponent;
-				shieldSlotComponent.currentItem.InventoryUI = inventoryUI;
+				shieldSlotComponent.CurrentItem = shieldIcon;
+				shieldSlotComponent.CurrentItem.ItemName = shield;
+				shieldSlotComponent.CurrentItem.IsEquipment = true;
+				shieldSlotComponent.CurrentItem.EquipmentSlot = shieldSlotComponent;
+				shieldSlotComponent.CurrentItem.InventoryUI = inventoryUI;
 			}
 		}
 
 		GameObject cloakPrefab = FindItemPrefab(cloak);
 		if (cloakPrefab != null)
 		{
-			EquipmentSlot cloakSlotComponent = equipmentUI.equipmentSlots[2];
+			EquipmentSlot cloakSlotComponent = equipmentUI.EquipmentSlots[2];
 
 			if (cloakSlotComponent != null && cloak != null)
 			{
@@ -311,10 +312,10 @@ public class LittleForestScene : BaseScene
 				playerEquipment.EquipCloak(cloak);
 
 				InventoryIcon cloakIcon = cloakInstance.GetComponent<InventoryIcon>();
-				cloakSlotComponent.currentItem = cloakIcon;
-				cloakSlotComponent.currentItem.itemName = cloak;
-				cloakIcon.isEquipment = true;
-				cloakIcon.equipmentSlot = cloakSlotComponent;
+				cloakSlotComponent.CurrentItem = cloakIcon;
+				cloakSlotComponent.CurrentItem.ItemName = cloak;
+				cloakIcon.IsEquipment = true;
+				cloakIcon.EquipmentSlot = cloakSlotComponent;
 				cloakIcon.InventoryUI = inventoryUI;
 			}
 		}
@@ -355,7 +356,7 @@ public class LittleForestScene : BaseScene
 
 		foreach (QuickSlot slot in quickSlots)
 		{
-			if (slot.slotIndex == slotIndex)
+			if (slot.SlotIndex == slotIndex)
 			{
 				GameObject prefabObject = Instantiate(prefab, slot.transform);
 				InventoryIcon potionIcon = prefabObject.GetComponent<InventoryIcon>();
@@ -363,17 +364,17 @@ public class LittleForestScene : BaseScene
 
 				if (potionIcon != null)
 				{
-					potionIcon.quickSlot = slot;
-					potionIcon.quantity = itemQuantity;
+					potionIcon.QuickSlot = slot;
+					potionIcon.Quantity = itemQuantity;
 					potionIcon.UpdateQuantityText();
-					slot.currentItem = potionIcon;
+					slot.CurrentItem = potionIcon;
 					break;
 				}
 				if (skillIcon != null)
 				{
 					skillIcon.name = itemName;
-					skillIcon.quickSlot = slot;
-					slot.currentSkill = skillIcon;
+					skillIcon.QuickSlot = slot;
+					slot.CurrentSkill = skillIcon;
 					break;
 				}
 			}

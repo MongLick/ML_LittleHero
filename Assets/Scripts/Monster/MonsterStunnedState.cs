@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using static MonsterState;
 
@@ -14,7 +13,7 @@ public class MonsterStunnedState : BaseState<MonsterStateType>
 
 	public override void Enter()
 	{
-		if(monster.StunnedRoutine != null)
+		if (monster.StunnedRoutine != null)
 		{
 			monster.StopCoroutine(monster.StunnedRoutine);
 		}
@@ -23,15 +22,15 @@ public class MonsterStunnedState : BaseState<MonsterStateType>
 
 	public override void Update()
 	{
-		if(monster.IsStunned)
+		if (monster.IsStunned)
 		{
 			return;
 		}
-		else if(monster.IsDie)
+		else if (monster.IsDie)
 		{
 			ChangeState(MonsterStateType.Die);
 		}
-		else if(monster.IsTakeHit)
+		else if (monster.IsTakeHit)
 		{
 			ChangeState(MonsterStateType.TakeHit);
 		}
@@ -39,11 +38,11 @@ public class MonsterStunnedState : BaseState<MonsterStateType>
 		{
 			ChangeState(MonsterStateType.Return);
 		}
-		else if(monster.IsAttack)
-        {
+		else if (monster.IsAttack)
+		{
 			ChangeState(MonsterStateType.Attack);
 		}
-		else if(monster.IsMove)
+		else if (monster.IsMove)
 		{
 			ChangeState(MonsterStateType.Move);
 		}
@@ -51,7 +50,7 @@ public class MonsterStunnedState : BaseState<MonsterStateType>
 		{
 			ChangeState(MonsterStateType.Idle);
 		}
-    }
+	}
 
 	private IEnumerator StunnedCoroutine()
 	{

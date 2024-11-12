@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using static PlayerState;
 
 public class PlayerIdleState : BaseState<PlayerStateType>
@@ -14,19 +11,19 @@ public class PlayerIdleState : BaseState<PlayerStateType>
 
 	public override void Update()
 	{
-		if(player.IsAttack)
+		if (player.IsAttack)
 		{
 			ChangeState(PlayerStateType.Attack);
 		}
-		else if(player.IsTakeHit)
+		else if (player.IsTakeHit)
 		{
 			ChangeState(PlayerStateType.TakeHit);
 		}
-		else if(player.IsBlock)
+		else if (player.IsBlock)
 		{
 			ChangeState(PlayerStateType.Block);
 		}
-		else if(player.IsStunned)
+		else if (player.IsStunned)
 		{
 			ChangeState(PlayerStateType.Stunned);
 		}

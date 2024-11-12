@@ -1,25 +1,31 @@
 using Firebase.Extensions;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ChoicePanel : MonoBehaviour
 {
+	[Header("Components")]
 	[SerializeField] Button cancelButton;
 	[SerializeField] Button confirmButton;
 	[SerializeField] Button creationButton;
 	[SerializeField] MainPanel mainPanel;
 
+	[Header("Specs")]
+	[SerializeField] string choice;
 	private bool isLeftChoice;
 
 	private void Awake()
 	{
 		cancelButton.onClick.AddListener(Cancel);
 		confirmButton.onClick.AddListener(Confirm);
-		cancelButton.onClick.AddListener(Manager.Sound.ButtonSFX);
-		confirmButton.onClick.AddListener(Manager.Sound.ButtonSFX);
-		creationButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+		AddButtonSFXListener(cancelButton);
+		AddButtonSFXListener(confirmButton);
+		AddButtonSFXListener(creationButton);
+	}
+
+	private void AddButtonSFXListener(Button button)
+	{
+		button.onClick.AddListener(Manager.Sound.ButtonSFX);
 	}
 
 	public void ShowChoice(bool isLeft)
@@ -36,37 +42,29 @@ public class ChoicePanel : MonoBehaviour
 	}
 
 	private void Confirm()
-	{
-		if (isLeftChoice)
-		{
-			Manager.Fire.DB.GetReference("UserData")
-				.Child(Manager.Fire.UserID)
-				.Child("Left")
-				.RemoveValueAsync()
-				.ContinueWithOnMainThread(task =>
-				{
-					if (task.IsCompleted)
-					{
-						gameObject.SetActive(false);
-						mainPanel.gameObject.SetActive(true);
-						mainPanel.UIOffChange1();
-					}
-				});
-		}
-		else
-		{
-			Manager.Fire.DB.GetReference("UserData")
-				.Child(Manager.Fire.UserID)
-				.Child("Right")
-				.RemoveValueAsync().ContinueWithOnMainThread(task =>
-				{
-					if (task.IsCompleted)
-					{
-						gameObject.SetActive(false);
-						mainPanel.gameObject.SetActive(true);
-						mainPanel.UIOffChange2();
-					}
-				});
-		}
-	}
+    {
+        choice = isLeftChoice ? "Left" : "Right";
+
+        Manager.Fire.DB.GetReference("UserData")
+            .Child(Manager.Fire.UserID)
+            .Child(choice)
+            .RemoveValueAsync()
+            .ContinueWithOnMainThread(task =>
+            {
+                if (task.IsCompleted)
+                {
+                    gameObject.SetActive(false);
+                    mainPanel.gameObject.SetActive(true);
+
+                    if (isLeftChoice)
+                    {
+                        mainPanel.UpdateUIForLeftChoice();
+                    }
+                    else
+                    {
+                        mainPanel.UpdateUIForRightChoice();
+                    }
+                }
+            });
+    }
 }

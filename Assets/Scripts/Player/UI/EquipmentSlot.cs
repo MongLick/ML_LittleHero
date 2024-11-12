@@ -4,9 +4,13 @@ using static InventoryIcon;
 
 public class EquipmentSlot : MonoBehaviour, IDropHandler
 {
-	public SlotType slotType;
-	public InventoryIcon currentItem;
-	private PlayerEquipment playerEquipment;
+	[Header("Components")]
+	[SerializeField] SlotType slotType;
+	public SlotType SlotType { get { return slotType; } set { slotType = value; } }
+	[SerializeField] InventoryIcon currentItem;
+	public InventoryIcon CurrentItem { get { return currentItem; } set { currentItem = value; } }
+	[SerializeField] PlayerEquipment playerEquipment;
+	public PlayerEquipment PlayerEquipment { get { return playerEquipment; } set { playerEquipment = value; } }
 
 	private void Start()
 	{
@@ -36,42 +40,42 @@ public class EquipmentSlot : MonoBehaviour, IDropHandler
 		item.transform.SetParent(transform);
 		item.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
 		currentItem = item;
-		currentItem.isEquipment = true;
+		currentItem.IsEquipment = true;
 
 		if (slotType == SlotType.Weapon)
 		{
-			playerEquipment.EquipWeapon(item.itemName);
+			playerEquipment.EquipWeapon(item.ItemName);
 			if (Manager.Fire.IsLeft)
 			{
-				Manager.Fire.UpdateWeaponSlot("Left", item.itemName);
+				Manager.Fire.UpdateWeaponSlot("Left", item.ItemName);
 			}
 			else
 			{
-				Manager.Fire.UpdateWeaponSlot("Right", item.itemName);
+				Manager.Fire.UpdateWeaponSlot("Right", item.ItemName);
 			}
 		}
 		else if (slotType == SlotType.Shield)
 		{
-			playerEquipment.EquipShield(item.itemName);
+			playerEquipment.EquipShield(item.ItemName);
 			if (Manager.Fire.IsLeft)
 			{
-				Manager.Fire.UpdateShieldSlot("Left", item.itemName);
+				Manager.Fire.UpdateShieldSlot("Left", item.ItemName);
 			}
 			else
 			{
-				Manager.Fire.UpdateShieldSlot("Right", item.itemName);
+				Manager.Fire.UpdateShieldSlot("Right", item.ItemName);
 			}
 		}
 		else if (slotType == SlotType.Cloak)
 		{
-			playerEquipment.EquipCloak(item.itemName);
+			playerEquipment.EquipCloak(item.ItemName);
 			if (Manager.Fire.IsLeft)
 			{
-				Manager.Fire.UpdateCloakSlot("Left", item.itemName);
+				Manager.Fire.UpdateCloakSlot("Left", item.ItemName);
 			}
 			else
 			{
-				Manager.Fire.UpdateCloakSlot("Right", item.itemName);
+				Manager.Fire.UpdateCloakSlot("Right", item.ItemName);
 			}
 		}
 	}

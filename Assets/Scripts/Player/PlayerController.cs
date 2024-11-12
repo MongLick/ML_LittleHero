@@ -9,49 +9,79 @@ using static PlayerState;
 
 public class PlayerController : MonoBehaviour, IDamageable
 {
-	private Vector3 move;
-	[SerializeField] MonsterController monster;
-	[SerializeField] float closestDistance;
-	private Vector3 playerPosition;
-	[SerializeField] Collider[] hitColliders;
-	[SerializeField] float detectionRange;
-	[SerializeField] float monsterDistance;
-	private Transform monsterTarget;
-	[SerializeField] float attackCooltime;
-	public float AttackCooltime { get { return attackCooltime; } }
-	[SerializeField] float cooltime;
+	[SerializeField] StateMachine<PlayerStateType> playerState;
+	[SerializeField] PlayerStateType currentState;
+	public PlayerStateType CurrentState { get { return currentState; } set { currentState = value; } }
+	[SerializeField] LayerMask groundLayer;
+	[SerializeField] LayerMask monsterLayer;
+
+	[Header("Components")]
 	[SerializeField] GameObject attack;
 	public GameObject Attack { get { return attack; } set { attack = value; } }
 	[SerializeField] PlayerInput playerInput;
 	public PlayerInput PlayerInput { get { return playerInput; } set { playerInput = value; } }
-	[SerializeField] CinemachineVirtualCamera playerCamera;
 	[SerializeField] CinemachineVirtualCamera gameOverCamera;
 	public CinemachineVirtualCamera GameOverCamera { get { return gameOverCamera; } set { gameOverCamera = value; } }
-	[SerializeField] StateMachine<PlayerStateType> playerState;
-	[SerializeField] PlayerStateType currentState;
-	public PlayerStateType CurrentState { get { return currentState; } set { currentState = value; } }
-	[SerializeField] CharacterController controller;
 	[SerializeField] Animator animator;
 	public Animator Animator { get { return animator; } }
-	[SerializeField] float moveSpeed;
-	[SerializeField] float jumpSpeed;
-	[SerializeField] bool isGround;
-	[SerializeField] LayerMask groundLayer;
-	[SerializeField] LayerMask monsterLayer;
-	[SerializeField] float ySpeedMax;
-	[SerializeField] float rotationSpeed;
+	[SerializeField] InventoryUI inventoryUI;
+	public InventoryUI InventoryUI { get { return inventoryUI; } }
+	[SerializeField] GraphicsUI graphicsUI;
+	public GraphicsUI GraphicsUI { get { return graphicsUI; } }
+	[SerializeField] EquipmentUI equipmentUI;
+	public EquipmentUI EquipmentUI { get { return equipmentUI; } }
+	[SerializeField] TMP_Dropdown dropdown;
+	public TMP_Dropdown Dropdown { get { return dropdown; } }
+	[SerializeField] QuickSlot[] quickSlots;
+	public QuickSlot[] QuickSlots { get { return quickSlots; } }
+	[SerializeField] Collider[] colliders = new Collider[20];
+	[SerializeField] Collider[] hitColliders;
+	[SerializeField] MonsterController monster;
+	[SerializeField] Transform monsterTarget;
+	[SerializeField] CinemachineVirtualCamera playerCamera;
+	[SerializeField] CharacterController controller;
+	[SerializeField] PhotonView view;
 
+	[Header("Vector")]
+	private Vector3 move;
+	private Vector3 playerPosition;
+	private Vector3 moveDir;
+	private Vector3 direction;
+
+	[Header("Coroutine")]
+	private Coroutine attackRoutine;
+	public Coroutine AttackRoutine { get { return attackRoutine; } set { attackRoutine = value; } }
+	private Coroutine blockRoutine;
+	public Coroutine BlockRoutine { get { return blockRoutine; } set { blockRoutine = value; } }
+	private Coroutine stunnedRoutine;
+	public Coroutine StunnedRoutine { get { return stunnedRoutine; } set { stunnedRoutine = value; } }
+	private Coroutine takeHitRoutine;
+	public Coroutine TakeHitRoutine { get { return takeHitRoutine; } set { takeHitRoutine = value; } }
+
+	[Header("Specs")]
+	[SerializeField] string skillName;
+	public string SkillName { get { return skillName; } set { skillName = value; } }
 	[SerializeField] float attackDelay;
 	public float AttackDelay { get { return attackDelay; } }
 	[SerializeField] float takeHitDelay;
 	public float TakeHitDelay { get { return takeHitDelay; } }
 	[SerializeField] float stunnedDelay;
 	public float StunnedDelay { get { return stunnedDelay; } }
-
-	private Vector3 moveDir;
-	private Vector3 direction;
-	private float ySpeed;
-
+	[SerializeField] float skillOffset;
+	public float SkillOffset { get { return skillOffset; } set { skillOffset = value; } }
+	[SerializeField] float attackCooltime;
+	public float AttackCooltime { get { return attackCooltime; } }
+	[SerializeField] float range;
+	public float Range { get { return range; } }
+	[SerializeField] float closestDistance;
+	[SerializeField] float monsterDistance;
+	[SerializeField] float detectionRange;
+	[SerializeField] float cooltime;
+	[SerializeField] float moveSpeed;
+	[SerializeField] float jumpSpeed;
+	[SerializeField] float ySpeedMax;
+	[SerializeField] float rotationSpeed;
+	[SerializeField] float ySpeed;
 	private bool isAttackCooltime;
 	public bool IsAttackCooltime { get { return isAttackCooltime; } set { isAttackCooltime = value; } }
 	private bool isAttack;
@@ -64,34 +94,10 @@ public class PlayerController : MonoBehaviour, IDamageable
 	public bool IsStunned { get { return isStunned; } set { isStunned = value; } }
 	private bool isDie;
 	public bool IsDie { get { return isDie; } set { isDie = value; } }
-	private bool isAutoAttack;
-	private bool isSkiilAttack = false;
+	private bool isSkiilAttack;
 	public bool IsSkiilAttack { get { return isSkiilAttack; } set { isSkiilAttack = value; } }
-
-	private string skillName;
-	public string SkillName { get { return skillName; } set { skillName = value; } }
-
-	[SerializeField] float skillOffset;
-	public float SkillOffset { get { return skillOffset; } set { skillOffset = value; } }
-
-	private Coroutine attackRoutine;
-	public Coroutine AttackRoutine { get { return attackRoutine; } set { attackRoutine = value; } }
-	private Coroutine blockRoutine;
-	public Coroutine BlockRoutine { get { return blockRoutine; } set { blockRoutine = value; } }
-	private Coroutine stunnedRoutine;
-	public Coroutine StunnedRoutine { get { return stunnedRoutine; } set { stunnedRoutine = value; } }
-	private Coroutine takeHitRoutine;
-	public Coroutine TakeHitRoutine { get { return takeHitRoutine; } set { takeHitRoutine = value; } }
-	public InventoryUI inventoryUI;
-	public GraphicsUI graphicsUI;
-	public EquipmentUI equipmentUI;
-	public TMP_Dropdown dropdown; 
-	public QuickSlot quickSlot;
-	[SerializeField] float range;
-	public float Range { get { return range; } }
-	[SerializeField] Collider[] colliders = new Collider[20];
-
-	[SerializeField] PhotonView view;
+	private bool isGround;
+	private bool isAutoAttack;
 
 	private void Awake()
 	{

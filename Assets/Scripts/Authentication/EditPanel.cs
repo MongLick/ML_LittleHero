@@ -1,99 +1,106 @@
-using Firebase.Auth;
 using Firebase.Extensions;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class EditPanel : MonoBehaviour
 {
-    [SerializeField] PanelController panelController;
+	[Header("Components")]
+	[SerializeField] PanelController panelController;
+	[SerializeField] TMP_InputField passInputField;
+	[SerializeField] TMP_InputField confirmInputField;
+	[SerializeField] Button passApplyButton;
+	[SerializeField] Button backButton;
+	[SerializeField] Button deleteButton;
 
-    [SerializeField] TMP_InputField passInputField;
-    [SerializeField] TMP_InputField confirmInputField;
+	[Header("Specs")]
+	[SerializeField] string newPassword;
 
-    [SerializeField] Button passApplyButton;
-    [SerializeField] Button backButton;
-    [SerializeField] Button deleteButton;
-
-    private void Awake()
-    {
-        passApplyButton.onClick.AddListener(PassApply);
-        backButton.onClick.AddListener(Back);
-        deleteButton.onClick.AddListener(Delete);
-		passApplyButton.onClick.AddListener(Manager.Sound.ButtonSFX);
-		backButton.onClick.AddListener(Manager.Sound.ButtonSFX);
-		deleteButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+	private void Awake()
+	{
+		AddButtonListeners();
 	}
 
-    private void PassApply()
-    {
+	private void AddButtonListeners()
+	{
+		passApplyButton.onClick.AddListener(PassApply);
+		backButton.onClick.AddListener(Back);
+		deleteButton.onClick.AddListener(Delete);
+
+		AddSoundEffectListener(passApplyButton);
+		AddSoundEffectListener(backButton);
+		AddSoundEffectListener(deleteButton);
+	}
+
+	private void AddSoundEffectListener(Button button)
+	{
+		button.onClick.AddListener(Manager.Sound.ButtonSFX);
+	}
+
+	private void PassApply()
+	{
 		SetInteractable(false);
 
-        if(passInputField.text != confirmInputField.text)
-        {
-            panelController.ShowInfo("password doesn't matched");
+		if (passInputField.text != confirmInputField.text)
+		{
+			ShowMessage("비밀번호가 일치하지 않습니다.");
 			SetInteractable(true);
-            return;
+			return;
 		}
 
-        string newPassword = passInputField.text;
+		newPassword = passInputField.text;
 
-        Manager.Fire.Auth.CurrentUser.UpdatePasswordAsync(newPassword).ContinueWithOnMainThread(task =>
-        {
-			if (task.IsCanceled)
-			{
-				panelController.ShowInfo("UpdatePasswordAsync canceled");
-				SetInteractable(true);
-				return;
-			}
-			else if (task.IsFaulted)
-			{
-				panelController.ShowInfo($"UpdatePasswordAsync failed : {task.Exception.Message}");
-				SetInteractable(true);
-				return;
-			}
-
-			panelController.ShowInfo("UpdatePasswordAsync success");
-			SetInteractable(true);
-		});
+		Manager.Fire.Auth.CurrentUser.UpdatePasswordAsync(newPassword)
+			.ContinueWithOnMainThread(task => HandleTaskResult(task, "비밀번호 변경 성공", "비밀번호 변경 실패"));
 	}
 
-    private void Back()
-    {
-        panelController.SetActivePanel(PanelController.Panel.Main);
-    }
+	private void Back()
+	{
+		panelController.SetActivePanel(PanelController.Panel.Main);
+	}
 
-    private void Delete()
-    {
-        SetInteractable(false);
-		Manager.Fire.Auth.CurrentUser.DeleteAsync().ContinueWithOnMainThread(task =>
-        {
-			if (task.IsCanceled)
+	private void Delete()
+	{
+		SetInteractable(false);
+
+		Manager.Fire.Auth.CurrentUser.DeleteAsync()
+			.ContinueWithOnMainThread(task => HandleTaskResult(task, "계정 삭제 성공", "계정 삭제 실패", isDeleteOperation: true));
+	}
+
+	private void HandleTaskResult(Task task, string successMessage, string failureMessage, bool isDeleteOperation = false)
+	{
+		if (task.IsCanceled)
+		{
+			ShowMessage("작업이 취소되었습니다.");
+		}
+		else if (task.IsFaulted)
+		{
+			ShowMessage("작업이 실패되었습니다.");
+		}
+		else
+		{
+			ShowMessage(successMessage);
+			if (isDeleteOperation)
 			{
-				panelController.ShowInfo("DeleteAsync canceled");
-				SetInteractable(true);
-				return;
+				panelController.SetActivePanel(PanelController.Panel.Login);
+				Manager.Fire.Auth.SignOut();
 			}
-			else if (task.IsFaulted)
-			{
-				panelController.ShowInfo($"DeleteAsync failed : {task.Exception.Message}");
-				SetInteractable(true);
-				return;
-			}
+		}
+		SetInteractable(true);
+	}
 
-			panelController.ShowInfo("DeleteAsync success");
-            panelController.SetActivePanel(PanelController.Panel.Login);
-			SetInteractable(true);
-            Manager.Fire.Auth.SignOut();
-		});
-    }
+	private void ShowMessage(string message)
+	{
+		panelController.ShowInfo(message);
+	}
 
-    private void SetInteractable(bool interactable)
-    {
-        passInputField.interactable = interactable;
-        confirmInputField.interactable = interactable;
-        passApplyButton.interactable = interactable;
-        backButton.interactable = interactable;
-        deleteButton.interactable = interactable;
-    }
+	private void SetInteractable(bool interactable)
+	{
+		passInputField.interactable = interactable;
+		confirmInputField.interactable = interactable;
+		passApplyButton.interactable = interactable;
+		backButton.interactable = interactable;
+		deleteButton.interactable = interactable;
+	}
 }

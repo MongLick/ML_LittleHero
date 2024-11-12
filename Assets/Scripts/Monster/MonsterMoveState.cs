@@ -1,7 +1,3 @@
-using Photon.Realtime;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using static MonsterState;
 
 public class MonsterMoveState : BaseState<MonsterStateType>
@@ -20,7 +16,7 @@ public class MonsterMoveState : BaseState<MonsterStateType>
 
 	public override void Update()
 	{
-		if(monster.Target != null)
+		if (monster.Target != null)
 		{
 			monster.Agent.SetDestination(monster.Target.position);
 		}

@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using static MonsterState;
 
 public class MonsterReturnState : BaseState<MonsterStateType>
@@ -21,7 +18,7 @@ public class MonsterReturnState : BaseState<MonsterStateType>
 
 	public override void Update()
 	{
-		if(monster.IsIdle)
+		if (monster.IsIdle)
 		{
 			ChangeState(MonsterStateType.Idle);
 		}

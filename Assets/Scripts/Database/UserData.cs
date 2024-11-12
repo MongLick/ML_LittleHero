@@ -4,25 +4,32 @@ using System.Collections.Generic;
 [Serializable]
 public class UserData
 {
-	public string nickName;
+	public event Action<int> OnHealthChanged;
+	public int Health { get { return health; } set { { health = value; OnHealthChanged?.Invoke(health); } } }
+	public event Action<int> OnManaChanged;
+	public int Mana { get { return mana; } set { { mana = value; OnManaChanged?.Invoke(Mana); } } }
+	public event Action OnGoldChanged;
+	public int Gold { get { return gold; } set { { gold = value; OnGoldChanged?.Invoke(); } } }
+	public Dictionary<int, InventorySlotData> inventory;
+	public Dictionary<string, QuestData> quests;
+	public InventorySlotData[] quickSlots = new InventorySlotData[4];
 	public CharacterType type;
+	public enum CharacterType { Man, WoMan }
+	public string nickName;
 	public string position;
+	public string scene;
+	public string weaponSlot;
+	public string shieldSlot;
+	public string cloakSlot;
 	public float posX;
 	public float posY;
 	public float posZ;
-	public string scene;
 	public int health;
 	public int maxHealth;
 	public int mana;
 	public int maxMana;
 	public int gold;
-	public string weaponSlot;
-	public string shieldSlot;
-	public string cloakSlot;
 	public int qualityLevel;
-	public Dictionary<int, InventorySlotData> inventory;
-	public Dictionary<string, QuestData> quests;
-	public InventorySlotData[] quickSlots = new InventorySlotData[4];
 
 	public UserData(string nickName, CharacterType type, string position, float x, float y, float z, string scene,
 					int health, int mana, int gold, string weapon, string shield, string cloak, Dictionary<int, InventorySlotData> inventory, Dictionary<string, QuestData> quests, InventorySlotData[] quickSlots, int qualityLevel)
@@ -58,15 +65,6 @@ public class UserData
 			}
 		}
 	}
-
-	public enum CharacterType { Man, WoMan }
-
-	public event Action<int> OnHealthChanged;
-	public int Health { get { return health; } set { { health = value; OnHealthChanged?.Invoke(health); } } }
-	public event Action<int> OnManaChanged;
-	public int Mana { get { return mana; } set { { mana = value; OnManaChanged?.Invoke(Mana); } } }
-	public event Action OnGoldChanged;
-	public int Gold { get { return gold; } set { { gold = value; OnGoldChanged?.Invoke(); } } }
 }
 
 [Serializable]

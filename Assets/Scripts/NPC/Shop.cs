@@ -3,12 +3,12 @@ using UnityEngine.UI;
 
 public class Shop : MonoBehaviour
 {
+	[Header("Components")]
 	[SerializeField] Button closeButton;
 	[SerializeField] Button hpButton;
 	[SerializeField] Button mpButton;
 	[SerializeField] GameObject potionPrefab;
 	[SerializeField] ShopkeeperNPC npc;
-	[SerializeField] InventoryUI inventoryUI;
 
 	private void Awake()
 	{
@@ -63,13 +63,13 @@ public class Shop : MonoBehaviour
 		{
 			existingPotion.UpdateQuantity(1);
 
-			if (existingPotion.quickSlot != null)
+			if (existingPotion.QuickSlot != null)
 			{
-				Manager.Fire.SavePotionQuickSlot(existingPotion.quickSlot.slotIndex, new InventorySlotData(potionName, existingPotion.quantity));
+				Manager.Fire.SavePotionQuickSlot(existingPotion.QuickSlot.SlotIndex, new InventorySlotData(potionName, existingPotion.Quantity));
 			}
 			else
 			{
-				UpdatePotionQuantity(potionName, existingPotion.quantity);
+				UpdatePotionQuantity(potionName, existingPotion.Quantity);
 			}
 		}
 		else
@@ -80,13 +80,13 @@ public class Shop : MonoBehaviour
 
 	private InventoryIcon FindPotionInQuickSlots(string potionName)
 	{
-		QuickSlot[] quickSlots = FindObjectsOfType<QuickSlot>();
+		QuickSlot[] quickSlots = npc.QuickSlot;
 
 		foreach (QuickSlot slot in quickSlots)
 		{
-			if (slot.currentItem != null && slot.currentItem.itemName == potionName)
+			if (slot.CurrentItem != null && slot.CurrentItem.ItemName == potionName)
 			{
-				return slot.currentItem;
+				return slot.CurrentItem;
 			}
 		}
 		return null;
@@ -94,14 +94,13 @@ public class Shop : MonoBehaviour
 
 	private InventoryIcon FindPotionInInventory(string potionName)
 	{
-		inventoryUI =  npc.GetComponent<InventoryUI>();
-		InventorySlot[] slots = inventoryUI.InventorySlots;
+		InventorySlot[] slots = npc.InventorySlots;
 
 		foreach (InventorySlot slot in slots)
 		{
-			if (slot.currentItem != null && slot.currentItem.itemName == potionName)
+			if (slot.CurrentItem != null && slot.CurrentItem.ItemName == potionName)
 			{
-				return slot.currentItem;
+				return slot.CurrentItem;
 			}
 		}
 		return null;
@@ -121,17 +120,17 @@ public class Shop : MonoBehaviour
 		GameObject potionObject = Instantiate(potionPrefab);
 		InventoryIcon potionIcon = potionObject.GetComponent<InventoryIcon>();
 
-		potionIcon.itemName = potionName;
-		potionIcon.quantity = 1;
-		InventorySlot[] inventorySlots = inventoryUI.InventorySlots;
+		potionIcon.ItemName = potionName;
+		potionIcon.Quantity = 1;
+		InventorySlot[] inventorySlots = npc.InventorySlots;
 		for (int i = 0; i < inventorySlots.Length; i++)
 		{
-			if (inventorySlots[i].currentItem == null)
+			if (inventorySlots[i].CurrentItem == null)
 			{
 				potionObject.transform.SetParent(inventorySlots[i].transform);
 				potionObject.GetComponent<RectTransform>().position = inventorySlots[i].GetComponent<RectTransform>().position;
-				inventorySlots[i].currentItem = potionIcon;
-				potionIcon.parentSlot = inventorySlots[i];
+				inventorySlots[i].CurrentItem = potionIcon;
+				potionIcon.ParentSlot = inventorySlots[i];
 				InventorySlotData newPotionData = new InventorySlotData(potionName, 1);
 				Manager.Fire.SavePotionToDatabase(i, newPotionData);
 				return;
@@ -141,11 +140,11 @@ public class Shop : MonoBehaviour
 
 	private void UpdatePotionQuantity(string potionName, int quantity)
 	{
-		InventorySlot[] slots = inventoryUI.InventorySlots;
+		InventorySlot[] slots = npc.InventorySlots;
 
 		for (int i = 0; i < slots.Length; i++)
 		{
-			if (slots[i].currentItem != null && slots[i].currentItem.itemName == potionName)
+			if (slots[i].CurrentItem != null && slots[i].CurrentItem.ItemName == potionName)
 			{
 				InventorySlotData updatedPotionData = new InventorySlotData(potionName, quantity);
 				Manager.Fire.SavePotionToDatabase(i, updatedPotionData);
@@ -165,18 +164,18 @@ public class Shop : MonoBehaviour
 			potionPrefab = Resources.Load<GameObject>("Prefabs/mpPotion");
 		}
 
-		InventorySlot[] inventorySlots = inventoryUI.InventorySlots;
+		InventorySlot[] inventorySlots = npc.InventorySlots;
 		InventorySlot slot = inventorySlots[slotIndex];
 
 		GameObject potionObject = Instantiate(potionPrefab, slot.transform);
 		InventoryIcon potionIcon = potionObject.GetComponent<InventoryIcon>();
 
-		potionIcon.itemName = potionName;
-		potionIcon.quantity = itemQuantity;
+		potionIcon.ItemName = potionName;
+		potionIcon.Quantity = itemQuantity;
 		potionIcon.UpdateQuantityText();
 
 		potionObject.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-		slot.currentItem = potionIcon;
-		potionIcon.parentSlot = slot;
+		slot.CurrentItem = potionIcon;
+		potionIcon.ParentSlot = slot;
 	}
 }

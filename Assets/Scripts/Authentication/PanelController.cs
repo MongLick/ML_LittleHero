@@ -5,7 +5,9 @@ using UnityEngine;
 public class PanelController : MonoBehaviourPunCallbacks
 {
 	public enum Panel { Login, SignUp, Verify, Reset, Main, Edit, Hero }
+	private ClientState state;
 
+	[Header("Components")]
 	[SerializeField] InfoPanel infoPanel;
 	[SerializeField] LoginPanel loginPanel;
 	[SerializeField] SignUpPanel signUpPanel;
@@ -16,8 +18,6 @@ public class PanelController : MonoBehaviourPunCallbacks
 	[SerializeField] HeroPanel heroPanel;
 	[SerializeField] ChoicePanel choicePanel;
 
-	private ClientState state;
-
 	private void Update()
 	{
 		ClientState curState = PhotonNetwork.NetworkClientState;
@@ -26,7 +26,6 @@ public class PanelController : MonoBehaviourPunCallbacks
 			return;
 		}
 		state = curState;
-		Debug.Log(state);
 	}
 
 	private void Start()
@@ -47,7 +46,7 @@ public class PanelController : MonoBehaviourPunCallbacks
 
 	public void ShowInfo(string message)
 	{
-		infoPanel.ShowInfo(message);
+		infoPanel.DisplayMessage(message);
 	}
 
 	public void ShowChoice(bool isLeft)

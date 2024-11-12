@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
+	[Header("Specs")]
 	[SerializeField] LayerMask monsterLayer;
 	[SerializeField] int damage;
 

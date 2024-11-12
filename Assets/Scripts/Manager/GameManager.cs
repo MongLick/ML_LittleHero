@@ -1,12 +1,10 @@
-using Photon.Pun;
-using System.Collections;
-using System.Threading;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class GameManager : Singleton<GameManager>
 {
-	public PoolEffect poolEffect;
-	public PlayerController player;
+	[Header("Components")]
+	[SerializeField] PoolEffect poolEffect;
+	public PoolEffect PoolEffect { get { return poolEffect; } set { poolEffect = value; } }
+	[SerializeField] PlayerController player;
+	public PlayerController Player { get { return player; } set { player = value; } }
 }

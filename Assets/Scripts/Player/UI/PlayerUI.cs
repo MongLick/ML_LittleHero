@@ -1,26 +1,25 @@
 using Photon.Pun;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerUI : MonoBehaviour
 {
+	[Header("Components")]
 	[SerializeField] Button menuButton;
 	[SerializeField] Button settingButton;
 	[SerializeField] PlayerMenuUI playerMenuUI;
 	[SerializeField] PlayerSettingUI playerSettingUI;
 	[SerializeField] TMP_Text healthText;
 	[SerializeField] TMP_Text manaText;
+	[SerializeField] TMP_Text glodText;
 	[SerializeField] Slider healthSlider;
 	[SerializeField] Slider manaSlider;
-	[SerializeField] TMP_Text glodText;
 	[SerializeField] PhotonView PhotonView;
 
 	private void Awake()
 	{
-		if(PhotonView.IsMine == false)
+		if (PhotonView.IsMine == false)
 		{
 			return;
 		}

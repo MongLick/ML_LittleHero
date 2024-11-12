@@ -1,13 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SoundUI : MonoBehaviour
 {
-	[SerializeField] Button closeButton;
+	[Header("Components")]
 	[SerializeField] Slider bgmVolumeSlider;
 	[SerializeField] Slider sfxVolumeSlider;
+	[SerializeField] Button closeButton;
 	[SerializeField] Button bGMOnButton;
 	[SerializeField] Button bGMOffButton;
 	[SerializeField] Button sFXOnButton;

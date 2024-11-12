@@ -2815,7 +2815,7 @@ GameObject:
   - component: {fileID: 2601771445572727862}
   - component: {fileID: 6310995271583586461}
   - component: {fileID: 6036958620938434539}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Attack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4219,6 +4219,7 @@ GameObject:
   - component: {fileID: 5693294581613640591}
   - component: {fileID: 7468976633368429941}
   - component: {fileID: -9136126279260163459}
+  - component: {fileID: 3159031144153256184}
   m_Layer: 3
   m_Name: ManPlayer
   m_TagString: Untagged
@@ -4349,7 +4350,11 @@ MonoBehaviour:
   graphicsUI: {fileID: 7803499021115897276}
   equipmentUI: {fileID: 3176434291849928445}
   dropdown: {fileID: 4213662402581621230}
-  quickSlot: {fileID: 5935163045347926862}
+  quickSlots:
+  - {fileID: 5935163045347926862}
+  - {fileID: 6096924470968288926}
+  - {fileID: 2699507219137110206}
+  - {fileID: 2314137687455785959}
   range: 0
   colliders:
   - {fileID: 0}
@@ -4468,6 +4473,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 5693294581613640591}
   - {fileID: -9136126279260163459}
+  - {fileID: 3159031144153256184}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -4487,6 +4493,56 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!114 &3159031144153256184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2593100026026308736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 9
+    SynchronizeType: 1
+    Name: Jump
+  - Type: 9
+    SynchronizeType: 1
+    Name: Attack1
+  - Type: 9
+    SynchronizeType: 1
+    Name: Attack2
+  - Type: 9
+    SynchronizeType: 1
+    Name: Attack3
+  - Type: 4
+    SynchronizeType: 1
+    Name: Block
+  - Type: 9
+    SynchronizeType: 1
+    Name: TakeHit
+  - Type: 4
+    SynchronizeType: 1
+    Name: TakeHitBlock
+  - Type: 9
+    SynchronizeType: 1
+    Name: Die
+  - Type: 4
+    SynchronizeType: 1
+    Name: Stunned
+  - Type: 4
+    SynchronizeType: 2
+    Name: Move
+  m_SynchronizeLayers:
+  - SynchronizeType: 1
+    LayerIndex: 0
+  - SynchronizeType: 1
+    LayerIndex: 1
 --- !u!1 &2659838956313528121
 GameObject:
   m_ObjectHideFlags: 0

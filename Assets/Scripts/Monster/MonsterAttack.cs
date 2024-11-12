@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MonsterAttack : MonoBehaviour
 {
+	[Header("Specs")]
 	[SerializeField] LayerMask palyerLayer;
 	[SerializeField] int damage;
 

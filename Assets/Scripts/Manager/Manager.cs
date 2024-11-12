@@ -10,7 +10,6 @@ public static class Manager
 	public static SoundManager Sound { get { return SoundManager.Instance; } }
 	public static UIManager UI { get { return UIManager.Instance; } }
 	public static DataManager Data { get { return DataManager.Instance; } }
-	public static InventoryManager Inven { get { return InventoryManager.Instance; } }
 
 	[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
 	private static void Initialize()
@@ -23,7 +22,6 @@ public static class Manager
 		SoundManager.ReleaseInstance();
 		UIManager.ReleaseInstance();
 		DataManager.ReleaseInstance();
-		InventoryManager.ReleaseInstance();
 
 		FirebaseManager.CreateInstance();
 		GameManager.CreateInstance();
@@ -33,6 +31,5 @@ public static class Manager
 		SoundManager.CreateInstance();
 		UIManager.CreateInstance();
 		DataManager.CreateInstance();
-		InventoryManager.CreateInstance();
 	}
 }

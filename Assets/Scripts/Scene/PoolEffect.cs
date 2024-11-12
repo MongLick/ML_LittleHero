@@ -1,11 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public class PoolEffect : MonoBehaviour
 {
-    [SerializeField] PooledObject firePrefab;
-    [SerializeField] PooledObject icePrefab;
+	[Header("Components")]
+	[SerializeField] PooledObject firePrefab;
+	[SerializeField] PooledObject icePrefab;
 
 	private void OnEnable()
 	{
@@ -13,15 +13,24 @@ public class PoolEffect : MonoBehaviour
 		Manager.Pool.CreatePool(icePrefab, 1, 1);
 	}
 
-	public void SpawnEffects(string prefabName, Vector3 Position)
+	[PunRPC]
+	public void SpawnEffectRPC(string prefabName, Vector3 position)
 	{
+		PooledObject pooledEffect = null;
+
 		if (prefabName == firePrefab.name)
 		{
-			Manager.Pool.GetPool(firePrefab, Position, Quaternion.identity);
+			pooledEffect = Manager.Pool.GetPool(firePrefab, position, Quaternion.identity);
 		}
-		else
+		else if (prefabName == icePrefab.name)
 		{
-			Manager.Pool.GetPool(icePrefab, Position, Quaternion.identity);
+			pooledEffect = Manager.Pool.GetPool(icePrefab, position, Quaternion.identity);
 		}
+	}
+
+	public void SpawnEffects(string prefabName, Vector3 position)
+	{
+		PhotonView photonView = PhotonView.Get(this);
+		photonView.RPC("SpawnEffectRPC", RpcTarget.All, prefabName, position);
 	}
 }

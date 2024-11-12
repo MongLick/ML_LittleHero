@@ -2,38 +2,32 @@ using Firebase;
 using Firebase.Auth;
 using Firebase.Database;
 using Firebase.Extensions;
-using System;
 using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
-using UnityEngine.UIElements;
 using static MonsterController;
 using static UserData;
 
 public class FirebaseManager : Singleton<FirebaseManager>
 {
-	private FirebaseApp app;
+	[Header("Components")]
+	[SerializeField] FirebaseApp app;
 	public FirebaseApp App { get { return app; } }
-
-	private FirebaseAuth auth;
+	[SerializeField] FirebaseAuth auth;
 	public FirebaseAuth Auth { get { return auth; } }
-
-	private FirebaseDatabase db;
+	[SerializeField] FirebaseDatabase db;
 	public FirebaseDatabase DB { get { return db; } }
-
-	private bool isValid;
-	public bool IsValid { get { return isValid; } }
-
-	private bool isLeft;
-	public bool IsLeft { get { return isLeft; } set { isLeft = value; } }
-
-	private string userID;
-	public string UserID { get { return userID; } set { userID = value; } }
-
 	[SerializeField] GameObject manPrefab;
 	public GameObject ManPrefab { get { return manPrefab; } }
 	[SerializeField] GameObject woManPrefab;
 	public GameObject WoManPrefab { get { return woManPrefab; } }
+
+	[Header("Specs")]
+	[SerializeField] string userID;
+	public string UserID { get { return userID; } set { userID = value; } }
+	private bool isValid;
+	public bool IsValid { get { return isValid; } }
+	private bool isLeft;
+	public bool IsLeft { get { return isLeft; } set { isLeft = value; } }
 
 	protected override void Awake()
 	{
@@ -46,17 +40,14 @@ public class FirebaseManager : Singleton<FirebaseManager>
 		DependencyStatus dependencyStatus = await FirebaseApp.CheckAndFixDependenciesAsync();
 		if (dependencyStatus == DependencyStatus.Available)
 		{
-
 			app = FirebaseApp.DefaultInstance;
 			auth = FirebaseAuth.DefaultInstance;
 			db = FirebaseDatabase.DefaultInstance;
 
-			Debug.Log("Firebase Check and FixDependencies success");
 			isValid = true;
 		}
 		else
 		{
-			Debug.LogError("Firebase Check and FixDependencies fail");
 			isValid = false;
 
 			app = null;
@@ -95,6 +86,7 @@ public class FirebaseManager : Singleton<FirebaseManager>
 
 		});
 	}
+
 	public void UpdateShieldSlot(string position, string shield)
 	{
 		FirebaseUser user = auth.CurrentUser;
@@ -108,6 +100,7 @@ public class FirebaseManager : Singleton<FirebaseManager>
 
 		});
 	}
+
 	public void UpdateCloakSlot(string position, string cloak)
 	{
 		FirebaseUser user = auth.CurrentUser;

@@ -1,11 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-	public Transform player;
-	public Vector3 offset;
+	[Header("Components")]
+	[SerializeField] Transform player;
+
+	[Header("Vector")]
+	[SerializeField] Vector3 offset;
 
 	private void LateUpdate()
 	{

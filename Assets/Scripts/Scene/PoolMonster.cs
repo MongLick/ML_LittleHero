@@ -1,10 +1,9 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class PoolMonster : MonoBehaviour
 {
+	[Header("Components")]
 	[SerializeField] PooledObject mushroomPrefab;
 	[SerializeField] PooledObject cactusPrefab;
 	[SerializeField] Transform[] mushroomSpawnPoints;

@@ -5,10 +5,12 @@ using UnityEngine.UI;
 
 public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IDropHandler, IPointerExitHandler
 {
+	[Header("Components")]
+	[SerializeField] Image image;
 	[SerializeField] InventoryUI inventoryUI;
-	private Image image;
-	private RectTransform rect;
-	public InventoryIcon currentItem;
+	[SerializeField] RectTransform rect;
+	[SerializeField] InventoryIcon currentItem;
+	public InventoryIcon CurrentItem { get { return currentItem; } set { currentItem = value; } }
 
 	private void Awake()
 	{
@@ -27,10 +29,10 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IDropHandler, 
 		{
 			currentItem = newItem;
 			newItem.InventoryUI = inventoryUI;
-			newItem.parentSlot = this;
+			newItem.ParentSlot = this;
 			newItem.transform.SetParent(transform);
 			newItem.GetComponent<RectTransform>().position = GetComponent<RectTransform>().position;
-			Manager.Fire.SaveItemToDatabase(Array.IndexOf(inventoryUI.InventorySlots, this), newItem.itemName);
+			Manager.Fire.SaveItemToDatabase(Array.IndexOf(inventoryUI.InventorySlots, this), newItem.ItemName);
 		}
 	}
 
@@ -49,7 +51,7 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IDropHandler, 
 		}
 
 		InventoryIcon draggedItem = eventData.pointerDrag.GetComponent<InventoryIcon>();
-		InventorySlot draggedSlot = draggedItem.parentSlot;
+		InventorySlot draggedSlot = draggedItem.ParentSlot;
 		InventoryIcon tempItem = currentItem;
 
 		if (draggedItem == null || draggedSlot == null)
@@ -69,15 +71,15 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IDropHandler, 
 			draggedItem.GetComponent<RectTransform>().position = rect.position;
 
 			currentItem = draggedItem;
-			draggedItem.parentSlot = this;
+			draggedItem.ParentSlot = this;
 
 			if (currentItem.slotType == InventoryIcon.SlotType.hpPotion || currentItem.slotType == InventoryIcon.SlotType.mpPotion)
 			{
-				Manager.Fire.SavePotionToDatabase(thisSlotIndex, new InventorySlotData(currentItem.itemName, currentItem.quantity));
+				Manager.Fire.SavePotionToDatabase(thisSlotIndex, new InventorySlotData(currentItem.ItemName, currentItem.Quantity));
 			}
 			else
 			{
-				Manager.Fire.SaveItemToDatabase(thisSlotIndex, currentItem.itemName);
+				Manager.Fire.SaveItemToDatabase(thisSlotIndex, currentItem.ItemName);
 			}
 		}
 		else
@@ -85,41 +87,41 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IDropHandler, 
 			draggedItem.transform.SetParent(transform);
 			draggedItem.GetComponent<RectTransform>().position = rect.position;
 
-			draggedItem.parentSlot = this;
+			draggedItem.ParentSlot = this;
 
 			tempItem.transform.SetParent(draggedSlot.transform);
 			tempItem.GetComponent<RectTransform>().position = draggedSlot.GetComponent<RectTransform>().position;
 			draggedSlot.currentItem = tempItem;
-			tempItem.parentSlot = draggedSlot;
+			tempItem.ParentSlot = draggedSlot;
 
 			if (draggedItem.slotType == InventoryIcon.SlotType.hpPotion || draggedItem.slotType == InventoryIcon.SlotType.mpPotion)
 			{
 				if (currentItem.slotType == InventoryIcon.SlotType.hpPotion || currentItem.slotType == InventoryIcon.SlotType.mpPotion)
 				{
-					Manager.Fire.SavePotionToDatabase(draggedSlotIndex, new InventorySlotData(draggedSlot.currentItem.itemName, draggedSlot.currentItem.quantity));
+					Manager.Fire.SavePotionToDatabase(draggedSlotIndex, new InventorySlotData(draggedSlot.currentItem.ItemName, draggedSlot.currentItem.Quantity));
 					currentItem = draggedItem;
-					Manager.Fire.SavePotionToDatabase(thisSlotIndex, new InventorySlotData(currentItem.itemName, currentItem.quantity));
+					Manager.Fire.SavePotionToDatabase(thisSlotIndex, new InventorySlotData(currentItem.ItemName, currentItem.Quantity));
 				}
 				else
 				{
-					Manager.Fire.SaveItemToDatabase(draggedSlotIndex, draggedSlot.currentItem.itemName);
+					Manager.Fire.SaveItemToDatabase(draggedSlotIndex, draggedSlot.currentItem.ItemName);
 					currentItem = draggedItem;
-					Manager.Fire.SavePotionToDatabase(thisSlotIndex, new InventorySlotData(currentItem.itemName, currentItem.quantity));
+					Manager.Fire.SavePotionToDatabase(thisSlotIndex, new InventorySlotData(currentItem.ItemName, currentItem.Quantity));
 				}
 			}
 			else
 			{
 				if (currentItem.slotType == InventoryIcon.SlotType.hpPotion || currentItem.slotType == InventoryIcon.SlotType.mpPotion)
 				{
-					Manager.Fire.SavePotionToDatabase(draggedSlotIndex, new InventorySlotData(draggedSlot.currentItem.itemName, draggedSlot.currentItem.quantity));
+					Manager.Fire.SavePotionToDatabase(draggedSlotIndex, new InventorySlotData(draggedSlot.currentItem.ItemName, draggedSlot.currentItem.Quantity));
 					currentItem = draggedItem;
-					Manager.Fire.SaveItemToDatabase(thisSlotIndex, currentItem.itemName);
+					Manager.Fire.SaveItemToDatabase(thisSlotIndex, currentItem.ItemName);
 				}
 				else
 				{
-					Manager.Fire.SaveItemToDatabase(draggedSlotIndex, draggedSlot.currentItem.itemName);
+					Manager.Fire.SaveItemToDatabase(draggedSlotIndex, draggedSlot.currentItem.ItemName);
 					currentItem = draggedItem;
-					Manager.Fire.SaveItemToDatabase(thisSlotIndex, currentItem.itemName);
+					Manager.Fire.SaveItemToDatabase(thisSlotIndex, currentItem.ItemName);
 				}
 			}
 		}

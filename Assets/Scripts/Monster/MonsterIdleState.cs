@@ -1,14 +1,10 @@
-using JetBrains.Annotations;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using static MonsterState;
 
 public class MonsterIdleState : BaseState<MonsterStateType>
 {
-    private MonsterController monster;
+	private MonsterController monster;
 
-    public MonsterIdleState(MonsterController monster)
+	public MonsterIdleState(MonsterController monster)
 	{
 		this.monster = monster;
 	}

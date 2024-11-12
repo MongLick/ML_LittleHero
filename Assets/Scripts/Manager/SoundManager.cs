@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -6,10 +5,10 @@ public class SoundManager : Singleton<SoundManager>
 {
 	[Header("AudioSource")]
 	[SerializeField] AudioSource bgmSource;
-    [SerializeField] AudioSource sfxSource;
+	[SerializeField] AudioSource sfxSource;
 
-    public float BGMVolme { get { return bgmSource.volume; } set { bgmSource.volume = value; } }
-    public float SFXVolme { get { return sfxSource.volume; } set { sfxSource.volume = value; } }
+	public float BGMVolme { get { return bgmSource.volume; } set { bgmSource.volume = value; } }
+	public float SFXVolme { get { return sfxSource.volume; } set { sfxSource.volume = value; } }
 
 	[Header("Sound Clips")]
 	[Header("BGM")]
@@ -27,48 +26,47 @@ public class SoundManager : Singleton<SoundManager>
 	public AudioClip PlayerJump { get { return playerJump; } }
 	[SerializeField] AudioClip playerAttack;
 	public AudioClip PlayerAttack { get { return playerAttack; } }
-    [SerializeField] AudioClip playerBlock;
-    public AudioClip PlayerBlock { get { return playerBlock; } }
+	[SerializeField] AudioClip playerBlock;
+	public AudioClip PlayerBlock { get { return playerBlock; } }
 
 	[Header("Monster")]
 	[SerializeField] AudioClip monsterTakeHit;
 	public AudioClip MonsterTakeHit { get { return monsterTakeHit; } }
 
-
 	public void PlayBGM(AudioClip clip)
-    {
-        if (bgmSource.isPlaying)
-        {
-            bgmSource.Stop();
-        }
-        bgmSource.clip = clip;
-        bgmSource.Play();
-    }
+	{
+		if (bgmSource.isPlaying)
+		{
+			bgmSource.Stop();
+		}
+		bgmSource.clip = clip;
+		bgmSource.Play();
+	}
 
-    public void StopBGM()
-    {
-        if (bgmSource.isPlaying == false)
-            return;
+	public void StopBGM()
+	{
+		if (bgmSource.isPlaying == false)
+			return;
 
-        bgmSource.Stop();
-    }
+		bgmSource.Stop();
+	}
 
-    public void PlaySFX(AudioClip clip)
-    {
-        sfxSource.PlayOneShot(clip);
-    }
+	public void PlaySFX(AudioClip clip)
+	{
+		sfxSource.PlayOneShot(clip);
+	}
 
-    public void StopSFX()
-    {
-        if (sfxSource.isPlaying == false)
-            return;
+	public void StopSFX()
+	{
+		if (sfxSource.isPlaying == false)
+			return;
 
-        sfxSource.Stop();
-    }
+		sfxSource.Stop();
+	}
 
-    public void ButtonSFX()
-    {
-        PlaySFX(uiButton);
+	public void ButtonSFX()
+	{
+		PlaySFX(uiButton);
 		EventSystem.current.SetSelectedGameObject(null);
 	}
 }

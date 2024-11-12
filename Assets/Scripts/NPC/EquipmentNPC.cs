@@ -1,14 +1,18 @@
 using Firebase.Database;
 using Firebase.Extensions;
+using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class EquipmentNPC : MonoBehaviour
 {
+	[Header("Components")]
 	[SerializeField] InteractAdapter interactAdapter;
 	[SerializeField] LittleForestScene scene;
-	private bool isInteract;
 	[SerializeField] PlayerController playerController;
+
+	[Header("Specs")]
+	private bool isInteract;
 
 	private void Awake()
 	{
@@ -20,9 +24,13 @@ public class EquipmentNPC : MonoBehaviour
 	{
 		if (scene.PlayerLayer.Contain(other.gameObject.layer))
 		{
-			scene.TalkButton.gameObject.SetActive(true);
-			isInteract = true;
-			playerController = other.GetComponent<PlayerController>();
+			PhotonView photonView = other.GetComponent<PhotonView>();
+			if (photonView.IsMine)
+			{
+				scene.TalkButton.gameObject.SetActive(true);
+				isInteract = true;
+				playerController = other.GetComponent<PlayerController>();
+			}
 		}
 	}
 
@@ -30,11 +38,15 @@ public class EquipmentNPC : MonoBehaviour
 	{
 		if (scene.PlayerLayer.Contain(other.gameObject.layer))
 		{
-			scene.TalkButton.gameObject.SetActive(true);
-			isInteract = true;
 			if (playerController == null)
 			{
 				playerController = other.GetComponent<PlayerController>();
+			}
+			PhotonView photonView = other.GetComponent<PhotonView>();
+			if (photonView.IsMine)
+			{
+				scene.TalkButton.gameObject.SetActive(true);
+				isInteract = true;
 			}
 		}
 	}
@@ -43,10 +55,14 @@ public class EquipmentNPC : MonoBehaviour
 	{
 		if (scene.PlayerLayer.Contain(other.gameObject.layer))
 		{
-			scene.TalkButton.gameObject.SetActive(false);
-			scene.TalkBackImage.gameObject.SetActive(false);
-			isInteract = false;
-			playerController = null;
+			PhotonView photonView = other.GetComponent<PhotonView>();
+			if (photonView.IsMine)
+			{
+				scene.TalkButton.gameObject.SetActive(false);
+				scene.TalkBackImage.gameObject.SetActive(false);
+				isInteract = false;
+				playerController = null;
+			}
 		}
 	}
 
@@ -63,7 +79,7 @@ public class EquipmentNPC : MonoBehaviour
 		string questID = "firstQuest";
 		string questName = "첫 번째 퀘스트";
 		string position = Manager.Fire.IsLeft ? "Left" : "Right";
-		InventoryUI inventoryUI = playerController.inventoryUI;
+		InventoryUI inventoryUI = playerController.InventoryUI;
 		Manager.Fire.LoadQuestData(position, questID, (questData) =>
 		{
 			if (questData == null)
@@ -80,12 +96,12 @@ public class EquipmentNPC : MonoBehaviour
 					{
 						for (int i = 0; i < inventoryUI.InventorySlots.Length; i++)
 						{
-							if (inventoryUI.InventorySlots[i].currentItem == null)
+							if (inventoryUI.InventorySlots[i].CurrentItem == null)
 							{
 								InventoryIcon newItem = Instantiate(newItemPrefab, inventoryUI.InventorySlots[i].transform);
 								newItem.GetComponent<RectTransform>().localPosition = Vector3.zero;
 								newItem.InventoryUI = inventoryUI;
-								inventoryUI.InventorySlots[i].currentItem = newItem;
+								inventoryUI.InventorySlots[i].CurrentItem = newItem;
 								addedItems++;
 								Manager.Fire.SaveItemToDatabase(i, itemName);
 								break;

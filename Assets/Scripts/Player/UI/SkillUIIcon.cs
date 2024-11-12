@@ -1,19 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class SkillUIIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-	private Canvas canvas;
-	public string skillName;
-	private Image skillCopy;
-	public Image skillImage;
-	public QuickSlot quickSlot;
-	public SkillIcon targetSkillIcon;
-	private InventoryIcon targetInventoryIcon;
+	[Header("Components")]
+	[SerializeField] Canvas canvas;
+	[SerializeField] Image skillCopy;
+	[SerializeField] Image skillImage;
+	[SerializeField] QuickSlot quickSlot;
+	[SerializeField] SkillIcon targetSkillIcon;
+	[SerializeField] InventoryIcon targetInventoryIcon;
+
+	[Header("Specs")]
+	[SerializeField] string skillName;
 
 	private void Awake()
 	{
@@ -24,7 +24,7 @@ public class SkillUIIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 	{
 		skillCopy = new GameObject("SkillCopy").AddComponent<Image>();
 		skillCopy.sprite = skillImage.sprite;
-		skillCopy.transform.SetParent(canvas.transform); 
+		skillCopy.transform.SetParent(canvas.transform);
 		skillCopy.raycastTarget = false;
 
 		RectTransform copyRect = skillCopy.GetComponent<RectTransform>();
@@ -48,11 +48,11 @@ public class SkillUIIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
 		if (quickSlot != null)
 		{
-			if (quickSlot.currentItem != null)
+			if (quickSlot.CurrentItem != null)
 			{
 				targetInventoryIcon = quickSlot.GetComponentInChildren<InventoryIcon>();
 			}
-			else if (quickSlot.currentSkill != null)
+			else if (quickSlot.CurrentSkill != null)
 			{
 				targetSkillIcon = quickSlot.GetComponentInChildren<SkillIcon>();
 			}
@@ -68,7 +68,7 @@ public class SkillUIIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 				targetSkillIcon = null;
 			}
 		}
-		else if(targetInventoryIcon != null)
+		else if (targetInventoryIcon != null)
 		{
 			QuickSlot parentQuickSlot = targetInventoryIcon.GetComponentInParent<QuickSlot>();
 			if (parentQuickSlot != null)

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using static PlayerState;
 
@@ -23,7 +22,7 @@ public class PlayerTakeHitState : BaseState<PlayerStateType>
 
 	public override void Update()
 	{
-		if(player.IsTakeHit)
+		if (player.IsTakeHit)
 		{
 			return;
 		}
