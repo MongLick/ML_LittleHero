@@ -17,10 +17,7 @@ public class VerifyPanel : MonoBehaviour
 
 	private void Awake()
 	{
-		logoutButton.onClick.AddListener(Logout);
-		sendButton.onClick.AddListener(SendVerifyMail);
-		logoutButton.onClick.AddListener(Manager.Sound.ButtonSFX);
-		sendButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+		AddButtonListeners();
 	}
 
 	private void OnEnable()
@@ -38,6 +35,19 @@ public class VerifyPanel : MonoBehaviour
 		StopAllCoroutines();
 	}
 
+	private void AddButtonListeners()
+	{
+		logoutButton.onClick.AddListener(Logout);
+		sendButton.onClick.AddListener(SendVerifyMail);
+		logoutButton.onClick.AddListener(PlayButtonSFX);
+		sendButton.onClick.AddListener(PlayButtonSFX);
+	}
+
+	private void PlayButtonSFX()
+	{
+		Manager.Sound.ButtonSFX();
+	}
+
 	private void Logout()
 	{
 		Manager.Fire.Auth.SignOut();
@@ -50,17 +60,22 @@ public class VerifyPanel : MonoBehaviour
 		{
 			if (task.IsCanceled)
 			{
-				panelController.ShowInfo("SendEmailVerificationAsync canceled");
+				ShowMessage("작업이 취소되었습니다.");
 				return;
 			}
 			else if (task.IsFaulted)
 			{
-				panelController.ShowInfo($"SendEmailVerificationAsync failed : {task.Exception.Message}");
+				ShowMessage("작업이 실패되었습니다.");
 				return;
 			}
 
-			panelController.ShowInfo("SendEmailVerificationAsync succes");
+			ShowMessage("이메일 인증 메일이 성공적으로 발송되었습니다.");
 		});
+	}
+
+	private void ShowMessage(string message)
+	{
+		panelController.ShowInfo(message);
 	}
 
 	private IEnumerator VerifyCheckCoroutine()
@@ -73,12 +88,12 @@ public class VerifyPanel : MonoBehaviour
 			{
 				if (task.IsCanceled)
 				{
-					panelController.ShowInfo("ReloadAsync canceled");
+					ShowMessage("작업이 취소되었습니다.");
 					return;
 				}
 				else if (task.IsFaulted)
 				{
-					panelController.ShowInfo($"ReloadAsync failed : {task.Exception.Message}");
+					ShowMessage("작업이 실패되었습니다.");
 					return;
 				}
 

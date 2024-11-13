@@ -16,12 +16,23 @@ public class LoginPanel : MonoBehaviour
 
 	private void Awake()
 	{
+		InitializeButtonListeners();
+	}
+
+	private void InitializeButtonListeners()
+	{
 		signUpButton.onClick.AddListener(SignUp);
 		loginButton.onClick.AddListener(Login);
 		resetPasswordButton.onClick.AddListener(ResetPassword);
-		signUpButton.onClick.AddListener(Manager.Sound.ButtonSFX);
-		loginButton.onClick.AddListener(Manager.Sound.ButtonSFX);
-		resetPasswordButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+
+		AddButtonSound(signUpButton);
+		AddButtonSound(loginButton);
+		AddButtonSound(resetPasswordButton);
+	}
+
+	private void AddButtonSound(Button button)
+	{
+		button.onClick.AddListener(Manager.Sound.ButtonSFX);
 	}
 
 	public void SignUp()
@@ -37,42 +48,55 @@ public class LoginPanel : MonoBehaviour
 	public void Login()
 	{
 		SetInteractable(false);
+		AuthenticateUser(emailInputField.text, passInputField.text);
+		ConnectToPhoton(emailInputField.text);
+	}
 
-		string email = emailInputField.text;
-		string password = passInputField.text;
-
+	private void AuthenticateUser(string email, string password)
+	{
 		Manager.Fire.Auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(task =>
 		{
 			if (task.IsCanceled)
 			{
-				panelController.ShowInfo("SignInWithEmailAndPasswordAsync canceled");
-				SetInteractable(true);
-				return;
+				ShowMessage("작업이 취소되었습니다.");
 			}
 			else if (task.IsFaulted)
 			{
-				panelController.ShowInfo($"SignInWithEmailAndPasswordAsync failed : {task.Exception.Message}");
-				SetInteractable(true);
-				return;
-			}
-
-			if (Manager.Fire.Auth.CurrentUser.IsEmailVerified)
-			{
-				panelController.SetActivePanel(PanelController.Panel.Main);
+				ShowMessage("작업이 실패되었습니다.");
 			}
 			else
 			{
-				panelController.SetActivePanel(PanelController.Panel.Verify);
+				HandleLoginSuccess();
 			}
 
 			SetInteractable(true);
 		});
+	}
 
-		if (email != null)
+	private void ConnectToPhoton(string email)
+	{
+		if (!string.IsNullOrEmpty(email))
 		{
 			PhotonNetwork.LocalPlayer.NickName = email;
 			PhotonNetwork.ConnectUsingSettings();
 		}
+	}
+
+	private void HandleLoginSuccess()
+	{
+		if (Manager.Fire.Auth.CurrentUser.IsEmailVerified)
+		{
+			panelController.SetActivePanel(PanelController.Panel.Main);
+		}
+		else
+		{
+			panelController.SetActivePanel(PanelController.Panel.Verify);
+		}
+	}
+
+	private void ShowMessage(string message)
+	{
+		panelController.ShowInfo(message);
 	}
 
 	private void SetInteractable(bool interactable)

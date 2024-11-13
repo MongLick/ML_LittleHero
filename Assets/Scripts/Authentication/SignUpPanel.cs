@@ -15,10 +15,20 @@ public class SignUpPanel : MonoBehaviour
 
 	private void Awake()
 	{
+		AddButtonListeners();
+	}
+
+	private void AddButtonListeners()
+	{
 		cancelButton.onClick.AddListener(Cancel);
 		signUpButton.onClick.AddListener(SignUp);
-		cancelButton.onClick.AddListener(Manager.Sound.ButtonSFX);
-		signUpButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+		cancelButton.onClick.AddListener(PlayButtonSFX);
+		signUpButton.onClick.AddListener(PlayButtonSFX);
+	}
+
+	private void PlayButtonSFX()
+	{
+		Manager.Sound.ButtonSFX();
 	}
 
 	public void SignUp()
@@ -31,7 +41,7 @@ public class SignUpPanel : MonoBehaviour
 
 		if (password != confirm)
 		{
-			panelController.ShowInfo("Password doesn't matched");
+			ShowMessage("비밀번호가 일치하지 않습니다");
 			SetInteractable(true);
 			return;
 		}
@@ -40,21 +50,26 @@ public class SignUpPanel : MonoBehaviour
 		{
 			if (task.IsCanceled)
 			{
-				panelController.ShowInfo("CreateUserWithEmailAndPasswordAsync canceled");
+				ShowMessage("작업이 취소되었습니다.");
 				SetInteractable(true);
 				return;
 			}
 			else if (task.IsFaulted)
 			{
-				panelController.ShowInfo($"CreateUserWithEmailAndPasswordAsync failed : {task.Exception.Message}");
+				ShowMessage("작업이 실패되었습니다.");
 				SetInteractable(true);
 				return;
 			}
 
-			panelController.ShowInfo("CreateUserWithEmailAndPasswordAsync success");
+			ShowMessage("이메일과 비밀번호로 새로운 사용자가 성공적으로 생성되었습니다.");
 			panelController.SetActivePanel(PanelController.Panel.Login);
 			SetInteractable(true);
 		});
+	}
+
+	private void ShowMessage(string message)
+	{
+		panelController.ShowInfo(message);
 	}
 
 	public void Cancel()

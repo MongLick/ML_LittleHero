@@ -52,7 +52,7 @@ public class EditPanel : MonoBehaviour
 		newPassword = passInputField.text;
 
 		Manager.Fire.Auth.CurrentUser.UpdatePasswordAsync(newPassword)
-			.ContinueWithOnMainThread(task => HandleTaskResult(task, "비밀번호 변경 성공", "비밀번호 변경 실패"));
+			.ContinueWithOnMainThread(task => HandleTaskResult(task, "비밀번호 변경 성공되었습니다.", "비밀번호 변경 실패되었습니다."));
 	}
 
 	private void Back()
@@ -65,7 +65,7 @@ public class EditPanel : MonoBehaviour
 		SetInteractable(false);
 
 		Manager.Fire.Auth.CurrentUser.DeleteAsync()
-			.ContinueWithOnMainThread(task => HandleTaskResult(task, "계정 삭제 성공", "계정 삭제 실패", isDeleteOperation: true));
+			.ContinueWithOnMainThread(task => HandleTaskResult(task, "계정 삭제 성공되었습니다.", "계정 삭제 실패되었습니다.", isDeleteOperation: true));
 	}
 
 	private void HandleTaskResult(Task task, string successMessage, string failureMessage, bool isDeleteOperation = false)

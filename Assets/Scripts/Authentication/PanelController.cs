@@ -18,19 +18,17 @@ public class PanelController : MonoBehaviourPunCallbacks
 	[SerializeField] HeroPanel heroPanel;
 	[SerializeField] ChoicePanel choicePanel;
 
-	private void Update()
-	{
-		ClientState curState = PhotonNetwork.NetworkClientState;
-		if (state == curState)
-		{
-			return;
-		}
-		state = curState;
-	}
-
 	private void Start()
 	{
 		SetActivePanel(Panel.Login);
+	}
+
+	private void Update()
+	{
+		if (state != PhotonNetwork.NetworkClientState)
+		{
+			state = PhotonNetwork.NetworkClientState;
+		}
 	}
 
 	public void SetActivePanel(Panel panel)

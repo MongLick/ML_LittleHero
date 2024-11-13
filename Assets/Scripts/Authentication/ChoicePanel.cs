@@ -58,11 +58,11 @@ public class ChoicePanel : MonoBehaviour
 
                     if (isLeftChoice)
                     {
-                        mainPanel.UpdateUIForLeftChoice();
+                        mainPanel.UpdateUIForChoice("Left");
                     }
                     else
                     {
-                        mainPanel.UpdateUIForRightChoice();
+                        mainPanel.UpdateUIForChoice("Right");
                     }
                 }
             });

@@ -82,17 +82,31 @@ public class HeroPanel : MonoBehaviour
 	{
 		if (!manChoice && !woManChoice)
 		{
-			panelController.ShowInfo("캐릭터를 선택해주세요");
+			ShowMessage("캐릭터를 선택해주세요");
 			return false;
 		}
 
 		if (string.IsNullOrEmpty(name))
 		{
-			panelController.ShowInfo("닉네임을 설정해주세요");
+			ShowMessage("닉네임을 설정해주세요");
 			return false;
 		}
 
 		return true;
+	}
+
+	private void ShowMessage(string message)
+	{
+		panelController.ShowInfo(message);
+	}
+
+	private void ResetSelection()
+	{
+		manPressed.image.color = Color.white;
+		woManPressed.image.color = Color.white;
+		nickName.text = "";
+		manChoice = false;
+		woManChoice = false;
 	}
 
 	private Dictionary<int, InventorySlotData> InitializeInventory()
@@ -103,14 +117,5 @@ public class HeroPanel : MonoBehaviour
 			inventory[i] = new InventorySlotData();
 		}
 		return inventory;
-	}
-
-	private void ResetSelection()
-	{
-		manPressed.image.color = Color.white;
-		woManPressed.image.color = Color.white;
-		nickName.text = "";
-		manChoice = false;
-		woManChoice = false;
 	}
 }

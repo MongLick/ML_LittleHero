@@ -1,6 +1,7 @@
 using Firebase.Database;
 using Firebase.Extensions;
 using Photon.Pun;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,45 +11,11 @@ public class MainPanel : MonoBehaviour
 	[Header("Components")]
 	[SerializeField] PanelController panelController;
 	[SerializeField] HeroPanel heroPanel;
-	[SerializeField] Button logoutButton;
-	[SerializeField] Button editButton;
-	[SerializeField] Button startButton;
-	[SerializeField] Button creation1;
-	[SerializeField] Button creation2;
-	[SerializeField] Button delete1;
-	[SerializeField] Button delete2;
-	[SerializeField] Button pressed1;
-	[SerializeField] Button pressed2;
-	[SerializeField] Animator manAnimator1;
-	[SerializeField] Animator woManAnimator1;
-	[SerializeField] Animator manAnimator2;
-	[SerializeField] Animator woManAnimator2;
-	[SerializeField] TMP_Text leftNickName;
-	[SerializeField] TMP_Text rightNickName;
-	[SerializeField] GameObject man1Weapon1;
-	[SerializeField] GameObject man1Weapon2;
-	[SerializeField] GameObject man1Shield1;
-	[SerializeField] GameObject man1Shield2;
-	[SerializeField] GameObject man1Cloak1;
-	[SerializeField] GameObject man1Cloak2;
-	[SerializeField] GameObject man2Weapon1;
-	[SerializeField] GameObject man2Weapon2;
-	[SerializeField] GameObject man2Shield1;
-	[SerializeField] GameObject man2Shield2;
-	[SerializeField] GameObject man2Cloak1;
-	[SerializeField] GameObject man2Cloak2;
-	[SerializeField] GameObject woMan1Weapon1;
-	[SerializeField] GameObject woMan1Weapon2;
-	[SerializeField] GameObject woMan1Shield1;
-	[SerializeField] GameObject woMan1Shield2;
-	[SerializeField] GameObject woMan1Cloak1;
-	[SerializeField] GameObject woMan1Cloak2;
-	[SerializeField] GameObject woMan2Weapon1;
-	[SerializeField] GameObject woMan2Weapon2;
-	[SerializeField] GameObject woMan2Shield1;
-	[SerializeField] GameObject woMan2Shield2;
-	[SerializeField] GameObject woMan2Cloak1;
-	[SerializeField] GameObject woMan2Cloak2;
+	[SerializeField] Button logoutButton, editButton, startButton;
+	[SerializeField] Button creation1, creation2, delete1, delete2, pressed1, pressed2;
+	[SerializeField] Animator manAnimator1, woManAnimator1, manAnimator2, woManAnimator2;
+	[SerializeField] TMP_Text leftNickName, rightNickName;
+	[SerializeField] GameObject[] man1Items, man2Items, woMan1Items, woMan2Items;
 
 	private void Awake()
 	{
@@ -66,28 +33,25 @@ public class MainPanel : MonoBehaviour
 		delete2.onClick.AddListener(Delete2);
 		pressed2.onClick.AddListener(Pressed2);
 
-		logoutButton.onClick.AddListener(Manager.Sound.ButtonSFX);
-		editButton.onClick.AddListener(Manager.Sound.ButtonSFX);
-		startButton.onClick.AddListener(Manager.Sound.ButtonSFX);
-		creation1.onClick.AddListener(Manager.Sound.ButtonSFX);
-		creation2.onClick.AddListener(Manager.Sound.ButtonSFX);
-		delete1.onClick.AddListener(Manager.Sound.ButtonSFX);
-		delete2.onClick.AddListener(Manager.Sound.ButtonSFX);
-		pressed1.onClick.AddListener(Manager.Sound.ButtonSFX);
-		pressed2.onClick.AddListener(Manager.Sound.ButtonSFX);
+		BindButtonSounds();
+	}
+
+	private void BindButtonSounds()
+	{
+		Button[] buttons = { logoutButton, editButton, startButton, creation1, creation2, delete1, delete2, pressed1, pressed2 };
+		foreach (Button btn in buttons)
+		{
+			btn.onClick.AddListener(Manager.Sound.ButtonSFX);
+		}
 	}
 
 	private void OnEnable()
 	{
-		if (Manager.Fire.Auth == null)
-		{
-			return;
-		}
+		if (Manager.Fire.Auth == null) return;
 
 		Manager.Fire.UserID = Manager.Fire.Auth.CurrentUser.UserId;
 		LoadCharacterData(Manager.Fire.UserID);
-		pressed1.image.color = Color.white;
-		pressed2.image.color = Color.white;
+		ResetButtonStates();
 		startButton.gameObject.SetActive(false);
 	}
 
@@ -98,302 +62,124 @@ public class MainPanel : MonoBehaviour
 
 	public void LoadCharacterData(string userId)
 	{
+		LoadCharacter("Left", userId, leftNickName, manAnimator1, woManAnimator1, man1Items, woMan1Items, creation1, delete1, pressed1);
+		LoadCharacter("Right", userId, rightNickName, manAnimator2, woManAnimator2, man2Items, woMan2Items, creation2, delete2, pressed2);
+	}
+
+	private void LoadCharacter(string side, string userId, TMP_Text nickNameText, Animator manAnimator, Animator womanAnimator, GameObject[] manItems, GameObject[] womanItems, Button creationButton, Button deleteButton, Button pressedButton)
+	{
 		Manager.Fire.DB
 		.GetReference("UserData")
 		.Child(userId)
-		.Child("Left")
+		.Child(side)
 		.GetValueAsync()
 		.ContinueWithOnMainThread(task =>
 		{
 			if (task.IsCompleted && task.Result != null)
 			{
-				DataSnapshot leftSnapshot = task.Result;
-				string nickName = leftSnapshot.Child("nickName").Value.ToString();
-				string type = leftSnapshot.Child("type").Value.ToString();
-				string Weapon = leftSnapshot.Child("weaponSlot").Value.ToString();
-				string Shield = leftSnapshot.Child("shieldSlot").Value.ToString();
-				string Cloak = leftSnapshot.Child("cloakSlot").Value.ToString();
+				DataSnapshot snapshot = task.Result;
+				string nickName = snapshot.Child("nickName").Value.ToString();
+				string type = snapshot.Child("type").Value.ToString();
+				string weapon = snapshot.Child("weaponSlot").Value.ToString();
+				string shield = snapshot.Child("shieldSlot").Value.ToString();
+				string cloak = snapshot.Child("cloakSlot").Value.ToString();
 
-				leftNickName.text = nickName;
-				if (type == "0")
-				{
-					manAnimator1.gameObject.SetActive(true);
-					woManAnimator1.gameObject.SetActive(false);
-					if (Weapon == "sword1")
-					{
-						man1Weapon1.SetActive(true);
-						man1Weapon2.SetActive(false);
-					}
-					else if (Weapon == "sword2")
-					{
-						man1Weapon1.SetActive(false);
-						man1Weapon2.SetActive(true);
-					}
-					else
-					{
-						man1Weapon1.SetActive(false);
-						man1Weapon2.SetActive(false);
-					}
-					if (Shield == "shield1")
-					{
-						man1Shield1.SetActive(true);
-						man1Shield2.SetActive(false);
-					}
-					else if (Shield == "shield2")
-					{
-						man1Shield1.SetActive(false);
-						man1Shield2.SetActive(true);
-					}
-					else
-					{
-						man1Shield1.SetActive(false);
-						man1Shield2.SetActive(false);
-					}
-					if (Cloak == "cloak1")
-					{
-						man1Cloak1.SetActive(true);
-						man1Cloak2.SetActive(false);
-					}
-					else if (Cloak == "cloak2")
-					{
-						man1Cloak1.SetActive(false);
-						man1Cloak2.SetActive(true);
-					}
-					else
-					{
-						man1Cloak1.SetActive(false);
-						man1Cloak2.SetActive(false);
-					}
-				}
-				else if (type == "1")
-				{
-					woManAnimator1.gameObject.SetActive(true);
-					manAnimator1.gameObject.SetActive(false);
-					if (Weapon == "sword1")
-					{
-						woMan1Weapon1.SetActive(true);
-						woMan1Weapon2.SetActive(false);
-					}
-					else if (Weapon == "sword2")
-					{
-						woMan1Weapon1.SetActive(false);
-						woMan1Weapon2.SetActive(true);
-					}
-					else
-					{
-						woMan1Weapon1.SetActive(false);
-						woMan1Weapon2.SetActive(false);
-					}
-					if (Shield == "shield1")
-					{
-						woMan1Shield1.SetActive(true);
-						woMan1Shield2.SetActive(false);
-					}
-					else if (Shield == "shield2")
-					{
-						woMan1Shield1.SetActive(false);
-						woMan1Shield2.SetActive(true);
-					}
-					else
-					{
-						woMan1Shield1.SetActive(false);
-						woMan1Shield2.SetActive(false);
-					}
-					if (Cloak == "cloak1")
-					{
-						woMan1Cloak1.SetActive(true);
-						woMan1Cloak2.SetActive(false);
-					}
-					else if (Cloak == "cloak2")
-					{
-						woMan1Cloak1.SetActive(false);
-						woMan1Cloak2.SetActive(true);
-					}
-					else
-					{
-						woMan1Cloak1.SetActive(false);
-						woMan1Cloak2.SetActive(false);
-					}
-				}
+				nickNameText.text = nickName;
+				SetCharacterAppearance(type, weapon, shield, cloak, manAnimator, womanAnimator, manItems, womanItems);
 
-				creation1.gameObject.SetActive(false);
-				delete1.gameObject.SetActive(true);
-				pressed1.gameObject.SetActive(true);
+				creationButton.gameObject.SetActive(false);
+				deleteButton.gameObject.SetActive(true);
+				pressedButton.gameObject.SetActive(true);
 			}
 			else
 			{
-				UpdateUIForLeftChoice();
+				if (side == "Left") UpdateUIForChoice("Left");
+				else UpdateUIForChoice("Right");
 			}
 		});
+	}
 
-		Manager.Fire.DB
-			.GetReference("UserData")
-			.Child(userId)
-			.Child("Right")
-			.GetValueAsync()
-			.ContinueWithOnMainThread(task =>
-			{
-				if (task.IsCompleted && task.Result != null)
-				{
-					DataSnapshot rightSnapshot = task.Result;
-					string nickName = rightSnapshot.Child("nickName").Value.ToString();
-					string type = rightSnapshot.Child("type").Value.ToString();
-					string Weapon = rightSnapshot.Child("weaponSlot").Value.ToString();
-					string Shield = rightSnapshot.Child("shieldSlot").Value.ToString();
-					string Cloak = rightSnapshot.Child("cloakSlot").Value.ToString();
+	private void SetCharacterAppearance(string type, string weapon, string shield, string cloak, Animator manAnimator, Animator womanAnimator, GameObject[] manItems, GameObject[] womanItems)
+	{
+		bool isMan = type == "0";
+		manAnimator.gameObject.SetActive(isMan);
+		womanAnimator.gameObject.SetActive(!isMan);
 
-					rightNickName.text = nickName;
-					if (type == "0")
-					{
-						manAnimator2.gameObject.SetActive(true);
-						woManAnimator2.gameObject.SetActive(false);
-						if (Weapon == "sword1")
-						{
-							man2Weapon1.SetActive(true);
-							man2Weapon2.SetActive(false);
-						}
-						else if (Weapon == "sword2")
-						{
-							man2Weapon1.SetActive(false);
-							man2Weapon2.SetActive(true);
-						}
-						else
-						{
-							man2Weapon1.SetActive(false);
-							man2Weapon2.SetActive(false);
-						}
-						if (Shield == "shield1")
-						{
-							man2Shield1.SetActive(true);
-							man2Shield2.SetActive(false);
-						}
-						else if (Shield == "shield2")
-						{
-							man2Shield1.SetActive(false);
-							man2Shield2.SetActive(true);
-						}
-						else
-						{
-							man2Shield1.SetActive(false);
-							man2Shield2.SetActive(false);
-						}
-						if (Cloak == "cloak1")
-						{
-							man2Cloak1.SetActive(true);
-							man2Cloak2.SetActive(false);
-						}
-						else if (Cloak == "cloak2")
-						{
-							man2Cloak1.SetActive(false);
-							man2Cloak2.SetActive(true);
-						}
-						else
-						{
-							man2Cloak1.SetActive(false);
-							man2Cloak2.SetActive(false);
-						}
-					}
-					else if (type == "1")
-					{
-						woManAnimator2.gameObject.SetActive(true);
-						manAnimator2.gameObject.SetActive(false);
-						if (Weapon == "sword1")
-						{
-							woMan2Weapon1.SetActive(true);
-							woMan2Weapon2.SetActive(false);
-						}
-						else if (Weapon == "sword2")
-						{
-							woMan2Weapon1.SetActive(false);
-							woMan2Weapon2.SetActive(true);
-						}
-						else
-						{
-							woMan2Weapon1.SetActive(false);
-							woMan2Weapon2.SetActive(false);
-						}
-						if (Shield == "shield1")
-						{
-							woMan2Shield1.SetActive(true);
-							woMan2Shield2.SetActive(false);
-						}
-						else if (Shield == "shield2")
-						{
-							woMan2Shield1.SetActive(false);
-							woMan2Shield2.SetActive(true);
-						}
-						else
-						{
-							woMan2Shield1.SetActive(false);
-							woMan2Shield2.SetActive(false);
-						}
-						if (Cloak == "cloak1")
-						{
-							woMan2Cloak1.SetActive(true);
-							woMan2Cloak2.SetActive(false);
-						}
-						else if (Cloak == "cloak2")
-						{
-							woMan2Cloak1.SetActive(false);
-							woMan2Cloak2.SetActive(true);
-						}
-						else
-						{
-							woMan2Cloak1.SetActive(false);
-							woMan2Cloak2.SetActive(false);
-						}
-					}
-					creation2.gameObject.SetActive(false);
-					delete2.gameObject.SetActive(true);
-					pressed2.gameObject.SetActive(true);
-				}
-				else
-				{
-					UpdateUIForRightChoice();
-				}
-			});
+		SetItemsAppearance(weapon, shield, cloak, isMan ? manItems : womanItems);
+	}
+
+	private void SetItemsAppearance(string weapon, string shield, string cloak, GameObject[] items)
+	{
+		SetItemActive(items[0], weapon == "sword1");
+		SetItemActive(items[1], weapon == "sword2");
+		SetItemActive(items[2], shield == "shield1");
+		SetItemActive(items[3], shield == "shield2");
+		SetItemActive(items[4], cloak == "cloak1");
+		SetItemActive(items[5], cloak == "cloak2");
+	}
+
+	private void SetItemActive(GameObject item, bool isActive)
+	{
+		item.SetActive(isActive);
 	}
 
 	public void OnLeftButtonPressed()
 	{
-		pressed1.image.color = Color.green;
-		pressed2.image.color = Color.white;
+		SetButtonStates(pressed1, pressed2, true);
 		heroPanel.SetCharacterPosition("Left");
 		panelController.SetActivePanel(PanelController.Panel.Hero);
 	}
 
 	public void OnRightButtonPressed()
 	{
-		pressed1.image.color = Color.white;
-		pressed2.image.color = Color.green;
+		SetButtonStates(pressed2, pressed1, true);
 		heroPanel.SetCharacterPosition("Right");
 		panelController.SetActivePanel(PanelController.Panel.Hero);
 	}
 
-	public void UpdateUIForLeftChoice()
+	private void SetButtonStates(Button activeButton, Button inactiveButton, bool isActive)
 	{
-		leftNickName.text = "";
-		manAnimator1.gameObject.SetActive(false);
-		woManAnimator1.gameObject.SetActive(false);
-		creation1.gameObject.SetActive(true);
-		delete1.gameObject.SetActive(false);
-		pressed1.gameObject.SetActive(false);
+		activeButton.image.color = isActive ? Color.green : Color.white;
+		inactiveButton.image.color = Color.white;
 	}
 
-	public void UpdateUIForRightChoice()
+	private void ResetButtonStates()
 	{
-		rightNickName.text = "";
-		manAnimator2.gameObject.SetActive(false);
-		woManAnimator2.gameObject.SetActive(false);
-		creation2.gameObject.SetActive(true);
-		delete2.gameObject.SetActive(false);
-		pressed2.gameObject.SetActive(false);
+		pressed1.image.color = Color.white;
+		pressed2.image.color = Color.white;
+	}
+
+	public void UpdateUIForChoice(string side)
+	{
+		if (side == "Left")
+		{
+			leftNickName.text = "";
+			ResetCharacterAppearance(manAnimator1, woManAnimator1, man1Items, woMan1Items);
+			creation1.gameObject.SetActive(true);
+			delete1.gameObject.SetActive(false);
+			pressed1.gameObject.SetActive(false);
+		}
+		else if (side == "Right")
+		{
+			rightNickName.text = "";
+			ResetCharacterAppearance(manAnimator2, woManAnimator2, man2Items, woMan2Items);
+			creation2.gameObject.SetActive(true);
+			delete2.gameObject.SetActive(false);
+			pressed2.gameObject.SetActive(false);
+		}
+	}
+
+	private void ResetCharacterAppearance(Animator manAnimator, Animator womanAnimator, GameObject[] manItems, GameObject[] womanItems)
+	{
+		manAnimator.gameObject.SetActive(false);
+		womanAnimator.gameObject.SetActive(false);
+		foreach (GameObject item in manItems) item.SetActive(false);
+		foreach (GameObject item in womanItems) item.SetActive(false);
 	}
 
 	private void Logout()
 	{
-		pressed1.image.color = Color.white;
-		pressed2.image.color = Color.white;
+		ResetButtonStates();
 		Manager.Fire.Auth.SignOut();
 		panelController.SetActivePanel(PanelController.Panel.Login);
 		PhotonNetwork.Disconnect();
@@ -401,122 +187,70 @@ public class MainPanel : MonoBehaviour
 
 	private void Edit()
 	{
-		pressed1.image.color = Color.white;
-		pressed2.image.color = Color.white;
+		ResetButtonStates();
 		panelController.SetActivePanel(PanelController.Panel.Edit);
 	}
 
 	private void GameStart()
 	{
-		pressed1.image.color = Color.white;
-		pressed2.image.color = Color.white;
+		ResetButtonStates();
+		string side = Manager.Fire.IsLeft ? "Left" : "Right";
+		LoadSceneForSide(side);
+	}
 
-		if (Manager.Fire.IsLeft)
+	private void LoadSceneForSide(string side)
+	{
+		Manager.Fire.DB
+		.GetReference("UserData")
+		.Child(Manager.Fire.UserID)
+		.Child(side)
+		.Child("scene")
+		.GetValueAsync()
+		.ContinueWithOnMainThread(task =>
 		{
-			Manager.Fire.DB
-			.GetReference("UserData")
-			.Child(Manager.Fire.UserID)
-			.Child("Left")
-			.Child("scene")
-			.GetValueAsync()
-			.ContinueWithOnMainThread(task =>
+			if (task.IsCompleted && task.Result != null)
 			{
-				if (task.IsCompleted && task.Result != null)
-				{
-					DataSnapshot snapshot = task.Result;
-					string sceneName = snapshot.Value.ToString();
-
-					Manager.Scene.LoadScene(sceneName);
-				}
-			});
-		}
-		else
-		{
-			Manager.Fire.DB
-			.GetReference("UserData")
-			.Child(Manager.Fire.UserID)
-			.Child("Right")
-			.Child("scene")
-			.GetValueAsync()
-			.ContinueWithOnMainThread(task =>
-			{
-				if (task.IsCompleted && task.Result != null)
-				{
-					DataSnapshot snapshot = task.Result;
-					string sceneName = snapshot.Value.ToString();
-
-					Manager.Scene.LoadScene(sceneName);
-				}
-			});
-		}
+				DataSnapshot snapshot = task.Result;
+				string sceneName = snapshot.Value.ToString();
+				Manager.Scene.LoadScene(sceneName);
+			}
+		});
 	}
 
 	private void Creation()
 	{
-		pressed1.image.color = Color.white;
-		pressed2.image.color = Color.white;
+		ResetButtonStates();
 		panelController.SetActivePanel(PanelController.Panel.Hero);
 	}
 
-	private void Delete1()
-	{
-		pressed1.image.color = Color.white;
-		pressed2.image.color = Color.white;
-		panelController.ShowChoice(true);
-	}
-
-	private void Delete2()
-	{
-		pressed1.image.color = Color.white;
-		pressed2.image.color = Color.white;
-		panelController.ShowChoice(false);
-	}
+	private void Delete1() { panelController.ShowChoice(true); }
+	private void Delete2() { panelController.ShowChoice(false); }
 
 	private void Pressed1()
 	{
-		if (manAnimator1.gameObject.activeInHierarchy)
-		{
-			manAnimator1.SetBool("Victory", true);
-		}
-		if (woManAnimator1.gameObject.activeInHierarchy)
-		{
-			woManAnimator1.SetBool("Victory", true);
-		}
-		if (manAnimator2.gameObject.activeInHierarchy)
-		{
-			manAnimator2.SetBool("Victory", false);
-		}
-		if (woManAnimator2.gameObject.activeInHierarchy)
-		{
-			woManAnimator2.SetBool("Victory", false);
-		}
-		pressed1.image.color = Color.green;
-		pressed2.image.color = Color.white;
+		SetVictoryState(true, false);
+		SetButtonStates(pressed1, pressed2, true);
 		startButton.gameObject.SetActive(true);
 		Manager.Fire.IsLeft = true;
 	}
 
 	private void Pressed2()
 	{
-		if (manAnimator1.gameObject.activeInHierarchy)
-		{
-			manAnimator1.SetBool("Victory", false);
-		}
-		if (woManAnimator1.gameObject.activeInHierarchy)
-		{
-			woManAnimator1.SetBool("Victory", false);
-		}
-		if (manAnimator2.gameObject.activeInHierarchy)
-		{
-			manAnimator2.SetBool("Victory", true);
-		}
-		if (woManAnimator2.gameObject.activeInHierarchy)
-		{
-			woManAnimator2.SetBool("Victory", true);
-		}
-		pressed1.image.color = Color.white;
-		pressed2.image.color = Color.green;
+		SetVictoryState(false, true);
+		SetButtonStates(pressed2, pressed1, true);
 		startButton.gameObject.SetActive(true);
 		Manager.Fire.IsLeft = false;
+	}
+
+	private void SetVictoryState(bool leftVictory, bool rightVictory)
+	{
+		SetAnimatorVictoryState(manAnimator1, woManAnimator1, leftVictory);
+		SetAnimatorVictoryState(manAnimator2, woManAnimator2, rightVictory);
+	}
+
+	private void SetAnimatorVictoryState(Animator manAnimator, Animator womanAnimator, bool victory)
+	{
+		if (manAnimator.gameObject.activeInHierarchy) manAnimator.SetBool("Victory", victory);
+		if (womanAnimator.gameObject.activeInHierarchy) womanAnimator.SetBool("Victory", victory);
 	}
 }

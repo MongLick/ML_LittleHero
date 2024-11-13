@@ -13,10 +13,20 @@ public class ResetPanel : MonoBehaviour
 
 	private void Awake()
 	{
+		AddButtonListeners();
+	}
+
+	private void AddButtonListeners()
+	{
 		sendButton.onClick.AddListener(SendResetMail);
 		cancelButton.onClick.AddListener(Cancel);
-		sendButton.onClick.AddListener(Manager.Sound.ButtonSFX);
-		cancelButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+		sendButton.onClick.AddListener(PlayButtonSFX);
+		cancelButton.onClick.AddListener(PlayButtonSFX);
+	}
+
+	private void PlayButtonSFX()
+	{
+		Manager.Sound.ButtonSFX();
 	}
 
 	private void SendResetMail()
@@ -28,18 +38,18 @@ public class ResetPanel : MonoBehaviour
 		{
 			if (task.IsCanceled)
 			{
-				panelController.ShowInfo("SendPasswordResetEmailAsync canceled");
+				ShowMessage("작업이 취소되었습니다.");
 				SetInteractable(true);
 				return;
 			}
 			else if (task.IsFaulted)
 			{
-				panelController.ShowInfo($"SendPasswordResetEmailAsync failed : {task.Exception.Message}");
+				ShowMessage("작업이 살패되었습니다.");
 				SetInteractable(true);
 				return;
 			}
 
-			panelController.ShowInfo("SendPasswordResetEmailAsync success");
+			ShowMessage("비밀번호 재설정 이메일이 성공적으로 발송되었습니다");
 			panelController.SetActivePanel(PanelController.Panel.Login);
 			SetInteractable(true);
 		});
@@ -48,6 +58,11 @@ public class ResetPanel : MonoBehaviour
 	private void Cancel()
 	{
 		panelController.SetActivePanel(PanelController.Panel.Login);
+	}
+
+	private void ShowMessage(string message)
+	{
+		panelController.ShowInfo(message);
 	}
 
 	private void SetInteractable(bool interactable)

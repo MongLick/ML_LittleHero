@@ -3284,7 +3284,7 @@ PrefabInstance:
     - target: {fileID: 5352958571798197664, guid: c564c8c0d0cdc45429417f315e9f3e41,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5463,6 +5463,7 @@ MonoBehaviour:
   confirmButton: {fileID: 1119262106}
   creationButton: {fileID: 1531756593}
   mainPanel: {fileID: 1441083691}
+  choice: 
 --- !u!1 &673472444
 GameObject:
   m_ObjectHideFlags: 0
@@ -7863,13 +7864,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panelController: {fileID: 961723365}
+  nickName: {fileID: 1580022332}
   manPressed: {fileID: 924042601}
   woManPressed: {fileID: 78063669}
-  nickName: {fileID: 1580022332}
   cancelButton: {fileID: 1799706483}
   confirmButton: {fileID: 74042579}
   manAnimator: {fileID: 470537264}
   woManAnimator: {fileID: 1232388590}
+  characterPosition: 
 --- !u!114 &939023239
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12086,7 +12088,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1441083690
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12141,30 +12143,34 @@ MonoBehaviour:
   woManAnimator2: {fileID: 2070604584}
   leftNickName: {fileID: 1336727530}
   rightNickName: {fileID: 577199608}
-  man1Weapon1: {fileID: 1535359182}
-  man1Weapon2: {fileID: 1424043306}
-  man1Shield1: {fileID: 1532376255}
-  man1Shield2: {fileID: 1222711501}
-  man1Cloak1: {fileID: 2103928333}
-  man1Cloak2: {fileID: 1009256372}
-  man2Weapon1: {fileID: 154749897}
-  man2Weapon2: {fileID: 922125921}
-  man2Shield1: {fileID: 1304917789}
-  man2Shield2: {fileID: 158504285}
-  man2Cloak1: {fileID: 165988115}
-  man2Cloak2: {fileID: 1547290164}
-  woMan1Weapon1: {fileID: 837858569}
-  woMan1Weapon2: {fileID: 81912079}
-  woMan1Shield1: {fileID: 913645753}
-  woMan1Shield2: {fileID: 1976581143}
-  woMan1Cloak1: {fileID: 1006257086}
-  woMan1Cloak2: {fileID: 1572727287}
-  woMan2Weapon1: {fileID: 1062227175}
-  woMan2Weapon2: {fileID: 1469790577}
-  woMan2Shield1: {fileID: 1777696614}
-  woMan2Shield2: {fileID: 1689963611}
-  woMan2Cloak1: {fileID: 1793500123}
-  woMan2Cloak2: {fileID: 798254769}
+  man1Items:
+  - {fileID: 1535359182}
+  - {fileID: 1424043306}
+  - {fileID: 1532376255}
+  - {fileID: 1222711501}
+  - {fileID: 2103928333}
+  - {fileID: 1009256372}
+  man2Items:
+  - {fileID: 154749897}
+  - {fileID: 922125921}
+  - {fileID: 1304917789}
+  - {fileID: 158504285}
+  - {fileID: 165988115}
+  - {fileID: 1547290164}
+  woMan1Items:
+  - {fileID: 837858569}
+  - {fileID: 81912079}
+  - {fileID: 913645753}
+  - {fileID: 1976581143}
+  - {fileID: 1006257086}
+  - {fileID: 1572727287}
+  woMan2Items:
+  - {fileID: 1062227175}
+  - {fileID: 1469790577}
+  - {fileID: 1777696614}
+  - {fileID: 1689963611}
+  - {fileID: 1793500123}
+  - {fileID: 798254769}
 --- !u!114 &1441083692
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17001,6 +17007,7 @@ MonoBehaviour:
   passApplyButton: {fileID: 472349724}
   backButton: {fileID: 895177323}
   deleteButton: {fileID: 1066716853}
+  newPassword: 
 --- !u!1 &2103928333 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5003047110509551044, guid: c564c8c0d0cdc45429417f315e9f3e41,
