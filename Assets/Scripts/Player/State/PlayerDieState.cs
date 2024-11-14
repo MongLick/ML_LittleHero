@@ -16,6 +16,7 @@ public class PlayerDieState : BaseState<PlayerStateType>
 		player.Animator.SetTrigger("Die");
 		player.GameOverCamera.Priority = player.CameraPriority;
 		player.PlayerInput.enabled = false;
+		player.IsAutoAttack = false;
 		player.StartCoroutine(DieCoroutine());
 	}
 

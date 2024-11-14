@@ -480,7 +480,7 @@ MonoBehaviour:
   button: {fileID: 3896810817502559757}
   timeText: {fileID: 1238163088942371283}
   hideImage: {fileID: 7262330453069114748}
-  inventoryUI: {fileID: 0}
+  inventoryUI: {fileID: 6257370888887383569}
   currentItem: {fileID: 0}
   currentSkill: {fileID: 0}
   coolTime: 0
@@ -5215,7 +5215,7 @@ MonoBehaviour:
   button: {fileID: 1168966603629366741}
   timeText: {fileID: 6267741309520956394}
   hideImage: {fileID: 7336744265283873557}
-  inventoryUI: {fileID: 0}
+  inventoryUI: {fileID: 6257370888887383569}
   currentItem: {fileID: 0}
   currentSkill: {fileID: 0}
   coolTime: 0
@@ -7583,7 +7583,7 @@ MonoBehaviour:
   button: {fileID: 2878491264809267838}
   timeText: {fileID: 2816205619089755929}
   hideImage: {fileID: 7431115250255536028}
-  inventoryUI: {fileID: 0}
+  inventoryUI: {fileID: 6257370888887383569}
   currentItem: {fileID: 0}
   currentSkill: {fileID: 0}
   coolTime: 0
@@ -9210,7 +9210,7 @@ MonoBehaviour:
   button: {fileID: 4725389828459370931}
   timeText: {fileID: 3748190122051117502}
   hideImage: {fileID: 335879439278112427}
-  inventoryUI: {fileID: 0}
+  inventoryUI: {fileID: 6257370888887383569}
   currentItem: {fileID: 0}
   currentSkill: {fileID: 0}
   coolTime: 0

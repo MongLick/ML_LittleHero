@@ -34,7 +34,14 @@ public class LittleForestScene : BaseScene
 	public override void OnEnable()
 	{
 		base.OnEnable();
-		PhotonNetwork.JoinOrCreateRoom("RPG_MainRoom", new RoomOptions { MaxPlayers = 20 }, TypedLobby.Default);
+		if (PhotonNetwork.IsConnectedAndReady)
+		{
+			JoinMainRoom();
+		}
+		else
+		{
+			PhotonNetwork.ConnectUsingSettings();
+		}
 		Manager.Game.PoolEffect = FindAnyObjectByType<PoolEffect>();
 		Manager.Sound.PlayBGM(Manager.Sound.LittleForestSoundClip);
 	}
@@ -42,6 +49,16 @@ public class LittleForestScene : BaseScene
 	public override void OnJoinedRoom()
 	{
 		LoadCharacterData();
+	}
+
+	public override void OnConnectedToMaster()
+	{
+		JoinMainRoom();
+	}
+
+	private void JoinMainRoom()
+	{
+		PhotonNetwork.JoinOrCreateRoom("RPG_MainRoom", new RoomOptions { MaxPlayers = 20 }, TypedLobby.Default);
 	}
 
 	private void LoadCharacterData()
@@ -114,7 +131,7 @@ public class LittleForestScene : BaseScene
 								if (item.Child("quantity").Exists)
 								{
 									int itemQuantity = int.Parse(item.Child("quantity").Value.ToString());
-									shopBack.LitileSceneLoadPtion(itemName, slotIndex, itemQuantity, inventoryUI.InventorySlots);
+									shopBack.LoadPotion(itemName, slotIndex, itemQuantity, inventoryUI);
 								}
 								else
 								{
@@ -219,7 +236,7 @@ public class LittleForestScene : BaseScene
 									if (item.Child("quantity").Exists)
 									{
 										int itemQuantity = int.Parse(item.Child("quantity").Value.ToString());
-										shopBack.LitileSceneLoadPtion(itemName, slotIndex, itemQuantity, inventoryUI.InventorySlots);
+										shopBack.LoadPotion(itemName, slotIndex, itemQuantity, inventoryUI);
 									}
 									else
 									{
@@ -242,7 +259,6 @@ public class LittleForestScene : BaseScene
 
 							if (!string.IsNullOrEmpty(itemName))
 							{
-								Debug.Log(itemName);
 								int itemQuantity = int.Parse(slot.Child("quantity").Value.ToString());
 								LoadQuickSlotItem(itemName, slotIndex, itemQuantity);
 							}

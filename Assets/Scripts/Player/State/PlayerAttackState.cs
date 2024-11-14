@@ -83,6 +83,5 @@ public class PlayerAttackState : BaseState<PlayerStateType>
 		player.IsAttackCooltime = true;
 		player.IsAttack = false;
 		player.IsSkiilAttack = false;
-		ChangeState(PlayerStateType.Idle);
 	}
 }

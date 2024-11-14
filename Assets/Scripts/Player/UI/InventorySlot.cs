@@ -75,7 +75,7 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IDropHandler, 
 
 			if (currentItem.slotType == InventoryIcon.SlotType.hpPotion || currentItem.slotType == InventoryIcon.SlotType.mpPotion)
 			{
-				Manager.Fire.SavePotionData(thisSlotIndex, new InventorySlotData(currentItem.ItemName, currentItem.Quantity), true);
+				Manager.Fire.SavePotionToDatabase(thisSlotIndex, new InventorySlotData(currentItem.ItemName, currentItem.Quantity));
 			}
 			else
 			{
@@ -98,22 +98,22 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IDropHandler, 
 			{
 				if (currentItem.slotType == InventoryIcon.SlotType.hpPotion || currentItem.slotType == InventoryIcon.SlotType.mpPotion)
 				{
-					Manager.Fire.SavePotionData(draggedSlotIndex, new InventorySlotData(draggedSlot.currentItem.ItemName, draggedSlot.currentItem.Quantity), false);
+					Manager.Fire.SavePotionToDatabase(draggedSlotIndex, new InventorySlotData(draggedSlot.currentItem.ItemName, draggedSlot.currentItem.Quantity));
 					currentItem = draggedItem;
-					Manager.Fire.SavePotionData(thisSlotIndex, new InventorySlotData(currentItem.ItemName, currentItem.Quantity), false);
+					Manager.Fire.SavePotionToDatabase(thisSlotIndex, new InventorySlotData(currentItem.ItemName, currentItem.Quantity));
 				}
 				else
 				{
 					Manager.Fire.SaveItemToDatabase(draggedSlotIndex, draggedSlot.currentItem.ItemName);
 					currentItem = draggedItem;
-					Manager.Fire.SavePotionData(thisSlotIndex, new InventorySlotData(currentItem.ItemName, currentItem.Quantity), false);
+					Manager.Fire.SavePotionToDatabase(thisSlotIndex, new InventorySlotData(currentItem.ItemName, currentItem.Quantity));
 				}
 			}
 			else
 			{
 				if (currentItem.slotType == InventoryIcon.SlotType.hpPotion || currentItem.slotType == InventoryIcon.SlotType.mpPotion)
 				{
-					Manager.Fire.SavePotionData(draggedSlotIndex, new InventorySlotData(draggedSlot.currentItem.ItemName, draggedSlot.currentItem.Quantity), false);
+					Manager.Fire.SavePotionToDatabase(draggedSlotIndex, new InventorySlotData(draggedSlot.currentItem.ItemName, draggedSlot.currentItem.Quantity));
 					currentItem = draggedItem;
 					Manager.Fire.SaveItemToDatabase(thisSlotIndex, currentItem.ItemName);
 				}

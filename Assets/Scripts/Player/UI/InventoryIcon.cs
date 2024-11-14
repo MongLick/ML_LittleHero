@@ -106,7 +106,7 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 				if (slot.CurrentItem != null && slot.CurrentItem.itemName == itemName)
 				{
 					slot.CurrentItem = null;
-					Manager.Fire.SavePotionData(slot.SlotIndex, new InventorySlotData("", 0), true);
+					Manager.Fire.SavePotionQuickSlot(slot.SlotIndex, new InventorySlotData("", 0));
 					break;
 				}
 			}
@@ -141,7 +141,7 @@ public class InventoryIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
 				if (slotType == SlotType.hpPotion || slotType == SlotType.mpPotion)
 				{
-					Manager.Fire.SavePotionData(index, new InventorySlotData(this.itemName, this.quantity), false);
+					Manager.Fire.SavePotionToDatabase(index, new InventorySlotData(this.itemName, this.quantity));
 				}
 				else
 				{

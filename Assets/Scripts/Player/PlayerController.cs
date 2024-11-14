@@ -102,6 +102,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 	public bool IsSkiilAttack { get { return isSkiilAttack; } set { isSkiilAttack = value; } }
 	private bool isGround;
 	private bool isAutoAttack;
+	public bool IsAutoAttack { get { return isAutoAttack; } set { isAutoAttack = value; } }
 
 	private void Awake()
 	{
@@ -320,6 +321,11 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	private void MoveTowardsMonster()
 	{
+		if (isStunned)
+		{
+			isAttack = false;
+			return;
+		}
 		if (monsterTarget != null)
 		{
 			Vector3 directionToMonster = (monsterTarget.position - transform.position).normalized;
@@ -379,7 +385,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 			{
 				while (isAutoAttack)
 				{
-					if (monsterTarget.GetComponent<MonsterController>().Hp <= 0)
+					if (monsterTarget == null || monsterTarget.GetComponent<MonsterController>().Hp <= 0)
 					{
 						monsterTarget = null;
 						break;
@@ -391,5 +397,4 @@ public class PlayerController : MonoBehaviour, IDamageable
 			yield return null;
 		}
 	}
-
 }
