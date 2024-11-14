@@ -102,6 +102,7 @@ public class Shop : MonoBehaviour
 				potionObject.GetComponent<RectTransform>().position = inventorySlots[i].GetComponent<RectTransform>().position;
 				inventorySlots[i].CurrentItem = potionIcon;
 				potionIcon.ParentSlot = inventorySlots[i];
+				potionIcon.InventoryUI = npc.InventoryUI;
 
 				InventorySlotData newPotionData = new InventorySlotData(potionName, 1);
 				Manager.Fire.SavePotionData(i, newPotionData, false);
@@ -147,6 +148,27 @@ public class Shop : MonoBehaviour
 		potionObject.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
 		slot.CurrentItem = potionIcon;
 		potionIcon.ParentSlot = slot;
+		potionIcon.InventoryUI = npc.InventoryUI;
+	}
+
+	public void LitileSceneLoadPtion(string potionName, int slotIndex, int itemQuantity, InventorySlot[] inventorySlots)
+	{
+		potionPrefab = LoadPotionPrefab(potionName);
+
+		InventorySlot[] inventorySlot = inventorySlots;
+		InventorySlot slot = inventorySlot[slotIndex];
+
+		GameObject potionObject = Instantiate(potionPrefab, slot.transform);
+		InventoryIcon potionIcon = potionObject.GetComponent<InventoryIcon>();
+
+		potionIcon.ItemName = potionName;
+		potionIcon.Quantity = itemQuantity;
+		potionIcon.UpdateQuantityText();
+
+		potionObject.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+		slot.CurrentItem = potionIcon;
+		potionIcon.ParentSlot = slot;
+		potionIcon.InventoryUI = npc.InventoryUI;
 	}
 }
 

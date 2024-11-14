@@ -7,6 +7,8 @@ public class ShopkeeperNPC : MonoBehaviour
 	[SerializeField] InteractAdapter interactAdapter;
 	[SerializeField] LittleForestScene scene;
 	[SerializeField] PlayerController player;
+	[SerializeField] InventoryUI inventoryUI;
+	public InventoryUI InventoryUI { get { return inventoryUI; } }
 	[SerializeField] InventorySlot[] inventorySlots;
 	public InventorySlot[] InventorySlots { get { return inventorySlots; } }
 	[SerializeField] QuickSlot[] quickSlot;
@@ -49,6 +51,7 @@ public class ShopkeeperNPC : MonoBehaviour
 				isInteract = true;
 				player = other.GetComponent<PlayerController>();
 				inventorySlots = player.InventoryUI.InventorySlots;
+				inventoryUI = player.InventoryUI;
 				quickSlot = player.QuickSlots;
 			}
 			else

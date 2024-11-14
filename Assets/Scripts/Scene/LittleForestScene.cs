@@ -24,6 +24,7 @@ public class LittleForestScene : BaseScene
 	[SerializeField] Shop shopBack;
 	public Shop ShopBack { get { return shopBack; } set { shopBack = value; } }
 	[SerializeField] GameObject characterInstance;
+	[SerializeField] PlayerController character;
 
 	private void Awake()
 	{
@@ -88,7 +89,7 @@ public class LittleForestScene : BaseScene
 					}
 					UserData.CharacterType characterType = (type == "0") ? UserData.CharacterType.Man : UserData.CharacterType.WoMan;
 					Manager.Data.UserData = new UserData(nickName, characterType, "Left", posX, posY, posZ, "LittleForestScene", health, mana, gold, weapon, shield, cloak, new Dictionary<int, InventorySlotData>(), new Dictionary<string, QuestData>(), new InventorySlotData[4], qualityLevel);
-					PlayerController character = characterInstance.GetComponent<PlayerController>();
+					character = characterInstance.GetComponent<PlayerController>();
 					GraphicsUI graphicsUI = character.GraphicsUI;
 					InventoryUI inventoryUI = character.InventoryUI;
 					EquipmentUI equipmentUI = character.EquipmentUI;
@@ -113,7 +114,7 @@ public class LittleForestScene : BaseScene
 								if (item.Child("quantity").Exists)
 								{
 									int itemQuantity = int.Parse(item.Child("quantity").Value.ToString());
-									shopBack.LoadPotion(itemName, slotIndex, itemQuantity);
+									shopBack.LitileSceneLoadPtion(itemName, slotIndex, itemQuantity, inventoryUI.InventorySlots);
 								}
 								else
 								{
@@ -188,7 +189,7 @@ public class LittleForestScene : BaseScene
 					}
 					UserData.CharacterType characterType = (type == "0") ? UserData.CharacterType.Man : UserData.CharacterType.WoMan;
 					Manager.Data.UserData = new UserData(nickName, characterType, "Left", posX, posY, posZ, "LittleForestScene", health, mana, gold, weapon, shield, cloak, new Dictionary<int, InventorySlotData>(), new Dictionary<string, QuestData>(), new InventorySlotData[4], qualityLevel);
-					PlayerController character = characterInstance.GetComponent<PlayerController>();
+					character = characterInstance.GetComponent<PlayerController>();
 					GraphicsUI graphicsUI = character.GraphicsUI;
 					InventoryUI inventoryUI = character.InventoryUI;
 					EquipmentUI equipmentUI = character.EquipmentUI;
@@ -218,7 +219,7 @@ public class LittleForestScene : BaseScene
 									if (item.Child("quantity").Exists)
 									{
 										int itemQuantity = int.Parse(item.Child("quantity").Value.ToString());
-										shopBack.LoadPotion(itemName, slotIndex, itemQuantity);
+										shopBack.LitileSceneLoadPtion(itemName, slotIndex, itemQuantity, inventoryUI.InventorySlots);
 									}
 									else
 									{
@@ -364,6 +365,7 @@ public class LittleForestScene : BaseScene
 
 				if (potionIcon != null)
 				{
+					potionIcon.InventoryUI = character.InventoryUI;
 					potionIcon.QuickSlot = slot;
 					potionIcon.Quantity = itemQuantity;
 					potionIcon.UpdateQuantityText();
