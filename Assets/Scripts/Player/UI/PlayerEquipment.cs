@@ -19,78 +19,26 @@ public class PlayerEquipment : MonoBehaviourPun, IPunObservable
 	public void EquipWeapon(string weapon)
 	{
 		equippedWeapon = weapon;
-		UpdateWeapon();
+		UpdateEquipment(swordObject1, swordObject2, equippedWeapon == "sword1", equippedWeapon == "sword2");
 	}
 
 	public void EquipShield(string shield)
 	{
 		equippedShield = shield;
-		UpdateShield();
+		UpdateEquipment(shieldObject1, shieldObject2, equippedShield == "shield1", equippedShield == "shield2");
 	}
 
 	public void EquipCloak(string cloak)
 	{
 		equippedCloak = cloak;
-		UpdateCloak();
+		UpdateEquipment(cloakObject1, cloakObject2, equippedCloak == "cloak1", equippedCloak == "cloak2");
 	}
 
-	private void UpdateWeapon()
+	private void UpdateEquipment(GameObject object1, GameObject object2, bool isEquipped1, bool isEquipped2)
 	{
-		if (equippedWeapon == "sword1")
-		{
-			swordObject1.SetActive(true);
-			swordObject2.SetActive(false);
-		}
-		else if (equippedWeapon == "sword2")
-		{
-			swordObject1.SetActive(false);
-			swordObject2.SetActive(true);
-		}
-		else
-		{
-			swordObject1.SetActive(false);
-			swordObject2.SetActive(false);
-		}
+		object1.SetActive(isEquipped1);
+		object2.SetActive(isEquipped2);
 	}
-
-	private void UpdateShield()
-	{
-		if (equippedShield == "shield1")
-		{
-			shieldObject1.SetActive(true);
-			shieldObject2.SetActive(false);
-		}
-		else if (equippedShield == "shield2")
-		{
-			shieldObject1.SetActive(false);
-			shieldObject2.SetActive(true);
-		}
-		else
-		{
-			shieldObject1.SetActive(false);
-			shieldObject2.SetActive(false);
-		}
-	}
-
-	private void UpdateCloak()
-	{
-		if (equippedCloak == "cloak1")
-		{
-			cloakObject1.SetActive(true);
-			cloakObject2.SetActive(false);
-		}
-		else if (equippedCloak == "cloak2")
-		{
-			cloakObject1.SetActive(false);
-			cloakObject2.SetActive(true);
-		}
-		else
-		{
-			cloakObject1.SetActive(false);
-			cloakObject2.SetActive(false);
-		}
-	}
-
 
 	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
@@ -111,4 +59,8 @@ public class PlayerEquipment : MonoBehaviourPun, IPunObservable
 			UpdateCloak();
 		}
 	}
+
+	private void UpdateWeapon() => UpdateEquipment(swordObject1, swordObject2, equippedWeapon == "sword1", equippedWeapon == "sword2");
+	private void UpdateShield() => UpdateEquipment(shieldObject1, shieldObject2, equippedShield == "shield1", equippedShield == "shield2");
+	private void UpdateCloak() => UpdateEquipment(cloakObject1, cloakObject2, equippedCloak == "cloak1", equippedCloak == "cloak2");
 }

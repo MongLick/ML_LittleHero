@@ -10,11 +10,14 @@ public class Shop : MonoBehaviour
 	[SerializeField] GameObject potionPrefab;
 	[SerializeField] ShopkeeperNPC npc;
 
+	[Header("Specs")]
+	private const int PotionCost = 5;
+
 	private void Awake()
 	{
 		closeButton.onClick.AddListener(Close);
-		hpButton.onClick.AddListener(HpPotionPurchase);
-		mpButton.onClick.AddListener(MpPotionPurchase);
+		hpButton.onClick.AddListener(() => PurchasePotion("hpPotion"));
+		mpButton.onClick.AddListener(() => PurchasePotion("mpPotion"));
 	}
 
 	private void Close()
@@ -22,42 +25,20 @@ public class Shop : MonoBehaviour
 		gameObject.SetActive(false);
 	}
 
-	private void HpPotionPurchase()
+	private void PurchasePotion(string potionName)
 	{
-		if (Manager.Data.UserData.Gold >= 5)
+		if (Manager.Data.UserData.Gold >= PotionCost)
 		{
-			Manager.Data.UserData.Gold -= 5;
-			AddPotion("hpPotion");
-		}
-		else
-		{
-			return;
-		}
-	}
-
-	private void MpPotionPurchase()
-	{
-		if (Manager.Data.UserData.Gold >= 5)
-		{
-			Manager.Data.UserData.Gold -= 5;
-			AddPotion("mpPotion");
-		}
-		else
-		{
-			return;
+			Manager.Data.UserData.Gold -= PotionCost;
+			AddPotion(potionName);
 		}
 	}
 
 	public void AddPotion(string potionName)
 	{
-		Manager.Fire.UpdateGoldInDatabase(-5);
+		Manager.Fire.UpdateGoldInDatabase(-PotionCost);
 
-		InventoryIcon existingPotion = FindPotionInInventory(potionName);
-
-		if (existingPotion == null)
-		{
-			existingPotion = FindPotionInQuickSlots(potionName);
-		}
+		InventoryIcon existingPotion = FindPotionInInventory(potionName) ?? FindPotionInQuickSlots(potionName);
 
 		if (existingPotion != null)
 		{
@@ -65,7 +46,7 @@ public class Shop : MonoBehaviour
 
 			if (existingPotion.QuickSlot != null)
 			{
-				Manager.Fire.SavePotionQuickSlot(existingPotion.QuickSlot.SlotIndex, new InventorySlotData(potionName, existingPotion.Quantity));
+				Manager.Fire.SavePotionData(existingPotion.QuickSlot.SlotIndex, new InventorySlotData(potionName, existingPotion.Quantity), true);
 			}
 			else
 			{
@@ -80,9 +61,7 @@ public class Shop : MonoBehaviour
 
 	private InventoryIcon FindPotionInQuickSlots(string potionName)
 	{
-		QuickSlot[] quickSlots = npc.QuickSlot;
-
-		foreach (QuickSlot slot in quickSlots)
+		foreach (QuickSlot slot in npc.QuickSlot)
 		{
 			if (slot.CurrentItem != null && slot.CurrentItem.ItemName == potionName)
 			{
@@ -94,9 +73,7 @@ public class Shop : MonoBehaviour
 
 	private InventoryIcon FindPotionInInventory(string potionName)
 	{
-		InventorySlot[] slots = npc.InventorySlots;
-
-		foreach (InventorySlot slot in slots)
+		foreach (InventorySlot slot in npc.InventorySlots)
 		{
 			if (slot.CurrentItem != null && slot.CurrentItem.ItemName == potionName)
 			{
@@ -108,14 +85,7 @@ public class Shop : MonoBehaviour
 
 	private void CreateNewPotionIcon(string potionName)
 	{
-		if (potionName == "hpPotion")
-		{
-			potionPrefab = Resources.Load<GameObject>("Prefabs/hpPotion");
-		}
-		else
-		{
-			potionPrefab = Resources.Load<GameObject>("Prefabs/mpPotion");
-		}
+		potionPrefab = LoadPotionPrefab(potionName);
 
 		GameObject potionObject = Instantiate(potionPrefab);
 		InventoryIcon potionIcon = potionObject.GetComponent<InventoryIcon>();
@@ -123,6 +93,7 @@ public class Shop : MonoBehaviour
 		potionIcon.ItemName = potionName;
 		potionIcon.Quantity = 1;
 		InventorySlot[] inventorySlots = npc.InventorySlots;
+
 		for (int i = 0; i < inventorySlots.Length; i++)
 		{
 			if (inventorySlots[i].CurrentItem == null)
@@ -131,11 +102,17 @@ public class Shop : MonoBehaviour
 				potionObject.GetComponent<RectTransform>().position = inventorySlots[i].GetComponent<RectTransform>().position;
 				inventorySlots[i].CurrentItem = potionIcon;
 				potionIcon.ParentSlot = inventorySlots[i];
+
 				InventorySlotData newPotionData = new InventorySlotData(potionName, 1);
-				Manager.Fire.SavePotionToDatabase(i, newPotionData);
+				Manager.Fire.SavePotionData(i, newPotionData, false);
 				return;
 			}
 		}
+	}
+
+	private GameObject LoadPotionPrefab(string potionName)
+	{
+		return Resources.Load<GameObject>($"Prefabs/{potionName}");
 	}
 
 	private void UpdatePotionQuantity(string potionName, int quantity)
@@ -147,7 +124,7 @@ public class Shop : MonoBehaviour
 			if (slots[i].CurrentItem != null && slots[i].CurrentItem.ItemName == potionName)
 			{
 				InventorySlotData updatedPotionData = new InventorySlotData(potionName, quantity);
-				Manager.Fire.SavePotionToDatabase(i, updatedPotionData);
+				Manager.Fire.SavePotionData(i, updatedPotionData, false);
 				break;
 			}
 		}
@@ -155,14 +132,7 @@ public class Shop : MonoBehaviour
 
 	public void LoadPotion(string potionName, int slotIndex, int itemQuantity)
 	{
-		if (potionName == "hpPotion")
-		{
-			potionPrefab = Resources.Load<GameObject>("Prefabs/hpPotion");
-		}
-		else
-		{
-			potionPrefab = Resources.Load<GameObject>("Prefabs/mpPotion");
-		}
+		potionPrefab = LoadPotionPrefab(potionName);
 
 		InventorySlot[] inventorySlots = npc.InventorySlots;
 		InventorySlot slot = inventorySlots[slotIndex];
@@ -179,3 +149,4 @@ public class Shop : MonoBehaviour
 		potionIcon.ParentSlot = slot;
 	}
 }
+

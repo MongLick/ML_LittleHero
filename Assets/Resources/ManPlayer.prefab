@@ -477,13 +477,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5339e7df3ed62c468e2746e0edc4113, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentItem: {fileID: 0}
-  slotIndex: 3
   button: {fileID: 3896810817502559757}
-  currentSkill: {fileID: 0}
   timeText: {fileID: 1238163088942371283}
   hideImage: {fileID: 7262330453069114748}
   inventoryUI: {fileID: 0}
+  currentItem: {fileID: 0}
+  currentSkill: {fileID: 0}
+  coolTime: 0
+  time: 0
+  slotIndex: 3
 --- !u!114 &5918690856033543782
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -717,10 +719,10 @@ MonoBehaviour:
   playerSettingUI: {fileID: 6326561844777284765}
   healthText: {fileID: 3725740752188645664}
   manaText: {fileID: 8931865867921668628}
+  goldText: {fileID: 1644675490180773705}
   healthSlider: {fileID: 6063943955539021221}
   manaSlider: {fileID: 898484768771073319}
-  glodText: {fileID: 1644675490180773705}
-  PhotonView: {fileID: 7468976633368429941}
+  photonView: {fileID: 7468976633368429941}
 --- !u!1 &530690913538476184
 GameObject:
   m_ObjectHideFlags: 0
@@ -3545,10 +3547,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38a9a14a1bd7b044aaed1f03a8390494, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillName: Fire
+  canvas: {fileID: 0}
+  skillCopy: {fileID: 0}
   skillImage: {fileID: 2646742385426496667}
   quickSlot: {fileID: 0}
   targetSkillIcon: {fileID: 0}
+  targetInventoryIcon: {fileID: 0}
+  skillName: Fire
 --- !u!1 &2061325574999355657
 GameObject:
   m_ObjectHideFlags: 0
@@ -4317,35 +4322,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96127797fb51e8847887c8f43f92fa37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monster: {fileID: 0}
-  closestDistance: 3.4028235e+38
-  hitColliders: []
-  detectionRange: 300
-  monsterDistance: 1.5
-  attackCooltime: 0.5
-  cooltime: 0
-  attack: {fileID: 1621895851606373713}
-  playerInput: {fileID: 1682567779185050240}
-  playerCamera: {fileID: 1230956969993290069}
-  gameOverCamera: {fileID: 1818844763979608707}
   currentState: 0
-  controller: {fileID: 4558170560650598739}
-  animator: {fileID: 7145009450000939628}
-  moveSpeed: 5
-  jumpSpeed: 10
-  isGround: 0
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
   monsterLayer:
     serializedVersion: 2
     m_Bits: 128
-  ySpeedMax: -10
-  rotationSpeed: 10
-  attackDelay: 0.5
-  takeHitDelay: 0.3
-  stunnedDelay: 2
-  skillOffset: 1.5
+  attack: {fileID: 1621895851606373713}
+  playerInput: {fileID: 1682567779185050240}
+  gameOverCamera: {fileID: 1818844763979608707}
+  animator: {fileID: 7145009450000939628}
   inventoryUI: {fileID: 6257370888887383569}
   graphicsUI: {fileID: 7803499021115897276}
   equipmentUI: {fileID: 3176434291849928445}
@@ -4355,7 +4342,6 @@ MonoBehaviour:
   - {fileID: 6096924470968288926}
   - {fileID: 2699507219137110206}
   - {fileID: 2314137687455785959}
-  range: 0
   colliders:
   - {fileID: 0}
   - {fileID: 0}
@@ -4377,7 +4363,30 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  hitColliders: []
+  monster: {fileID: 0}
+  monsterTarget: {fileID: 0}
+  playerCamera: {fileID: 1230956969993290069}
+  controller: {fileID: 4558170560650598739}
   view: {fileID: 7468976633368429941}
+  skillName: 
+  attackDelay: 0.5
+  takeHitDelay: 0.3
+  stunnedDelay: 2
+  skillOffset: 1.5
+  attackCooltime: 0.5
+  range: 0
+  dieDelay: 3
+  closestDistance: 3.4028235e+38
+  monsterDistance: 1.5
+  detectionRange: 300
+  cooltime: 0
+  moveSpeed: 5
+  jumpSpeed: 10
+  ySpeedMax: -10
+  rotationSpeed: 10
+  ySpeed: 0
+  cameraPriority: 100
 --- !u!143 &4558170560650598739
 CharacterController:
   m_ObjectHideFlags: 0
@@ -5203,13 +5212,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5339e7df3ed62c468e2746e0edc4113, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentItem: {fileID: 0}
-  slotIndex: 1
   button: {fileID: 1168966603629366741}
-  currentSkill: {fileID: 0}
   timeText: {fileID: 6267741309520956394}
   hideImage: {fileID: 7336744265283873557}
   inventoryUI: {fileID: 0}
+  currentItem: {fileID: 0}
+  currentSkill: {fileID: 0}
+  coolTime: 0
+  time: 0
+  slotIndex: 1
 --- !u!114 &4221513659301693420
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5933,6 +5944,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotType: 1
   currentItem: {fileID: 0}
+  playerEquipment: {fileID: 0}
 --- !u!1 &3713313331700288813
 GameObject:
   m_ObjectHideFlags: 0
@@ -7425,10 +7437,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38a9a14a1bd7b044aaed1f03a8390494, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillName: Ice
+  canvas: {fileID: 0}
+  skillCopy: {fileID: 0}
   skillImage: {fileID: 4754886524634060927}
   quickSlot: {fileID: 0}
   targetSkillIcon: {fileID: 0}
+  targetInventoryIcon: {fileID: 0}
+  skillName: Ice
 --- !u!1 &4402524999450050049
 GameObject:
   m_ObjectHideFlags: 0
@@ -7565,13 +7580,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5339e7df3ed62c468e2746e0edc4113, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentItem: {fileID: 0}
-  slotIndex: 0
   button: {fileID: 2878491264809267838}
-  currentSkill: {fileID: 0}
   timeText: {fileID: 2816205619089755929}
   hideImage: {fileID: 7431115250255536028}
   inventoryUI: {fileID: 0}
+  currentItem: {fileID: 0}
+  currentSkill: {fileID: 0}
+  coolTime: 0
+  time: 0
+  slotIndex: 0
 --- !u!114 &4404354273590275007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9190,13 +9207,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5339e7df3ed62c468e2746e0edc4113, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentItem: {fileID: 0}
-  slotIndex: 2
   button: {fileID: 4725389828459370931}
-  currentSkill: {fileID: 0}
   timeText: {fileID: 3748190122051117502}
   hideImage: {fileID: 335879439278112427}
   inventoryUI: {fileID: 0}
+  currentItem: {fileID: 0}
+  currentSkill: {fileID: 0}
+  coolTime: 0
+  time: 0
+  slotIndex: 2
 --- !u!114 &4584939816067510590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9801,6 +9820,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotType: 2
   currentItem: {fileID: 0}
+  playerEquipment: {fileID: 0}
 --- !u!1 &5823941071754755620
 GameObject:
   m_ObjectHideFlags: 0
@@ -10802,6 +10822,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotType: 0
   currentItem: {fileID: 0}
+  playerEquipment: {fileID: 0}
 --- !u!1 &6527740422510413673
 GameObject:
   m_ObjectHideFlags: 0
@@ -12061,9 +12082,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fe2bdc1c26ad6042be25a79da5284c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  closeButton: {fileID: 8222681558395938425}
   bgmVolumeSlider: {fileID: 4643124681630265510}
   sfxVolumeSlider: {fileID: 4004768154444796877}
+  closeButton: {fileID: 8222681558395938425}
   bGMOnButton: {fileID: 2575904400856420058}
   bGMOffButton: {fileID: 7765926604138785489}
   sFXOnButton: {fileID: 1361598169990887996}
@@ -15946,11 +15967,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b878a986b8237d4abae7d2c54293b81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  closeButton: {fileID: 1928369521083194812}
   equipmentSlots:
   - {fileID: 8911721791796584163}
   - {fileID: 1273706302622744767}
   - {fileID: 3602370640649977874}
+  closeButton: {fileID: 1928369521083194812}
   inventoryUI: {fileID: 6257370888887383569}
 --- !u!1 &8856276162247576761
 GameObject:

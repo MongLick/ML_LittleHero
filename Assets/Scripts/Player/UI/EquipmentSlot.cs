@@ -42,81 +42,70 @@ public class EquipmentSlot : MonoBehaviour, IDropHandler
 		currentItem = item;
 		currentItem.IsEquipment = true;
 
-		if (slotType == SlotType.Weapon)
-		{
-			playerEquipment.EquipWeapon(item.ItemName);
-			if (Manager.Fire.IsLeft)
-			{
-				Manager.Fire.UpdateWeaponSlot("Left", item.ItemName);
-			}
-			else
-			{
-				Manager.Fire.UpdateWeaponSlot("Right", item.ItemName);
-			}
-		}
-		else if (slotType == SlotType.Shield)
-		{
-			playerEquipment.EquipShield(item.ItemName);
-			if (Manager.Fire.IsLeft)
-			{
-				Manager.Fire.UpdateShieldSlot("Left", item.ItemName);
-			}
-			else
-			{
-				Manager.Fire.UpdateShieldSlot("Right", item.ItemName);
-			}
-		}
-		else if (slotType == SlotType.Cloak)
-		{
-			playerEquipment.EquipCloak(item.ItemName);
-			if (Manager.Fire.IsLeft)
-			{
-				Manager.Fire.UpdateCloakSlot("Left", item.ItemName);
-			}
-			else
-			{
-				Manager.Fire.UpdateCloakSlot("Right", item.ItemName);
-			}
-		}
+		HandleEquipment(item.ItemName, true);
 	}
 
 	public void UnequipItem()
 	{
-		if (slotType == SlotType.Weapon)
+		HandleEquipment("", false);
+	}
+
+	private void HandleEquipment(string itemName, bool isEquipping)
+	{
+		string slotName = GetSlotName();
+
+		if (isEquipping)
 		{
-			playerEquipment.EquipWeapon("");
-			if (Manager.Fire.IsLeft)
+			switch (slotType)
 			{
-				Manager.Fire.UpdateWeaponSlot("Left", "");
-			}
-			else
-			{
-				Manager.Fire.UpdateWeaponSlot("Right", "");
+				case SlotType.Weapon:
+					playerEquipment.EquipWeapon(itemName);
+					break;
+				case SlotType.Shield:
+					playerEquipment.EquipShield(itemName);
+					break;
+				case SlotType.Cloak:
+					playerEquipment.EquipCloak(itemName);
+					break;
 			}
 		}
-		else if (slotType == SlotType.Shield)
+		else
 		{
-			playerEquipment.EquipShield("");
-			if (Manager.Fire.IsLeft)
+			switch (slotType)
 			{
-				Manager.Fire.UpdateShieldSlot("Left", "");
-			}
-			else
-			{
-				Manager.Fire.UpdateShieldSlot("Right", "");
+				case SlotType.Weapon:
+					playerEquipment.EquipWeapon("");
+					break;
+				case SlotType.Shield:
+					playerEquipment.EquipShield("");
+					break;
+				case SlotType.Cloak:
+					playerEquipment.EquipCloak("");
+					break;
 			}
 		}
-		else if (slotType == SlotType.Cloak)
+
+		UpdateEquipmentSlot(slotName, itemName);
+	}
+
+	private void UpdateEquipmentSlot(string slotName, string itemName)
+	{
+		string side = Manager.Fire.IsLeft ? "Left" : "Right";
+		Manager.Fire.UpdateEquipmentSlot(side, $"{slotName}Slot", itemName);
+	}
+
+	private string GetSlotName()
+	{
+		switch (slotType)
 		{
-			playerEquipment.EquipCloak("");
-			if (Manager.Fire.IsLeft)
-			{
-				Manager.Fire.UpdateCloakSlot("Left", "");
-			}
-			else
-			{
-				Manager.Fire.UpdateCloakSlot("Right", "");
-			}
+			case SlotType.Weapon:
+				return "weapon";
+			case SlotType.Shield:
+				return "shield";
+			case SlotType.Cloak:
+				return "cloak";
+			default:
+				return "";
 		}
 	}
 }

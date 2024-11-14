@@ -15,29 +15,30 @@ public class PlayerSettingUI : MonoBehaviour
 
 	private void Awake()
 	{
-		logoutButton.onClick.AddListener(Logout);
-		soundButton.onClick.AddListener(Sound);
-		graphicButton.onClick.AddListener(Graphics);
+		AddButtonListeners();
+	}
+
+	private void AddButtonListeners()
+	{
+		logoutButton.onClick.AddListener(() => OpenUI(logoutUI));
+		soundButton.onClick.AddListener(() => OpenUI(soundUI));
+		graphicButton.onClick.AddListener(() => OpenUI(graphicsUI));
 		closeButton.onClick.AddListener(Close);
+
+		PlayButtonSFX();
+	}
+
+	private void PlayButtonSFX()
+	{
 		logoutButton.onClick.AddListener(Manager.Sound.ButtonSFX);
 		soundButton.onClick.AddListener(Manager.Sound.ButtonSFX);
 		graphicButton.onClick.AddListener(Manager.Sound.ButtonSFX);
 		closeButton.onClick.AddListener(Manager.Sound.ButtonSFX);
 	}
 
-	private void Logout()
+	private void OpenUI(MonoBehaviour ui)
 	{
-		logoutUI.gameObject.SetActive(true);
-	}
-
-	private void Sound()
-	{
-		soundUI.gameObject.SetActive(true);
-	}
-
-	private void Graphics()
-	{
-		graphicsUI.gameObject.SetActive(true);
+		ui.gameObject.SetActive(true);
 	}
 
 	private void Close()

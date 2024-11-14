@@ -14,14 +14,14 @@ public class PlayerDieState : BaseState<PlayerStateType>
 	public override void Enter()
 	{
 		player.Animator.SetTrigger("Die");
-		player.GameOverCamera.Priority = 100;
+		player.GameOverCamera.Priority = player.CameraPriority;
 		player.PlayerInput.enabled = false;
 		player.StartCoroutine(DieCoroutine());
 	}
 
 	private IEnumerator DieCoroutine()
 	{
-		yield return new WaitForSeconds(3f);
+		yield return new WaitForSeconds(player.DieDelay);
 		Manager.Scene.LoadScene("LittleForestScene");
 	}
 }

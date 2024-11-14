@@ -12,8 +12,8 @@ public class LogoutUI : MonoBehaviour
 	{
 		closeButton.onClick.AddListener(Close);
 		logoutButton.onClick.AddListener(Logout);
-		closeButton.onClick.AddListener(Manager.Sound.ButtonSFX);
-		logoutButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+		closeButton.onClick.AddListener(PlayButtonSFX);
+		logoutButton.onClick.AddListener(PlayButtonSFX);
 	}
 
 	private void Close()
@@ -25,5 +25,10 @@ public class LogoutUI : MonoBehaviour
 	{
 		Manager.Scene.LoadScene("TitleScene");
 		PhotonNetwork.Disconnect();
+	}
+
+	private void PlayButtonSFX()
+	{
+		Manager.Sound.ButtonSFX();
 	}
 }

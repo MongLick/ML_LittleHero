@@ -15,29 +15,30 @@ public class PlayerMenuUI : MonoBehaviour
 
 	private void Awake()
 	{
-		equipmentButton.onClick.AddListener(Equipment);
-		inventoryButton.onClick.AddListener(Inventory);
-		skillButton.onClick.AddListener(SkillUI);
+		AddButtonListeners();
+	}
+
+	private void AddButtonListeners()
+	{
+		equipmentButton.onClick.AddListener(() => OpenUI(equipmentUI));
+		inventoryButton.onClick.AddListener(() => OpenUI(inventoryUI));
+		skillButton.onClick.AddListener(() => OpenUI(skillUI));
 		closeButton.onClick.AddListener(Close);
+
+		PlayButtonSFX();
+	}
+
+	private void PlayButtonSFX()
+	{
 		equipmentButton.onClick.AddListener(Manager.Sound.ButtonSFX);
 		inventoryButton.onClick.AddListener(Manager.Sound.ButtonSFX);
 		skillButton.onClick.AddListener(Manager.Sound.ButtonSFX);
 		closeButton.onClick.AddListener(Manager.Sound.ButtonSFX);
 	}
 
-	private void Equipment()
+	private void OpenUI(MonoBehaviour ui)
 	{
-		equipmentUI.gameObject.SetActive(true);
-	}
-
-	private void Inventory()
-	{
-		inventoryUI.gameObject.SetActive(true);
-	}
-
-	private void SkillUI()
-	{
-		skillUI.gameObject.SetActive(true);
+		ui.gameObject.SetActive(true);
 	}
 
 	private void Close()

@@ -25,8 +25,8 @@ public class MonsterDieState : BaseState<MonsterStateType>
 		monster.Animator.SetTrigger("Die");
 		monster.BoxCollider.enabled = false;
 		monster.Attack.SetActive(false);
-		Manager.Data.UserData.Gold += 10;
-		Manager.Fire.UpdateGoldInDatabase(10);
+		Manager.Data.UserData.Gold += monster.Gold;
+		Manager.Fire.UpdateGoldInDatabase(monster.Gold);
 		yield return new WaitForSeconds(monster.DieDelay);
 		Manager.Fire.OnMonsterDie(monster.Type);
 		monster.OnDieEvent?.Invoke(monster);

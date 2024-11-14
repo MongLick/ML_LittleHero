@@ -69,7 +69,7 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 
 			if (currentSkill != null && draggedItem.ParentSlot != null)
 			{
-				Manager.Fire.SavePotionQuickSlot(slotIndex, new InventorySlotData("", 0));
+				Manager.Fire.SavePotionData(slotIndex, new InventorySlotData("", 0), true);
 				Destroy(currentSkill.gameObject);
 				currentSkill = null;
 			}
@@ -83,7 +83,7 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 				tempSkill.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
 				tempSkill.QuickSlot = originalSlot;
 
-				Manager.Fire.SavePotionQuickSlot(originalSlot.slotIndex, new InventorySlotData(tempSkill.name, 0));
+				Manager.Fire.SavePotionData(originalSlot.slotIndex, new InventorySlotData(tempSkill.name, 0), true);
 
 				currentItem = draggedItem;
 				currentSkill = null;
@@ -91,7 +91,7 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 				draggedItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
 				draggedItem.QuickSlot = this;
 
-				Manager.Fire.SavePotionQuickSlot(slotIndex, new InventorySlotData(draggedItem.ItemName, draggedItem.Quantity));
+				Manager.Fire.SavePotionData(slotIndex, new InventorySlotData(draggedItem.ItemName, draggedItem.Quantity), true);
 				return;
 			}
 
@@ -104,7 +104,7 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 				currentItem = draggedItem;
 				draggedItem.transform.SetParent(transform);
 				draggedItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-				Manager.Fire.SavePotionQuickSlot(slotIndex, new InventorySlotData(draggedItem.ItemName, draggedItem.Quantity));
+				Manager.Fire.SavePotionData(slotIndex, new InventorySlotData(draggedItem.ItemName, draggedItem.Quantity), true);
 				if (previousSlot != null)
 				{
 					draggedItem.ParentSlot = null;
@@ -121,13 +121,13 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 					{
 						tempItem.transform.SetParent(originalSlot.transform);
 						tempItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-						Manager.Fire.SavePotionQuickSlot(originalSlot.slotIndex, new InventorySlotData(tempItem.ItemName, tempItem.Quantity));
+						Manager.Fire.SavePotionData(originalSlot.slotIndex, new InventorySlotData(tempItem.ItemName, tempItem.Quantity), true);
 					}
 
 					currentItem = draggedItem;
 					draggedItem.transform.SetParent(transform);
 					draggedItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-					Manager.Fire.SavePotionQuickSlot(slotIndex, new InventorySlotData(draggedItem.ItemName, draggedItem.Quantity));
+					Manager.Fire.SavePotionData(slotIndex, new InventorySlotData(draggedItem.ItemName, draggedItem.Quantity), true);
 				}
 				else if (previousSlot != null)
 				{
@@ -137,13 +137,13 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 						tempItem.transform.SetParent(previousSlot.transform);
 						tempItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
 						int previousSlotIndex = Array.IndexOf(inventoryUI.InventorySlots, previousSlot);
-						Manager.Fire.SavePotionToDatabase(previousSlotIndex, new InventorySlotData(tempItem.ItemName, tempItem.Quantity));
+						Manager.Fire.SavePotionData(previousSlotIndex, new InventorySlotData(tempItem.ItemName, tempItem.Quantity), false);
 					}
 
 					currentItem = draggedItem;
 					draggedItem.transform.SetParent(transform);
 					draggedItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-					Manager.Fire.SavePotionQuickSlot(slotIndex, new InventorySlotData(draggedItem.ItemName, draggedItem.Quantity));
+					Manager.Fire.SavePotionData(slotIndex, new InventorySlotData(draggedItem.ItemName, draggedItem.Quantity), true);
 				}
 			}
 
@@ -167,7 +167,7 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 				currentItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
 				currentItem.QuickSlot = originalSlot;
 
-				Manager.Fire.SavePotionQuickSlot(originalSlot.slotIndex, new InventorySlotData(currentItem.ItemName, currentItem.Quantity));
+				Manager.Fire.SavePotionData(originalSlot.slotIndex, new InventorySlotData(currentItem.ItemName, currentItem.Quantity), true);
 
 				currentSkill = draggedSkill;
 				currentItem = null;
@@ -175,7 +175,7 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 				draggedSkill.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
 				draggedSkill.QuickSlot = this;
 
-				Manager.Fire.SavePotionQuickSlot(this.slotIndex, new InventorySlotData(draggedSkill.name, 0));
+				Manager.Fire.SavePotionData(this.slotIndex, new InventorySlotData(draggedSkill.name, 0), true);
 				return;
 			}
 
@@ -185,8 +185,8 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 				draggedSkill.transform.SetParent(transform);
 				draggedSkill.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
 				originalSlot.currentSkill = null;
-				Manager.Fire.SavePotionQuickSlot(this.slotIndex, new InventorySlotData(draggedSkill.name, 0));
-				Manager.Fire.SavePotionQuickSlot(originalSlot.slotIndex, new InventorySlotData("", 0));
+				Manager.Fire.SavePotionData(this.slotIndex, new InventorySlotData(draggedSkill.name, 0), true);
+				Manager.Fire.SavePotionData(originalSlot.slotIndex, new InventorySlotData("", 0), true);
 			}
 			else
 			{
@@ -194,12 +194,12 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 				tempSkill.transform.SetParent(originalSlot.transform);
 				tempSkill.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
 				tempSkill.QuickSlot = originalSlot;
-				Manager.Fire.SavePotionQuickSlot(originalSlot.slotIndex, new InventorySlotData(tempSkill.name, 0));
+				Manager.Fire.SavePotionData(originalSlot.slotIndex, new InventorySlotData(tempSkill.name, 0), true);
 
 				currentSkill = draggedSkill;
 				draggedSkill.transform.SetParent(transform);
 				draggedSkill.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-				Manager.Fire.SavePotionQuickSlot(this.slotIndex, new InventorySlotData(draggedSkill.name, 0));
+				Manager.Fire.SavePotionData(this.slotIndex, new InventorySlotData(draggedSkill.name, 0), true);
 			}
 			draggedSkill.QuickSlot = this;
 		}
@@ -221,7 +221,7 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 					return;
 				}
 				currentItem.UpdateQuantity(-1);
-				Manager.Fire.SavePotionQuickSlot(this.slotIndex, new InventorySlotData(currentItem.ItemName, currentItem.Quantity));
+				Manager.Fire.SavePotionData(this.slotIndex, new InventorySlotData(currentItem.ItemName, currentItem.Quantity), true);
 				Manager.Data.UserData.Health += 20;
 				if (Manager.Data.UserData.Health > Manager.Data.UserData.maxHealth)
 				{
@@ -231,7 +231,7 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 				{
 					Destroy(currentItem.gameObject);
 					currentItem = null;
-					Manager.Fire.SavePotionQuickSlot(this.slotIndex, new InventorySlotData("", 0));
+					Manager.Fire.SavePotionData(this.slotIndex, new InventorySlotData("", 0), true);
 				}
 			}
 			else if (currentItem.slotType == InventoryIcon.SlotType.mpPotion)
@@ -241,7 +241,7 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 					return;
 				}
 				currentItem.UpdateQuantity(-1);
-				Manager.Fire.SavePotionQuickSlot(this.slotIndex, new InventorySlotData(currentItem.ItemName, currentItem.Quantity));
+				Manager.Fire.SavePotionData(this.slotIndex, new InventorySlotData(currentItem.ItemName, currentItem.Quantity), true);
 				Manager.Data.UserData.Mana += 20;
 				if (Manager.Data.UserData.Mana > Manager.Data.UserData.maxMana)
 				{
@@ -251,7 +251,7 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 				{
 					Destroy(currentItem.gameObject);
 					currentItem = null;
-					Manager.Fire.SavePotionQuickSlot(this.slotIndex, new InventorySlotData("", 0));
+					Manager.Fire.SavePotionData(this.slotIndex, new InventorySlotData("", 0), true);
 				}
 			}
 			coolTime = 3f;
@@ -277,7 +277,7 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 				{
 					return;
 				}
-				Manager.Fire.SavePotionQuickSlot(slot.slotIndex, new InventorySlotData("", 0));
+				Manager.Fire.SavePotionData(slot.slotIndex, new InventorySlotData("", 0), true);
 				Destroy(slot.currentSkill.gameObject);
 				slot.currentSkill = null;
 			}
@@ -299,7 +299,7 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 			if (currentItem != null)
 			{
 				currentItem.ReturnToInventory();
-				Manager.Fire.SavePotionQuickSlot(this.slotIndex, new InventorySlotData("", 0));
+				Manager.Fire.SavePotionData(this.slotIndex, new InventorySlotData("", 0), true);
 				currentItem.QuickSlot = null;
 				currentItem = null;
 			}
@@ -314,7 +314,7 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 			skillRect.anchoredPosition = Vector2.zero;
 			currentSkill.name = skillName;
 			currentSkill.QuickSlot = this;
-			Manager.Fire.SavePotionQuickSlot(this.slotIndex, new InventorySlotData(currentSkill.name, 0));
+			Manager.Fire.SavePotionData(this.slotIndex, new InventorySlotData(currentSkill.name, 0), true);
 		}
 	}
 

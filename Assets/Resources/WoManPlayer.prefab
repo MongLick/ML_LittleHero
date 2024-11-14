@@ -7199,6 +7199,7 @@ MonoBehaviour:
   skillOffset: 1.5
   attackCooltime: 0.5
   range: 8
+  dieDelay: 3
   closestDistance: 3.4028235e+38
   monsterDistance: 1.5
   detectionRange: 300
@@ -7208,6 +7209,7 @@ MonoBehaviour:
   ySpeedMax: -10
   rotationSpeed: 10
   ySpeed: 0
+  cameraPriority: 100
 --- !u!143 &-3528172684879286764
 CharacterController:
   m_ObjectHideFlags: 0
@@ -10885,10 +10887,10 @@ MonoBehaviour:
   playerSettingUI: {fileID: 6071756390199321527}
   healthText: {fileID: 7246673982281502453}
   manaText: {fileID: 5105479620447533981}
-  glodText: {fileID: 7745470894087712325}
+  goldText: {fileID: 7745470894087712325}
   healthSlider: {fileID: 6182655019740021638}
   manaSlider: {fileID: 3491550691646530247}
-  PhotonView: {fileID: 3174971035778067892}
+  photonView: {fileID: 3174971035778067892}
 --- !u!1 &6165827504000388987
 GameObject:
   m_ObjectHideFlags: 0

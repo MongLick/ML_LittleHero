@@ -23,45 +23,35 @@ public class ShopkeeperNPC : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
-		if (scene.PlayerLayer.Contain(other.gameObject.layer))
-		{
-			PhotonView photonView = other.GetComponent<PhotonView>();
-			if (photonView.IsMine)
-			{
-				scene.TalkButton.gameObject.SetActive(true);
-				isInteract = true;
-				player = other.GetComponent<PlayerController>();
-				inventorySlots = player.InventoryUI.InventorySlots;
-				quickSlot = player.QuickSlots;
-			}
-		}
+		PlayerInteraction(other, true);
 	}
 
 	private void OnTriggerStay(Collider other)
 	{
-		if (scene.PlayerLayer.Contain(other.gameObject.layer))
-		{
-			if (player == null)
-			{
-				player = other.GetComponent<PlayerController>();
-				inventorySlots = player.InventoryUI.InventorySlots;
-				quickSlot = player.QuickSlots;
-			}
-			PhotonView photonView = other.GetComponent<PhotonView>();
-			if (photonView.IsMine)
-			{
-				scene.TalkButton.gameObject.SetActive(true);
-				isInteract = true;
-			}
-		}
+		PlayerInteraction(other, true);
 	}
 
 	private void OnTriggerExit(Collider other)
 	{
-		if (scene.PlayerLayer.Contain(other.gameObject.layer))
+		PlayerInteraction(other, false);
+	}
+
+	private void PlayerInteraction(Collider other, bool isEntering)
+	{
+		if (!scene.PlayerLayer.Contain(other.gameObject.layer)) return;
+
+		PhotonView photonView = other.GetComponent<PhotonView>();
+		if (photonView.IsMine)
 		{
-			PhotonView photonView = other.GetComponent<PhotonView>();
-			if (photonView.IsMine)
+			if (isEntering)
+			{
+				scene.TalkButton.gameObject.SetActive(true);
+				isInteract = true;
+				player = other.GetComponent<PlayerController>();
+				inventorySlots = player.InventoryUI.InventorySlots;
+				quickSlot = player.QuickSlots;
+			}
+			else
 			{
 				scene.TalkButton.gameObject.SetActive(false);
 				scene.TalkBackImage.gameObject.SetActive(false);
@@ -75,10 +65,7 @@ public class ShopkeeperNPC : MonoBehaviour
 
 	private void OnInteract(PlayerController player)
 	{
-		if (!isInteract)
-		{
-			return;
-		}
+		if (!isInteract) return;
 
 		scene.TalkButton.gameObject.SetActive(false);
 		scene.TalkBackImage.gameObject.SetActive(false);

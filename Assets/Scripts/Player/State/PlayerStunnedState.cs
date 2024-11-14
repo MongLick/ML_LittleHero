@@ -57,13 +57,9 @@ public class PlayerStunnedState : BaseState<PlayerStateType>
 	{
 		player.IsAttack = false;
 		player.Animator.SetBool("Stunned", true);
-
 		player.PlayerInput.enabled = false;
-
 		yield return new WaitForSeconds(player.StunnedDelay);
-
 		player.Animator.SetBool("Stunned", false);
-
 		player.PlayerInput.enabled = true;
 		player.IsStunned = false;
 	}

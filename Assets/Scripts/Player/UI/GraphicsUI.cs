@@ -11,13 +11,18 @@ public class GraphicsUI : MonoBehaviour
 	private void Awake()
 	{
 		closeButton.onClick.AddListener(Close);
+		closeButton.onClick.AddListener(PlayButtonSFX);
 		qualityDropdown.onValueChanged.AddListener(QualitySetting);
-		closeButton.onClick.AddListener(Manager.Sound.ButtonSFX);
 	}
 
 	private void Close()
 	{
 		gameObject.SetActive(false);
+	}
+
+	private void PlayButtonSFX()
+	{
+		Manager.Sound.ButtonSFX();
 	}
 
 	private void QualitySetting(int level)

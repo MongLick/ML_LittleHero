@@ -73,6 +73,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 	public float AttackCooltime { get { return attackCooltime; } }
 	[SerializeField] float range;
 	public float Range { get { return range; } }
+	[SerializeField] float dieDelay;
+	public float DieDelay { get { return dieDelay; } }
 	[SerializeField] float closestDistance;
 	[SerializeField] float monsterDistance;
 	[SerializeField] float detectionRange;
@@ -82,6 +84,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 	[SerializeField] float ySpeedMax;
 	[SerializeField] float rotationSpeed;
 	[SerializeField] float ySpeed;
+	[SerializeField] int cameraPriority;
+	public int CameraPriority { get { return cameraPriority; } }
 	private bool isAttackCooltime;
 	public bool IsAttackCooltime { get { return isAttackCooltime; } set { isAttackCooltime = value; } }
 	private bool isAttack;
@@ -132,6 +136,30 @@ public class PlayerController : MonoBehaviour, IDamageable
 		CoolTimeCheck();
 	}
 
+	private void OnTriggerEnter(Collider other)
+	{
+		if (groundLayer.Contain(other.gameObject.layer))
+		{
+			isGround = true;
+		}
+	}
+
+	private void OnTriggerStay(Collider other)
+	{
+		if (groundLayer.Contain(other.gameObject.layer))
+		{
+			isGround = true;
+		}
+	}
+
+	private void OnTriggerExit(Collider other)
+	{
+		if (groundLayer.Contain(other.gameObject.layer))
+		{
+			isGround = false;
+		}
+	}
+
 	private void OnMove(InputValue value)
 	{
 		Vector2 input = value.Get<Vector2>();
@@ -157,14 +185,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 		}
 	}
 
-	public void AttackButton()
-	{
-		if (!isAttack)
-		{
-			isAttack = true;
-		}
-	}
-
 	private void OnBlock(InputValue value)
 	{
 		if (value.isPressed)
@@ -180,6 +200,14 @@ public class PlayerController : MonoBehaviour, IDamageable
 	private void OnInteract(InputValue value)
 	{
 		Interact();
+	}
+
+	public void AttackButton()
+	{
+		if (!isAttack)
+		{
+			isAttack = true;
+		}
 	}
 
 	private void Move()
@@ -240,30 +268,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 		}
 	}
 
-	private void OnTriggerEnter(Collider other)
-	{
-		if (groundLayer.Contain(other.gameObject.layer))
-		{
-			isGround = true;
-		}
-	}
-
-	private void OnTriggerStay(Collider other)
-	{
-		if (groundLayer.Contain(other.gameObject.layer))
-		{
-			isGround = true;
-		}
-	}
-
-	private void OnTriggerExit(Collider other)
-	{
-		if (groundLayer.Contain(other.gameObject.layer))
-		{
-			isGround = false;
-		}
-	}
-
 	private void CoolTimeCheck()
 	{
 		if (isAttackCooltime)
@@ -314,6 +318,40 @@ public class PlayerController : MonoBehaviour, IDamageable
 		attack.SetActive(false);
 	}
 
+	private void MoveTowardsMonster()
+	{
+		if (monsterTarget != null)
+		{
+			Vector3 directionToMonster = (monsterTarget.position - transform.position).normalized;
+			float distance = Vector3.Distance(transform.position, monsterTarget.position);
+
+			if (distance > monsterDistance)
+			{
+				moveDir.x = directionToMonster.x;
+				moveDir.z = directionToMonster.z;
+			}
+			else
+			{
+				isAttack = true;
+				moveDir = Vector3.zero;
+
+				Quaternion rotation = Quaternion.LookRotation(directionToMonster);
+				transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * rotationSpeed);
+			}
+		}
+	}
+
+	public void SkillAttack(string skillName)
+	{
+		if (isSkiilAttack && isAttack)
+		{
+			return;
+		}
+		isAttack = true;
+		isSkiilAttack = true;
+		SkillName = skillName;
+	}
+
 	private IEnumerator AutoAttackCoroutine()
 	{
 		while (isAutoAttack)
@@ -354,37 +392,4 @@ public class PlayerController : MonoBehaviour, IDamageable
 		}
 	}
 
-	private void MoveTowardsMonster()
-	{
-		if (monsterTarget != null)
-		{
-			Vector3 directionToMonster = (monsterTarget.position - transform.position).normalized;
-			float distance = Vector3.Distance(transform.position, monsterTarget.position);
-
-			if (distance > monsterDistance)
-			{
-				moveDir.x = directionToMonster.x;
-				moveDir.z = directionToMonster.z;
-			}
-			else
-			{
-				isAttack = true;
-				moveDir = Vector3.zero;
-
-				Quaternion rotation = Quaternion.LookRotation(directionToMonster);
-				transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * rotationSpeed);
-			}
-		}
-	}
-
-	public void SkillAttack(string skillName)
-	{
-		if (isSkiilAttack && isAttack)
-		{
-			return;
-		}
-		isAttack = true;
-		isSkiilAttack = true;
-		SkillName = skillName;
-	}
 }

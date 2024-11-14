@@ -12,14 +12,14 @@ public class PlayerUI : MonoBehaviour
 	[SerializeField] PlayerSettingUI playerSettingUI;
 	[SerializeField] TMP_Text healthText;
 	[SerializeField] TMP_Text manaText;
-	[SerializeField] TMP_Text glodText;
+	[SerializeField] TMP_Text goldText;
 	[SerializeField] Slider healthSlider;
 	[SerializeField] Slider manaSlider;
-	[SerializeField] PhotonView PhotonView;
+	[SerializeField] PhotonView photonView;
 
 	private void Awake()
 	{
-		if (PhotonView.IsMine == false)
+		if (photonView.IsMine == false)
 		{
 			return;
 		}
@@ -70,12 +70,12 @@ public class PlayerUI : MonoBehaviour
 
 	private void UpdateManaUI(int newMana)
 	{
-		manaText.text = $"{newMana}/{Manager.Data.UserData.maxHealth}";
+		manaText.text = $"{newMana}/{Manager.Data.UserData.maxMana}";
 		manaSlider.value = newMana;
 	}
 
 	private void UpdateGold()
 	{
-		glodText.text = $"{Manager.Data.UserData.Gold}";
+		goldText.text = $"{Manager.Data.UserData.Gold}";
 	}
 }

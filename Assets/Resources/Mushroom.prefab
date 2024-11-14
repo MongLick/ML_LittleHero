@@ -76,33 +76,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
+  currentState: 0
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 8
   onDieEvent:
     m_PersistentCalls:
       m_Calls: []
   pooledObject: {fileID: 3210385136987741735}
   monsterCon: {fileID: 2123777740419986438}
-  attackCooltime: 2.5
-  cooltime: 0
   attack: {fileID: 5809805006923007444}
   boxCollider: {fileID: 6843927896957126086}
   agent: {fileID: 778541577711425387}
   target: {fileID: 0}
   spawnPos: {fileID: 0}
   animator: {fileID: 6865973865443279956}
-  currentState: 0
-  hp: 5
-  maxHp: 5
   moveDetectionRadius: 7
   attackDetectionRadius: 2.5
   maxDistance: 15
   spawnDistance: 0
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 8
   attackDelay: 0.5
   takeHitDelay: 0.5
   stunnedDelay: 1.5
   dieDelay: 2
+  attackCooltime: 2.5
+  cooltime: 0
+  spawnDistanceMax: 2
+  gold: 10
+  hp: 5
+  maxHp: 5
 --- !u!65 &6843927896957126086
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -205,7 +207,8 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: -6959352645706027953}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -223,8 +226,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters: []
-  m_SynchronizeLayers: []
+  m_SynchronizeParameters:
+  - Type: 4
+    SynchronizeType: 0
+    Name: Move
+  - Type: 9
+    SynchronizeType: 0
+    Name: Attack1
+  - Type: 9
+    SynchronizeType: 0
+    Name: Attack2
+  - Type: 9
+    SynchronizeType: 0
+    Name: TakeHit
+  - Type: 9
+    SynchronizeType: 0
+    Name: Die
+  - Type: 4
+    SynchronizeType: 0
+    Name: Stunned
+  m_SynchronizeLayers:
+  - SynchronizeType: 0
+    LayerIndex: 0
 --- !u!1 &870464457753867798
 GameObject:
   m_ObjectHideFlags: 0

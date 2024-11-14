@@ -65,6 +65,9 @@ public class MonsterController : MonoBehaviour, IDamageable
 	[SerializeField] float attackCooltime;
 	public float AttackCooltime { get { return attackCooltime; } }
 	[SerializeField] float cooltime;
+	[SerializeField] float spawnDistanceMax;
+	[SerializeField] int gold;
+	public int Gold { get { return gold; } }
 	[SerializeField] int hp;
 	public int Hp { get { return hp; } set { hp = value; } }
 	[SerializeField] int maxHp;
@@ -119,6 +122,13 @@ public class MonsterController : MonoBehaviour, IDamageable
 		}
 	}
 
+	private void OnDrawGizmos()
+	{
+		Gizmos.color = Color.red;
+		Gizmos.DrawWireSphere(transform.position, moveDetectionRadius);
+		Gizmos.DrawWireSphere(transform.position, attackDetectionRadius);
+	}
+
 	public void TakeDamage(int damage, bool isStunAttack)
 	{
 		hp -= damage;
@@ -136,13 +146,6 @@ public class MonsterController : MonoBehaviour, IDamageable
 		{
 			isDie = true;
 		}
-	}
-
-	private void OnDrawGizmos()
-	{
-		Gizmos.color = Color.red;
-		Gizmos.DrawWireSphere(transform.position, moveDetectionRadius);
-		Gizmos.DrawWireSphere(transform.position, attackDetectionRadius);
 	}
 
 	private void MoveCheck()
@@ -208,7 +211,7 @@ public class MonsterController : MonoBehaviour, IDamageable
 	{
 		spawnDistance = Vector3.Distance(transform.position, spawnPos.position);
 
-		if (spawnDistance < 2f)
+		if (spawnDistance < spawnDistanceMax)
 		{
 			isReturn = false;
 			isIdle = true;

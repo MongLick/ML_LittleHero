@@ -43,115 +43,52 @@ public class FirebaseManager : Singleton<FirebaseManager>
 			app = FirebaseApp.DefaultInstance;
 			auth = FirebaseAuth.DefaultInstance;
 			db = FirebaseDatabase.DefaultInstance;
-
 			isValid = true;
 		}
 		else
 		{
 			isValid = false;
-
 			app = null;
 			auth = null;
 			db = null;
 		}
 	}
 
-	public void CreateCharacter(string nickName, CharacterType type, string position, float x, float y, float z, string scene, int health, int mana, int gold, string weaponSlot, string shieldSlot, string cloakSlot, Dictionary<int, InventorySlotData> inventory, Dictionary<string, QuestData> quests, InventorySlotData[] quick, int qualityLevel)
+	private DatabaseReference GetUserReference(string position) =>
+		db.GetReference("UserData").Child(userID).Child(position);
+
+	public void CreateCharacter(
+		string nickName, CharacterType type, string position, float x, float y, float z,
+		string scene, int health, int mana, int gold, string weaponSlot, string shieldSlot,
+		string cloakSlot, Dictionary<int, InventorySlotData> inventory,
+		Dictionary<string, QuestData> quests, InventorySlotData[] quick, int qualityLevel)
 	{
 		FirebaseUser user = auth.CurrentUser;
 		string userID = user.UserId;
 		UserData userData = new UserData(nickName, type, position, x, y, z, scene, health, mana, gold, weaponSlot, shieldSlot, cloakSlot, inventory, quests, quick, qualityLevel);
 		string json = JsonUtility.ToJson(userData);
-		Manager.Fire.DB
-			.GetReference("UserData")
-			.Child(userID)
-			.Child(position)
-			.SetRawJsonValueAsync(json)
-			.ContinueWithOnMainThread(task =>
-			{
 
-			});
+		GetUserReference(position).SetRawJsonValueAsync(json).ContinueWithOnMainThread(task => { });
 	}
 
-	public void UpdateWeaponSlot(string position, string weapon)
+	public void UpdateEquipmentSlot(string position, string slotType, string item)
 	{
-		FirebaseUser user = auth.CurrentUser;
-		string userID = user.UserId;
-		DatabaseReference reference = Manager.Fire.DB
-		.GetReference("UserData")
-		.Child(userID)
-		.Child(position);
-		reference.Child("weaponSlot").SetValueAsync(weapon).ContinueWithOnMainThread(task =>
-		{
-
-		});
-	}
-
-	public void UpdateShieldSlot(string position, string shield)
-	{
-		FirebaseUser user = auth.CurrentUser;
-		string userID = user.UserId;
-		DatabaseReference reference = Manager.Fire.DB
-		.GetReference("UserData")
-		.Child(userID)
-		.Child(position);
-		reference.Child("shieldSlot").SetValueAsync(shield).ContinueWithOnMainThread(task =>
-		{
-
-		});
-	}
-
-	public void UpdateCloakSlot(string position, string cloak)
-	{
-		FirebaseUser user = auth.CurrentUser;
-		string userID = user.UserId;
-		DatabaseReference reference = Manager.Fire.DB
-		.GetReference("UserData")
-		.Child(userID)
-		.Child(position);
-		reference.Child("cloakSlot").SetValueAsync(cloak).ContinueWithOnMainThread(task =>
-		{
-
-		});
+		GetUserReference(position).Child(slotType).SetValueAsync(item).ContinueWithOnMainThread(task => { });
 	}
 
 	public void AddQuest(string position, string questID, string questName)
 	{
-		FirebaseUser user = auth.CurrentUser;
-		string userID = user.UserId;
-
 		QuestData newQuest = new QuestData(questID, questName, false);
-		DatabaseReference reference = Manager.Fire.DB
-			.GetReference("UserData")
-			.Child(userID)
-			.Child(position)
-			.Child("quests")
-			.Child(questID);
-
 		string json = JsonUtility.ToJson(newQuest);
-		reference.SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
-		{
-
-		});
+		GetUserReference(position).Child("quests").Child(questID).SetRawJsonValueAsync(json).ContinueWithOnMainThread(task => { });
 	}
 
 	public void LoadQuestData(string position, string questID, System.Action<QuestData> callback)
 	{
-		FirebaseUser user = auth.CurrentUser;
-		string userID = user.UserId;
-
-		DatabaseReference reference = Manager.Fire.DB
-			.GetReference("UserData")
-			.Child(userID)
-			.Child(position)
-			.Child("quests")
-			.Child(questID);
-
-		reference.GetValueAsync().ContinueWithOnMainThread(task =>
+		GetUserReference(position).Child("quests").Child(questID).GetValueAsync().ContinueWithOnMainThread(task =>
 		{
 			if (task.IsFaulted)
 			{
-				Debug.LogError("퀘스트 데이터 로드 오류: " + task.Exception);
 				callback(null);
 				return;
 			}
@@ -159,87 +96,44 @@ public class FirebaseManager : Singleton<FirebaseManager>
 			if (task.IsCompleted)
 			{
 				DataSnapshot snapshot = task.Result;
-				if (snapshot.Exists)
-				{
-					string json = snapshot.GetRawJsonValue();
-					QuestData questData = JsonUtility.FromJson<QuestData>(json);
-					callback(questData);
-				}
-				else
-				{
-					callback(null);
-				}
+				callback(snapshot.Exists ? JsonUtility.FromJson<QuestData>(snapshot.GetRawJsonValue()) : null);
 			}
 		});
 	}
 
 	public void SaveItemToDatabase(int slotIndex, string itemName)
 	{
-		string userID = Manager.Fire.UserID;
-		string position = Manager.Fire.IsLeft ? "Left" : "Right";
-
-		Manager.Fire.DB
-			.GetReference("UserData")
-			.Child(userID)
-			.Child(position)
-			.Child("inventory")
-			.Child(slotIndex.ToString())
-			.SetValueAsync(new Dictionary<string, object>
-			{
-			{ "itemName", itemName }
-			})
-			.ContinueWithOnMainThread(task =>
-			{
-
-			});
+		string position = isLeft ? "Left" : "Right";
+		GetUserReference(position).Child("inventory").Child(slotIndex.ToString())
+			.SetValueAsync(new Dictionary<string, object> { { "itemName", itemName } })
+			.ContinueWithOnMainThread(task => { });
 	}
 
 	public void OnMonsterDie(MonsterType type)
 	{
 		string questID = "secondQuest";
-
-		Manager.Fire.DB
-			.GetReference("UserData")
-			.Child(Manager.Fire.UserID)
-			.Child(Manager.Fire.IsLeft ? "Left" : "Right")
-			.Child("quests")
-			.Child(questID)
-			.GetValueAsync()
+		string position = isLeft ? "Left" : "Right";
+		GetUserReference(position).Child("quests").Child(questID).GetValueAsync()
 			.ContinueWithOnMainThread(task =>
 			{
-				if (task.IsCompleted)
+				if (task.IsCompleted && task.Result != null)
 				{
-					if (task.Result != null)
+					DataSnapshot questSnapshot = task.Result;
+					int mushroomCount = int.TryParse(questSnapshot.Child("mushroomCount").Value?.ToString(), out mushroomCount) ? mushroomCount : 0;
+					int cactusCount = int.TryParse(questSnapshot.Child("cactusCount").Value?.ToString(), out cactusCount) ? cactusCount : 0;
+
+					if (type == MonsterType.Mushroom)
 					{
-						DataSnapshot questSnapshot = task.Result;
-						int mushroomCount = 0;
-						int cactusCount = 0;
+						questSnapshot.Child("mushroomCount").Reference.SetValueAsync(++mushroomCount);
+					}
+					else if (type == MonsterType.Cactus)
+					{
+						questSnapshot.Child("cactusCount").Reference.SetValueAsync(++cactusCount);
+					}
 
-						if (questSnapshot.Child("mushroomCount").Value != null)
-						{
-							mushroomCount = int.Parse(questSnapshot.Child("mushroomCount").Value.ToString());
-						}
-
-						if (questSnapshot.Child("cactusCount").Value != null)
-						{
-							cactusCount = int.Parse(questSnapshot.Child("cactusCount").Value.ToString());
-						}
-
-						if (type == MonsterType.Mushroom)
-						{
-							mushroomCount++;
-							questSnapshot.Child("mushroomCount").Reference.SetValueAsync(mushroomCount);
-						}
-						else if (type == MonsterType.Cactus)
-						{
-							cactusCount++;
-							questSnapshot.Child("cactusCount").Reference.SetValueAsync(cactusCount);
-						}
-
-						if (mushroomCount >= 3 && cactusCount >= 3)
-						{
-							questSnapshot.Child("isCompleted").Reference.SetValueAsync(true);
-						}
+					if (mushroomCount >= 3 && cactusCount >= 3)
+					{
+						questSnapshot.Child("isCompleted").Reference.SetValueAsync(true);
 					}
 				}
 			});
@@ -247,92 +141,35 @@ public class FirebaseManager : Singleton<FirebaseManager>
 
 	public void UpdateGoldInDatabase(int newGold)
 	{
-		Manager.Fire.DB
-		.GetReference("UserData")
-		.Child(Manager.Fire.UserID)
-		.Child(Manager.Fire.IsLeft ? "Left" : "Right")
-		.Child("gold")
-		.GetValueAsync()
-		.ContinueWithOnMainThread(task =>
-		{
-			if (task.IsCompleted && !task.IsFaulted)
+		string position = isLeft ? "Left" : "Right";
+		GetUserReference(position).Child("gold").GetValueAsync()
+			.ContinueWithOnMainThread(task =>
 			{
-				DataSnapshot goldSnapshot = task.Result;
-				int currentGold = int.Parse(goldSnapshot.Value.ToString());
-				int updatedGold = currentGold + newGold;
-
-				Manager.Fire.DB
-					.GetReference("UserData")
-					.Child(Manager.Fire.UserID)
-					.Child(Manager.Fire.IsLeft ? "Left" : "Right")
-					.Child("gold")
-					.SetValueAsync(updatedGold)
-					.ContinueWithOnMainThread(updateTask =>
-					{
-
-					});
-			}
-		});
+				if (task.IsCompleted && !task.IsFaulted)
+				{
+					int currentGold = int.Parse(task.Result.Value.ToString());
+					GetUserReference(position).Child("gold").SetValueAsync(currentGold + newGold).ContinueWithOnMainThread(updateTask => { });
+				}
+			});
 	}
 
-	public void SavePotionToDatabase(int slotIndex, InventorySlotData inventorySlotData)
+	public void SavePotionData(int slotIndex, InventorySlotData inventorySlotData, bool isQuickSlot)
 	{
-		string userID = Manager.Fire.UserID;
-		string position = Manager.Fire.IsLeft ? "Left" : "Right";
+		string position = isLeft ? "Left" : "Right";
+		string slotType = isQuickSlot ? "quickSlots" : "inventory";
 
-		Manager.Fire.DB
-			.GetReference("UserData")
-			.Child(userID)
-			.Child(position)
-			.Child("inventory")
-			.Child(slotIndex.ToString())
+		GetUserReference(position).Child(slotType).Child(slotIndex.ToString())
 			.SetValueAsync(new Dictionary<string, object>
 			{
 			{ "itemName", inventorySlotData.itemName },
 			{ "quantity", inventorySlotData.mumber }
 			})
-			.ContinueWithOnMainThread(task =>
-			{
-
-			});
-	}
-
-	public void SavePotionQuickSlot(int slotIndex, InventorySlotData inventorySlotData)
-	{
-		string userID = Manager.Fire.UserID;
-		string position = Manager.Fire.IsLeft ? "Left" : "Right";
-
-		Manager.Fire.DB
-			.GetReference("UserData")
-			.Child(userID)
-			.Child(position)
-			.Child("quickSlots")
-			.Child(slotIndex.ToString())
-			.SetValueAsync(new Dictionary<string, object>
-			{
-			{ "itemName", inventorySlotData.itemName },
-			{ "quantity", inventorySlotData.mumber }
-			})
-			.ContinueWithOnMainThread(task =>
-			{
-
-			});
+			.ContinueWithOnMainThread(task => { });
 	}
 
 	public void SetQualitySetting(int level)
 	{
-		string userID = Manager.Fire.UserID;
-		string position = Manager.Fire.IsLeft ? "Left" : "Right";
-
-		Manager.Fire.DB
-			.GetReference("UserData")
-			.Child(userID)
-			.Child(position)
-			.Child("qualityLevel")
-			.SetValueAsync(level).
-			ContinueWithOnMainThread(task =>
-			{
-
-			});
+		string position = isLeft ? "Left" : "Right";
+		GetUserReference(position).Child("qualityLevel").SetValueAsync(level).ContinueWithOnMainThread(task => { });
 	}
 }
