@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -34,6 +35,8 @@ public class MonsterController : MonoBehaviour, IDamageable
 	public Transform SpawnPos { get { return spawnPos; } set { spawnPos = value; } }
 	[SerializeField] Animator animator;
 	public Animator Animator { get { return animator; } }
+	[SerializeField] PlayerController lastAttacker;
+	public PlayerController LastAttacker { get { return lastAttacker; } }
 
 	[Header("Coroutine")]
 	private Coroutine attackRoutine;
@@ -129,9 +132,10 @@ public class MonsterController : MonoBehaviour, IDamageable
 		Gizmos.DrawWireSphere(transform.position, attackDetectionRadius);
 	}
 
-	public void TakeDamage(int damage, bool isStunAttack)
+	public void TakeDamage(int damage, PlayerController attacker, bool isStunAttack)
 	{
 		hp -= damage;
+		lastAttacker = attacker;
 
 		if (isStunAttack)
 		{

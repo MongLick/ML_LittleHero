@@ -1,7 +1,13 @@
+using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 
 public class PlayerSkillAttack : MonoBehaviour
 {
+	[Header("Components")]
+	[SerializeField] PlayerController playerController;
+	public PlayerController PlayerController { get { return playerController; } set { playerController = value; } }
+
 	[Header("Specs")]
 	[SerializeField] LayerMask monsterLayer;
 	[SerializeField] int damage;
@@ -13,7 +19,7 @@ public class PlayerSkillAttack : MonoBehaviour
 			IDamageable damageable = other.GetComponent<IDamageable>();
 			if (damageable != null)
 			{
-				damageable.TakeDamage(damage, true);
+				damageable.TakeDamage(damage, playerController, true);
 			}
 		}
 	}

@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 using static PlayerState;
 
 public class PlayerController : MonoBehaviour, IDamageable
@@ -16,8 +17,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 	[SerializeField] LayerMask monsterLayer;
 
 	[Header("Components")]
-	[SerializeField] GameObject attack;
-	public GameObject Attack { get { return attack; } set { attack = value; } }
+	[SerializeField] CharacterController controller;
+	public CharacterController Controller { get { return controller; } set { controller = value; } }
 	[SerializeField] PlayerInput playerInput;
 	public PlayerInput PlayerInput { get { return playerInput; } set { playerInput = value; } }
 	[SerializeField] CinemachineVirtualCamera gameOverCamera;
@@ -34,13 +35,17 @@ public class PlayerController : MonoBehaviour, IDamageable
 	public TMP_Dropdown Dropdown { get { return dropdown; } }
 	[SerializeField] QuickSlot[] quickSlots;
 	public QuickSlot[] QuickSlots { get { return quickSlots; } }
+	[SerializeField] PhotonView photonView;
+	public PhotonView PhotonView { get { return photonView; } }
+	[SerializeField] Image fadeImage;
+	public Image FadeImage { get { return fadeImage; } }
 	[SerializeField] Collider[] colliders = new Collider[20];
+	[SerializeField] GameObject attack;
+	[SerializeField] GameObject skillAttack;
 	[SerializeField] Collider[] hitColliders;
 	[SerializeField] MonsterController monster;
 	[SerializeField] Transform monsterTarget;
 	[SerializeField] CinemachineVirtualCamera playerCamera;
-	[SerializeField] CharacterController controller;
-	[SerializeField] PhotonView view;
 
 	[Header("Vector")]
 	private Vector3 move;
@@ -75,6 +80,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 	public float Range { get { return range; } }
 	[SerializeField] float dieDelay;
 	public float DieDelay { get { return dieDelay; } }
+	[SerializeField] float fadeTime;
+	public float FadeTime { get { return fadeTime; } }
 	[SerializeField] float closestDistance;
 	[SerializeField] float monsterDistance;
 	[SerializeField] float detectionRange;
@@ -106,7 +113,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	private void Awake()
 	{
-		if (view.IsMine == false)
+		if (photonView.IsMine == false)
 		{
 			playerInput.enabled = false;
 			playerCamera.gameObject.SetActive(false);
@@ -125,7 +132,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	private void Update()
 	{
-		if (view.IsMine == false)
+		if (photonView.IsMine == false)
 		{
 			return;
 		}
@@ -282,8 +289,13 @@ public class PlayerController : MonoBehaviour, IDamageable
 		}
 	}
 
-	public void TakeDamage(int damage, bool isStunAttack)
+	public void TakeDamage(int damage, PlayerController attacker, bool isStunAttack)
 	{
+		if (!photonView.IsMine)
+		{
+			return;
+		}
+
 		if (!isBlock)
 		{
 			Manager.Data.UserData.Health -= damage;
@@ -317,6 +329,16 @@ public class PlayerController : MonoBehaviour, IDamageable
 	public void Attackfalse()
 	{
 		attack.SetActive(false);
+	}
+
+	public void SkillAttacktrue()
+	{
+		skillAttack.SetActive(true);
+	}
+
+	public void SKillAttackfalse()
+	{
+		skillAttack.SetActive(false);
 	}
 
 	private void MoveTowardsMonster()

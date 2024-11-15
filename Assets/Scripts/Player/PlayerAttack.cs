@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
+	[Header("Components")]
+	[SerializeField] PlayerController playerController;
+
 	[Header("Specs")]
 	[SerializeField] LayerMask monsterLayer;
 	[SerializeField] int damage;
@@ -13,7 +16,7 @@ public class PlayerAttack : MonoBehaviour
 			IDamageable damageable = other.GetComponent<IDamageable>();
 			if (damageable != null)
 			{
-				damageable.TakeDamage(damage, false);
+				damageable.TakeDamage(damage, playerController, false);
 			}
 		}
 	}

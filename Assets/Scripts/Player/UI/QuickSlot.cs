@@ -8,14 +8,15 @@ using UnityEngine.UI;
 public class QuickSlot : MonoBehaviour, IDropHandler
 {
 	[Header("Components")]
-	[SerializeField] Button button;
-	[SerializeField] TMP_Text timeText;
-	[SerializeField] Image hideImage;
-	[SerializeField] InventoryUI inventoryUI;
 	[SerializeField] InventoryIcon currentItem;
 	public InventoryIcon CurrentItem { get { return currentItem; } set { currentItem = value; } }
 	[SerializeField] SkillIcon currentSkill;
 	public SkillIcon CurrentSkill { get { return currentSkill; } set { currentSkill = value; } }
+	[SerializeField] Button button;
+	[SerializeField] TMP_Text timeText;
+	[SerializeField] Image hideImage;
+	[SerializeField] InventoryUI inventoryUI;
+	[SerializeField] PlayerController player;
 
 	[Header("Vector")]
 	private Vector3 spawnPosition;
@@ -207,7 +208,7 @@ public class QuickSlot : MonoBehaviour, IDropHandler
 
 	public void Use()
 	{
-		if (isCooldown)
+		if (isCooldown || player.IsStunned)
 		{
 			return;
 		}

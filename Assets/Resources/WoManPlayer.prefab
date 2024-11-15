@@ -1826,6 +1826,77 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7737116713931535481}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &876770364718983990
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4562984586622455366}
+  - component: {fileID: 1339635666957315445}
+  - component: {fileID: 3586893474160220188}
+  m_Layer: 0
+  m_Name: SkillAttack
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &4562984586622455366
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 876770364718983990}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5499415700484961962}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1339635666957315445
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 876770364718983990}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.5, y: 1.5, z: 1.5}
+  m_Center: {x: 0, y: 0.5, z: 1}
+--- !u!114 &3586893474160220188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 876770364718983990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 485a735845aa5794487282109ef2762e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerController: {fileID: 8518678228745831386}
+  monsterLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  damage: 2
 --- !u!1 &885238060722498345
 GameObject:
   m_ObjectHideFlags: 0
@@ -5859,6 +5930,81 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &3474610218184077360
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3270061464751885528}
+  - component: {fileID: 5921212790454122924}
+  - component: {fileID: 1727321638469562315}
+  m_Layer: 5
+  m_Name: Fade
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &3270061464751885528
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3474610218184077360}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1046614826940496363}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &5921212790454122924
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3474610218184077360}
+  m_CullTransparentMesh: 1
+--- !u!114 &1727321638469562315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3474610218184077360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &3512010418016092807
 GameObject:
   m_ObjectHideFlags: 0
@@ -7075,6 +7221,7 @@ Transform:
   - {fileID: 7829730236864100200}
   - {fileID: 4610428089437517424}
   - {fileID: 8720781686016465863}
+  - {fileID: 4562984586622455366}
   - {fileID: 1637155603726253837}
   - {fileID: 7781186953396823747}
   - {fileID: 2123648215148089754}
@@ -7152,7 +7299,7 @@ MonoBehaviour:
   monsterLayer:
     serializedVersion: 2
     m_Bits: 128
-  attack: {fileID: 4920711051019604285}
+  controller: {fileID: -3528172684879286764}
   playerInput: {fileID: 1207083965055460475}
   gameOverCamera: {fileID: 8568784522396150190}
   animator: {fileID: 2450479527317569854}
@@ -7165,6 +7312,8 @@ MonoBehaviour:
   - {fileID: 16115835826081376}
   - {fileID: 2651576997613947304}
   - {fileID: 5159183580559823804}
+  photonView: {fileID: 3174971035778067892}
+  fadeImage: {fileID: 1727321638469562315}
   colliders:
   - {fileID: 0}
   - {fileID: 0}
@@ -7186,12 +7335,12 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  attack: {fileID: 4920711051019604285}
+  skillAttack: {fileID: 876770364718983990}
   hitColliders: []
   monster: {fileID: 0}
   monsterTarget: {fileID: 0}
   playerCamera: {fileID: 8523509314562117391}
-  controller: {fileID: -3528172684879286764}
-  view: {fileID: 3174971035778067892}
   skillName: 
   attackDelay: 0.5
   takeHitDelay: 0.3
@@ -7200,6 +7349,7 @@ MonoBehaviour:
   attackCooltime: 0.5
   range: 8
   dieDelay: 3
+  fadeTime: 1.5
   closestDistance: 3.4028235e+38
   monsterDistance: 1.5
   detectionRange: 300
@@ -8293,6 +8443,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78ba262f4a9fa3e4f8fa28886e32bb12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerController: {fileID: 8518678228745831386}
   monsterLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -9722,12 +9873,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5339e7df3ed62c468e2746e0edc4113, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentItem: {fileID: 0}
+  currentSkill: {fileID: 0}
   button: {fileID: 816616146959809043}
   timeText: {fileID: 2539059463947914568}
   hideImage: {fileID: 2113737948586715416}
   inventoryUI: {fileID: 6143980217086969671}
-  currentItem: {fileID: 0}
-  currentSkill: {fileID: 0}
+  player: {fileID: 8518678228745831386}
   coolTime: 0
   time: 0
   slotIndex: 0
@@ -10526,12 +10678,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5339e7df3ed62c468e2746e0edc4113, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentItem: {fileID: 0}
+  currentSkill: {fileID: 0}
   button: {fileID: 6302126235147887627}
   timeText: {fileID: 9223127546384472205}
   hideImage: {fileID: 4356738014415775790}
   inventoryUI: {fileID: 6143980217086969671}
-  currentItem: {fileID: 0}
-  currentSkill: {fileID: 0}
+  player: {fileID: 8518678228745831386}
   coolTime: 0
   time: 0
   slotIndex: 2
@@ -10891,6 +11044,24 @@ MonoBehaviour:
   healthSlider: {fileID: 6182655019740021638}
   manaSlider: {fileID: 3491550691646530247}
   photonView: {fileID: 3174971035778067892}
+  localUserData:
+    quickSlots: []
+    type: 0
+    nickName: 
+    position: 
+    scene: 
+    weaponSlot: 
+    shieldSlot: 
+    cloakSlot: 
+    posX: 0
+    posY: 0
+    posZ: 0
+    health: 0
+    maxHealth: 0
+    mana: 0
+    maxMana: 0
+    gold: 0
+    qualityLevel: 0
 --- !u!1 &6165827504000388987
 GameObject:
   m_ObjectHideFlags: 0
@@ -11314,6 +11485,7 @@ RectTransform:
   - {fileID: 3966205447557519555}
   - {fileID: 7423498168614833943}
   - {fileID: 5911469972131018248}
+  - {fileID: 3270061464751885528}
   m_Father: {fileID: 5499415700484961962}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -11564,12 +11736,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5339e7df3ed62c468e2746e0edc4113, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentItem: {fileID: 0}
+  currentSkill: {fileID: 0}
   button: {fileID: 5727834065470491385}
   timeText: {fileID: 732641540577253229}
   hideImage: {fileID: 3529935865847152434}
   inventoryUI: {fileID: 6143980217086969671}
-  currentItem: {fileID: 0}
-  currentSkill: {fileID: 0}
+  player: {fileID: 8518678228745831386}
   coolTime: 0
   time: 0
   slotIndex: 1
@@ -12711,12 +12884,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5339e7df3ed62c468e2746e0edc4113, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentItem: {fileID: 0}
+  currentSkill: {fileID: 0}
   button: {fileID: 4345453033833775905}
   timeText: {fileID: 3445385692021476702}
   hideImage: {fileID: 2334934242305863464}
   inventoryUI: {fileID: 6143980217086969671}
-  currentItem: {fileID: 0}
-  currentSkill: {fileID: 0}
+  player: {fileID: 8518678228745831386}
   coolTime: 0
   time: 0
   slotIndex: 3

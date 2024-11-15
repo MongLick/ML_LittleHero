@@ -16,6 +16,7 @@ public class PlayerUI : MonoBehaviour
 	[SerializeField] Slider healthSlider;
 	[SerializeField] Slider manaSlider;
 	[SerializeField] PhotonView photonView;
+	[SerializeField] UserData localUserData;
 
 	private void Awake()
 	{
@@ -38,15 +39,16 @@ public class PlayerUI : MonoBehaviour
 			return;
 		}
 
-		Manager.Data.UserData.OnHealthChanged += UpdateHealthUI;
-		UpdateHealthUI(Manager.Data.UserData.Health);
-		Manager.Data.UserData.OnManaChanged += UpdateManaUI;
-		UpdateManaUI(Manager.Data.UserData.Mana);
-		healthSlider.maxValue = Manager.Data.UserData.maxHealth;
-		healthSlider.value = Manager.Data.UserData.maxHealth;
-		manaSlider.maxValue = Manager.Data.UserData.maxMana;
-		manaSlider.value = Manager.Data.UserData.maxMana;
-		Manager.Data.UserData.OnGoldChanged += UpdateGold;
+		localUserData = Manager.Data.UserData;
+		localUserData.OnHealthChanged += UpdateHealthUI;
+		UpdateHealthUI(localUserData.Health);
+		localUserData.OnManaChanged += UpdateManaUI;
+		UpdateManaUI(localUserData.Mana);
+		healthSlider.maxValue = localUserData.maxHealth;
+		healthSlider.value = localUserData.maxHealth;
+		manaSlider.maxValue = localUserData.maxMana;
+		manaSlider.value = localUserData.maxMana;
+		localUserData.OnGoldChanged += UpdateGold;
 		UpdateGold();
 	}
 

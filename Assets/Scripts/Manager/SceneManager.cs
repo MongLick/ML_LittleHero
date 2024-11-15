@@ -67,6 +67,16 @@ public class SceneManager : Singleton<SceneManager>
 		fade.gameObject.SetActive(false);
 	}
 
+	public void PlayerDieFadeOut()
+	{
+		StartCoroutine(FadeOut());
+	}
+
+	public void PlayerDieFadeIn()
+	{
+		StartCoroutine(FadeIn());
+	}
+
 	IEnumerator FadeOut()
 	{
 		float rate = 0;
