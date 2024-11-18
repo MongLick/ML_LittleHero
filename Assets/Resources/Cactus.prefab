@@ -520,6 +520,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7861e38e39a17e439e47df2f4e3cb29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerController: {fileID: 0}
   palyerLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -702,6 +703,7 @@ GameObject:
   - component: {fileID: 1590582318380213690}
   - component: {fileID: -8921886553221747884}
   - component: {fileID: 4068230707692769478}
+  - component: {fileID: -8579206483218209089}
   m_Layer: 7
   m_Name: Cactus
   m_TagString: Untagged
@@ -768,6 +770,7 @@ MonoBehaviour:
   onDieEvent:
     m_PersistentCalls:
       m_Calls: []
+  photonView: {fileID: -8921886553221747884}
   pooledObject: {fileID: 6233693558130836263}
   monsterCon: {fileID: 5931276182936468336}
   attack: {fileID: 4237265585355440840}
@@ -776,6 +779,7 @@ MonoBehaviour:
   target: {fileID: 0}
   spawnPos: {fileID: 0}
   animator: {fileID: 3645209178630246246}
+  lastAttacker: {fileID: 0}
   moveDetectionRadius: 7
   attackDetectionRadius: 2.5
   maxDistance: 15
@@ -894,6 +898,7 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: 4068230707692769478}
+  - {fileID: -8579206483218209089}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -933,6 +938,22 @@ MonoBehaviour:
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
+--- !u!114 &-8579206483218209089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8759276818484078763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!1 &8884399249421481271
 GameObject:
   m_ObjectHideFlags: 0

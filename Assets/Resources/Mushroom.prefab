@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: -5181250073397914122}
   - component: {fileID: 4540598820100261978}
   - component: {fileID: -6959352645706027953}
+  - component: {fileID: 7405953778329288528}
   m_Layer: 7
   m_Name: Mushroom
   m_TagString: Untagged
@@ -83,6 +84,7 @@ MonoBehaviour:
   onDieEvent:
     m_PersistentCalls:
       m_Calls: []
+  photonView: {fileID: 4540598820100261978}
   pooledObject: {fileID: 3210385136987741735}
   monsterCon: {fileID: 2123777740419986438}
   attack: {fileID: 5809805006923007444}
@@ -91,6 +93,7 @@ MonoBehaviour:
   target: {fileID: 0}
   spawnPos: {fileID: 0}
   animator: {fileID: 6865973865443279956}
+  lastAttacker: {fileID: 0}
   moveDetectionRadius: 7
   attackDetectionRadius: 2.5
   maxDistance: 15
@@ -209,6 +212,7 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: -6959352645706027953}
+  - {fileID: 7405953778329288528}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -248,6 +252,22 @@ MonoBehaviour:
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
+--- !u!114 &7405953778329288528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 181463372218186819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!1 &870464457753867798
 GameObject:
   m_ObjectHideFlags: 0
@@ -734,6 +754,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7861e38e39a17e439e47df2f4e3cb29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerController: {fileID: 0}
   palyerLayer:
     serializedVersion: 2
     m_Bits: 8

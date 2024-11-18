@@ -9,24 +9,24 @@ public class InfoPanel : MonoBehaviour
 	[SerializeField] Button closeButton;
 
 	private void Awake()
-    {
-        AddCloseButtonListeners();
-    }
+	{
+		AddCloseButtonListeners();
+	}
 
-    private void AddCloseButtonListeners()
-    {
-        closeButton.onClick.AddListener(Close);
-        closeButton.onClick.AddListener(Manager.Sound.ButtonSFX);
-    }
+	private void AddCloseButtonListeners()
+	{
+		closeButton.onClick.AddListener(Close);
+		closeButton.onClick.AddListener(Manager.Sound.ButtonSFX);
+	}
 
-    public void DisplayMessage(string message)
-    {
-        infoText.text = message;
-        gameObject.SetActive(true);
-    }
+	public void DisplayMessage(string message)
+	{
+		infoText.text = message;
+		gameObject.SetActive(true);
+	}
 
-    private void Close()
-    {
-        gameObject.SetActive(false);
-    }
+	private void Close()
+	{
+		gameObject.SetActive(false);
+	}
 }

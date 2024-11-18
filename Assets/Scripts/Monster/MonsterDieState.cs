@@ -25,8 +25,7 @@ public class MonsterDieState : BaseState<MonsterStateType>
 		monster.Animator.SetTrigger("Die");
 		monster.BoxCollider.enabled = false;
 		monster.Attack.SetActive(false);
-		Debug.Log(monster.LastAttacker);
-		Debug.Log(monster.LastAttacker.PhotonView.IsMine);
+
 		if (monster.LastAttacker != null && monster.LastAttacker.PhotonView.IsMine)
 		{
 			Manager.Data.UserData.Gold += monster.Gold;

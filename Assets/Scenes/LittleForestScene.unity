@@ -22836,14 +22836,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff0f2dfc1ffe56640b66d259f0a36de3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  talkText: {fileID: 875167909}
-  talkBackImage: {fileID: 2134737885}
   playerLayer:
     serializedVersion: 2
     m_Bits: 8
+  talkText: {fileID: 875167909}
+  talkBackImage: {fileID: 2134737885}
   talkButton: {fileID: 1082877111}
   closeButton: {fileID: 205095852}
   shopBack: {fileID: 1165156821}
+  characterInstance: {fileID: 0}
+  character: {fileID: 0}
 --- !u!4 &1028548079
 Transform:
   m_ObjectHideFlags: 0
@@ -23382,6 +23384,7 @@ MonoBehaviour:
   interactAdapter: {fileID: 1056743102}
   scene: {fileID: 1028548078}
   player: {fileID: 0}
+  inventoryUI: {fileID: 0}
   inventorySlots: []
   quickSlot: []
 --- !u!114 &1056743102
@@ -25955,6 +25958,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 965fe1f3375807c488a1d7254d0966c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  photonView: {fileID: 1168661081}
   mushroomPrefab: {fileID: 3210385136987741735, guid: 478146fad6e29c841a4225b77ce45aea,
     type: 3}
   cactusPrefab: {fileID: 6233693558130836263, guid: 0c284742b03fb46499ed49ad07135a63,
@@ -40200,6 +40204,7 @@ MonoBehaviour:
     type: 3}
   icePrefab: {fileID: 3259275555942189247, guid: ac11ca6a5b199434ea2a4d3b0c7c906c,
     type: 3}
+  photonView: {fileID: 1809298708}
 --- !u!4 &1809298707
 Transform:
   m_ObjectHideFlags: 0

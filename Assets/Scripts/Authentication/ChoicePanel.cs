@@ -42,29 +42,29 @@ public class ChoicePanel : MonoBehaviour
 	}
 
 	private void Confirm()
-    {
-        choice = isLeftChoice ? "Left" : "Right";
+	{
+		choice = isLeftChoice ? "Left" : "Right";
 
-        Manager.Fire.DB.GetReference("UserData")
-            .Child(Manager.Fire.UserID)
-            .Child(choice)
-            .RemoveValueAsync()
-            .ContinueWithOnMainThread(task =>
-            {
-                if (task.IsCompleted)
-                {
-                    gameObject.SetActive(false);
-                    mainPanel.gameObject.SetActive(true);
+		Manager.Fire.DB.GetReference("UserData")
+			.Child(Manager.Fire.UserID)
+			.Child(choice)
+			.RemoveValueAsync()
+			.ContinueWithOnMainThread(task =>
+			{
+				if (task.IsCompleted)
+				{
+					gameObject.SetActive(false);
+					mainPanel.gameObject.SetActive(true);
 
-                    if (isLeftChoice)
-                    {
-                        mainPanel.UpdateUIForChoice("Left");
-                    }
-                    else
-                    {
-                        mainPanel.UpdateUIForChoice("Right");
-                    }
-                }
-            });
-    }
+					if (isLeftChoice)
+					{
+						mainPanel.UpdateUIForChoice("Left");
+					}
+					else
+					{
+						mainPanel.UpdateUIForChoice("Right");
+					}
+				}
+			});
+	}
 }

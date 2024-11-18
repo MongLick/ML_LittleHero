@@ -31,6 +31,6 @@ public class PoolEffect : MonoBehaviour
 	public void SpawnEffects(string prefabName, Vector3 position)
 	{
 		PhotonView photonView = PhotonView.Get(this);
-		photonView.RPC("SpawnEffectRPC", RpcTarget.All, prefabName, position);
+		photonView.RPC("SpawnEffectRPC", RpcTarget.AllBuffered, prefabName, position);
 	}
 }

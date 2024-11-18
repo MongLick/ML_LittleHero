@@ -61,7 +61,7 @@ public class SignUpPanel : MonoBehaviour
 				return;
 			}
 
-			ShowMessage("이메일과 비밀번호로 새로운 사용자가 성공적으로 생성되었습니다.");
+			ShowMessage("새로운 사용자가 생성되었습니다.");
 			panelController.SetActivePanel(PanelController.Panel.Login);
 			SetInteractable(true);
 		});

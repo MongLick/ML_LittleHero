@@ -19,6 +19,8 @@ public class MonsterController : MonoBehaviour, IDamageable
 	public UnityEvent<MonsterController> OnDieEvent { get { return onDieEvent; } set { onDieEvent = value; } }
 
 	[Header("Components")]
+	[SerializeField] PhotonView photonView;
+	public PhotonView PhotonView { get { return photonView; } }
 	[SerializeField] PooledObject pooledObject;
 	public PooledObject PooledObject { get { return pooledObject; } }
 	[SerializeField] MonsterController monsterCon;
@@ -232,6 +234,7 @@ public class MonsterController : MonoBehaviour, IDamageable
 		attack.SetActive(false);
 	}
 
+	[PunRPC]
 	public void Initialize()
 	{
 		hp = maxHp;

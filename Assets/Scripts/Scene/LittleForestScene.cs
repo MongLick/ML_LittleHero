@@ -63,211 +63,103 @@ public class LittleForestScene : BaseScene
 
 	private void LoadCharacterData()
 	{
-		if (Manager.Fire.IsLeft)
-		{
-			Manager.Fire.DB
+		string side = Manager.Fire.IsLeft ? "Left" : "Right";
+		Manager.Fire.DB
 			.GetReference("UserData")
 			.Child(Manager.Fire.UserID)
-			.Child("Left")
+			.Child(side)
 			.GetValueAsync()
 			.ContinueWithOnMainThread(task =>
 			{
 				if (task.IsCompleted && task.Result != null)
 				{
-					DataSnapshot leftSnapshot = task.Result;
-
-					string nickName = leftSnapshot.Child("nickName").Value.ToString();
-					string type = leftSnapshot.Child("type").Value.ToString();
-					float posX = float.Parse(leftSnapshot.Child("posX").Value.ToString());
-					float posY = float.Parse(leftSnapshot.Child("posY").Value.ToString());
-					float posZ = float.Parse(leftSnapshot.Child("posZ").Value.ToString());
-					int health = int.Parse(leftSnapshot.Child("health").Value.ToString());
-					int mana = int.Parse(leftSnapshot.Child("mana").Value.ToString());
-					int gold = int.Parse(leftSnapshot.Child("gold").Value.ToString());
-					string weapon = leftSnapshot.Child("weaponSlot").Value.ToString();
-					string shield = leftSnapshot.Child("shieldSlot").Value.ToString();
-					string cloak = leftSnapshot.Child("cloakSlot").Value.ToString();
-					int qualityLevel = int.Parse(leftSnapshot.Child("qualityLevel").Value.ToString());
-
-					if (type == "0")
-					{
-						characterInstance = PhotonNetwork.Instantiate("ManPlayer", new Vector3(posX, posY, posZ), Quaternion.identity);
-					}
-					else
-					{
-						characterInstance = PhotonNetwork.Instantiate("WoManPlayer", new Vector3(posX, posY, posZ), Quaternion.identity);
-					}
-
-					Manager.Game.Player = FindAnyObjectByType<PlayerController>();
-					TMP_Text nicknameUI = characterInstance.GetComponentInChildren<TMP_Text>();
-					if (nicknameUI != null)
-					{
-						nicknameUI.text = nickName;
-					}
-					UserData.CharacterType characterType = (type == "0") ? UserData.CharacterType.Man : UserData.CharacterType.WoMan;
-					Manager.Data.UserData = new UserData(nickName, characterType, "Left", posX, posY, posZ, "LittleForestScene", health, mana, gold, weapon, shield, cloak, new Dictionary<int, InventorySlotData>(), new Dictionary<string, QuestData>(), new InventorySlotData[4], qualityLevel);
-					character = characterInstance.GetComponent<PlayerController>();
-					GraphicsUI graphicsUI = character.GraphicsUI;
-					InventoryUI inventoryUI = character.InventoryUI;
-					EquipmentUI equipmentUI = character.EquipmentUI;
-					TMP_Dropdown qualityDropdown = character.Dropdown;
-					QualitySettings.SetQualityLevel(qualityLevel);
-					EquipItems(weapon, shield, cloak, equipmentUI, inventoryUI);
-					qualityDropdown.value = qualityLevel;
-					graphicsUI.gameObject.SetActive(false);
-					var inventoryData = leftSnapshot.Child("inventory");
-
-					foreach (var item in inventoryData.Children)
-					{
-						int slotIndex = int.Parse(item.Key);
-						string itemName = item.Child("itemName").Value.ToString();
-
-						if (slotIndex < inventoryUI.InventorySlots.Length)
-						{
-							InventorySlot slot = inventoryUI.InventorySlots[slotIndex];
-
-							if (!string.IsNullOrEmpty(itemName))
-							{
-								if (item.Child("quantity").Exists)
-								{
-									int itemQuantity = int.Parse(item.Child("quantity").Value.ToString());
-									shopBack.LoadPotion(itemName, slotIndex, itemQuantity, inventoryUI);
-								}
-								else
-								{
-									InventoryIcon newIcon = Instantiate(FindItemPrefab(itemName)).GetComponent<InventoryIcon>();
-									slot.AddItem(newIcon);
-								}
-							}
-						}
-					}
-
-					var quickSlotData = leftSnapshot.Child("quickSlots");
-
-					if (quickSlotData.Exists)
-					{
-						foreach (var slot in quickSlotData.Children)
-						{
-							int slotIndex = int.Parse(slot.Key);
-							string itemName = slot.Child("itemName").Value.ToString();
-
-							if (!string.IsNullOrEmpty(itemName))
-							{
-								int itemQuantity = int.Parse(slot.Child("quantity").Value.ToString());
-								LoadQuickSlotItem(itemName, slotIndex, itemQuantity);
-							}
-						}
-					}
-
-					Manager.Data.UserData.Gold = gold;
+					InitializeCharacter(task.Result, side);
 				}
 			});
+	}
+
+	private void InitializeCharacter(DataSnapshot snapshot, string side)
+	{
+		string nickName = snapshot.Child("nickName").Value.ToString();
+		string type = snapshot.Child("type").Value.ToString();
+		float posX = float.Parse(snapshot.Child("posX").Value.ToString());
+		float posY = float.Parse(snapshot.Child("posY").Value.ToString());
+		float posZ = float.Parse(snapshot.Child("posZ").Value.ToString());
+		int health = int.Parse(snapshot.Child("health").Value.ToString());
+		int mana = int.Parse(snapshot.Child("mana").Value.ToString());
+		int gold = int.Parse(snapshot.Child("gold").Value.ToString());
+		string weapon = snapshot.Child("weaponSlot").Value.ToString();
+		string shield = snapshot.Child("shieldSlot").Value.ToString();
+		string cloak = snapshot.Child("cloakSlot").Value.ToString();
+		int qualityLevel = int.Parse(snapshot.Child("qualityLevel").Value.ToString());
+
+		characterInstance = PhotonNetwork.Instantiate(
+			type == "0" ? "ManPlayer" : "WoManPlayer",
+			new Vector3(posX, posY, posZ),
+			Quaternion.identity
+		);
+
+		Manager.Game.Player = FindAnyObjectByType<PlayerController>();
+		TMP_Text nicknameUI = characterInstance.GetComponentInChildren<TMP_Text>();
+		if (nicknameUI != null) nicknameUI.text = nickName;
+
+		UserData.CharacterType characterType = (type == "0") ? UserData.CharacterType.Man : UserData.CharacterType.WoMan;
+		Manager.Data.UserData = new UserData(nickName, characterType, side, posX, posY, posZ, "LittleForestScene", health, mana, gold, weapon, shield, cloak, new Dictionary<int, InventorySlotData>(), new Dictionary<string, QuestData>(), new InventorySlotData[4], qualityLevel);
+
+		character = characterInstance.GetComponent<PlayerController>();
+		InitializeUI(qualityLevel, weapon, shield, cloak, snapshot);
+
+		Manager.Data.UserData.Gold = gold;
+	}
+
+	private void InitializeUI(int qualityLevel, string weapon, string shield, string cloak, DataSnapshot snapshot)
+	{
+		GraphicsUI graphicsUI = character.GraphicsUI;
+		InventoryUI inventoryUI = character.InventoryUI;
+		EquipmentUI equipmentUI = character.EquipmentUI;
+		TMP_Dropdown qualityDropdown = character.Dropdown;
+
+		QualitySettings.SetQualityLevel(qualityLevel);
+		qualityDropdown.value = qualityLevel;
+
+		EquipItems(weapon, shield, cloak, equipmentUI, inventoryUI);
+		graphicsUI.gameObject.SetActive(false);
+
+		var inventoryData = snapshot.Child("inventory");
+		foreach (var item in inventoryData.Children)
+		{
+			int slotIndex = int.Parse(item.Key);
+			string itemName = item.Child("itemName").Value.ToString();
+
+			if (slotIndex < inventoryUI.InventorySlots.Length && !string.IsNullOrEmpty(itemName))
+			{
+				InventorySlot slot = inventoryUI.InventorySlots[slotIndex];
+				if (item.Child("quantity").Exists)
+				{
+					int itemQuantity = int.Parse(item.Child("quantity").Value.ToString());
+					shopBack.LoadPotion(itemName, slotIndex, itemQuantity, inventoryUI);
+				}
+				else
+				{
+					InventoryIcon newIcon = Instantiate(FindItemPrefab(itemName)).GetComponent<InventoryIcon>();
+					slot.AddItem(newIcon);
+				}
+			}
 		}
-		else
+
+		var quickSlotData = snapshot.Child("quickSlots");
+		if (quickSlotData.Exists)
 		{
-			Manager.Fire.DB
-			.GetReference("UserData")
-			.Child(Manager.Fire.UserID)
-			.Child("Right")
-			.GetValueAsync()
-			.ContinueWithOnMainThread(task =>
+			foreach (var slot in quickSlotData.Children)
 			{
-				if (task.IsCompleted && task.Result != null)
+				int slotIndex = int.Parse(slot.Key);
+				string itemName = slot.Child("itemName").Value.ToString();
+				if (!string.IsNullOrEmpty(itemName))
 				{
-					DataSnapshot rightSnapshot = task.Result;
-
-					string nickName = rightSnapshot.Child("nickName").Value.ToString();
-					string type = rightSnapshot.Child("type").Value.ToString();
-					float posX = float.Parse(rightSnapshot.Child("posX").Value.ToString());
-					float posY = float.Parse(rightSnapshot.Child("posY").Value.ToString());
-					float posZ = float.Parse(rightSnapshot.Child("posZ").Value.ToString());
-					int health = int.Parse(rightSnapshot.Child("health").Value.ToString());
-					int mana = int.Parse(rightSnapshot.Child("mana").Value.ToString());
-					int gold = int.Parse(rightSnapshot.Child("gold").Value.ToString());
-					string weapon = rightSnapshot.Child("weaponSlot").Value.ToString();
-					string shield = rightSnapshot.Child("shieldSlot").Value.ToString();
-					string cloak = rightSnapshot.Child("cloakSlot").Value.ToString();
-					int qualityLevel = int.Parse(rightSnapshot.Child("qualityLevel").Value.ToString());
-
-					if (type == "0")
-					{
-						characterInstance = PhotonNetwork.Instantiate("ManPlayer", new Vector3(posX, posY, posZ), Quaternion.identity);
-					}
-					else
-					{
-						characterInstance = PhotonNetwork.Instantiate("WoManPlayer", new Vector3(posX, posY, posZ), Quaternion.identity);
-					}
-
-					Manager.Game.Player = FindAnyObjectByType<PlayerController>();
-					TMP_Text nicknameUI = characterInstance.GetComponentInChildren<TMP_Text>();
-					if (nicknameUI != null)
-					{
-						nicknameUI.text = nickName;
-					}
-					UserData.CharacterType characterType = (type == "0") ? UserData.CharacterType.Man : UserData.CharacterType.WoMan;
-					Manager.Data.UserData = new UserData(nickName, characterType, "Left", posX, posY, posZ, "LittleForestScene", health, mana, gold, weapon, shield, cloak, new Dictionary<int, InventorySlotData>(), new Dictionary<string, QuestData>(), new InventorySlotData[4], qualityLevel);
-					character = characterInstance.GetComponent<PlayerController>();
-					GraphicsUI graphicsUI = character.GraphicsUI;
-					InventoryUI inventoryUI = character.InventoryUI;
-					EquipmentUI equipmentUI = character.EquipmentUI;
-					TMP_Dropdown qualityDropdown = character.Dropdown;
-					graphicsUI.gameObject.SetActive(true);
-					inventoryUI.gameObject.SetActive(true);
-					equipmentUI.gameObject.SetActive(true);
-					QualitySettings.SetQualityLevel(qualityLevel);
-					EquipItems(weapon, shield, cloak, equipmentUI, inventoryUI);
-					qualityDropdown.value = qualityLevel;
-					graphicsUI.gameObject.SetActive(false);
-					var inventoryData = rightSnapshot.Child("inventory");
-
-					foreach (var item in inventoryData.Children)
-					{
-						int slotIndex = int.Parse(item.Key);
-						string itemName = item.Child("itemName").Value.ToString();
-
-						if (slotIndex < inventoryUI.InventorySlots.Length)
-						{
-							InventorySlot slot = inventoryUI.InventorySlots[slotIndex];
-
-							if (!string.IsNullOrEmpty(itemName))
-							{
-								if (!string.IsNullOrEmpty(itemName))
-								{
-									if (item.Child("quantity").Exists)
-									{
-										int itemQuantity = int.Parse(item.Child("quantity").Value.ToString());
-										shopBack.LoadPotion(itemName, slotIndex, itemQuantity, inventoryUI);
-									}
-									else
-									{
-										InventoryIcon newIcon = Instantiate(FindItemPrefab(itemName)).GetComponent<InventoryIcon>();
-										slot.AddItem(newIcon);
-									}
-								}
-							}
-						}
-					}
-
-					var quickSlotData = rightSnapshot.Child("quickSlots");
-
-					if (quickSlotData.Exists)
-					{
-						foreach (var slot in quickSlotData.Children)
-						{
-							int slotIndex = int.Parse(slot.Key);
-							string itemName = slot.Child("itemName").Value.ToString();
-
-							if (!string.IsNullOrEmpty(itemName))
-							{
-								int itemQuantity = int.Parse(slot.Child("quantity").Value.ToString());
-								LoadQuickSlotItem(itemName, slotIndex, itemQuantity);
-							}
-						}
-					}
-
-					Manager.Data.UserData.Gold = gold;
+					int itemQuantity = int.Parse(slot.Child("quantity").Value.ToString());
+					LoadQuickSlotItem(itemName, slotIndex, itemQuantity);
 				}
-			});
+			}
 		}
 	}
 

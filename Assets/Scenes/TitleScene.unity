@@ -4057,8 +4057,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 400, y: -40}
-  m_SizeDelta: {x: 750, y: 320}
+  m_AnchoredPosition: {x: 304, y: -40}
+  m_SizeDelta: {x: 558, y: 208.721}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &540503558
 MonoBehaviour:
@@ -12131,40 +12131,40 @@ MonoBehaviour:
   logoutButton: {fileID: 1480819428}
   editButton: {fileID: 1356078890}
   startButton: {fileID: 322329542}
-  creation1: {fileID: 1531756593}
-  creation2: {fileID: 1034835038}
-  delete1: {fileID: 1888780491}
-  delete2: {fileID: 652065157}
-  pressed1: {fileID: 131957521}
-  pressed2: {fileID: 1636806466}
-  manAnimator1: {fileID: 170462138}
-  woManAnimator1: {fileID: 1892340854}
-  manAnimator2: {fileID: 1469734516}
-  woManAnimator2: {fileID: 2070604584}
+  creationLeft: {fileID: 1531756593}
+  creationRight: {fileID: 1034835038}
+  deleteLeft: {fileID: 1888780491}
+  deleteRight: {fileID: 652065157}
+  pressedLeft: {fileID: 131957521}
+  pressedRight: {fileID: 1636806466}
+  manAnimatorLeft: {fileID: 170462138}
+  woManAnimatorLeft: {fileID: 1892340854}
+  manAnimatorRight: {fileID: 1469734516}
+  woManAnimatorRight: {fileID: 2070604584}
   leftNickName: {fileID: 1336727530}
   rightNickName: {fileID: 577199608}
-  man1Items:
+  manLeftItems:
   - {fileID: 1535359182}
   - {fileID: 1424043306}
   - {fileID: 1532376255}
   - {fileID: 1222711501}
   - {fileID: 2103928333}
   - {fileID: 1009256372}
-  man2Items:
+  manRightItems:
   - {fileID: 154749897}
   - {fileID: 922125921}
   - {fileID: 1304917789}
   - {fileID: 158504285}
   - {fileID: 165988115}
   - {fileID: 1547290164}
-  woMan1Items:
+  woManLeftItems:
   - {fileID: 837858569}
   - {fileID: 81912079}
   - {fileID: 913645753}
   - {fileID: 1976581143}
   - {fileID: 1006257086}
   - {fileID: 1572727287}
-  woMan2Items:
+  woManRightItems:
   - {fileID: 1062227175}
   - {fileID: 1469790577}
   - {fileID: 1777696614}

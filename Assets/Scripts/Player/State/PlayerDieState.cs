@@ -1,11 +1,6 @@
-using Photon.Realtime;
-using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem.XR;
 using static PlayerState;
-using static UnityEditor.Experimental.GraphView.GraphView;
-using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class PlayerDieState : BaseState<PlayerStateType>
 {

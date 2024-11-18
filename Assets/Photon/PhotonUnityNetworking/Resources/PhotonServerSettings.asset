@@ -41,6 +41,23 @@ MonoBehaviour:
   - RespawnSpaceship
   - LoadCharacterData
   - SpawnEffectRPC
+  - Initialize
+  - DieCoroutine
+  - CactusDie
+  - CactusDieCoroutine
+  - MonsterDieCoroutine
+  - MushroomDie
+  - SpawnMonsters
+  - RPC_MonsterDie
+  - RPC_CactusDie
+  - RPC_MushroomDie
+  - RespawnMonster
+  - SpawnMonsterRPC
+  - SpawnCactusRPC
+  - SpawnMushroomRPC
+  - SpawnMonstersRPC
+  - RespawnMonsterRPC
+  - RPC_OnMonsterDie
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
