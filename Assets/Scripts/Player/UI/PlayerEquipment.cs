@@ -1,7 +1,7 @@
 using Photon.Pun;
 using UnityEngine;
 
-public class PlayerEquipment : MonoBehaviourPun, IPunObservable
+public class PlayerEquipment : MonoBehaviourPun
 {
 	[Header("Components")]
 	[SerializeField] GameObject swordObject1;
@@ -16,18 +16,21 @@ public class PlayerEquipment : MonoBehaviourPun, IPunObservable
 	[SerializeField] string equippedShield = "";
 	[SerializeField] string equippedCloak = "";
 
+	[PunRPC]
 	public void EquipWeapon(string weapon)
 	{
 		equippedWeapon = weapon;
 		UpdateEquipment(swordObject1, swordObject2, equippedWeapon == "sword1", equippedWeapon == "sword2");
 	}
 
+	[PunRPC]
 	public void EquipShield(string shield)
 	{
 		equippedShield = shield;
 		UpdateEquipment(shieldObject1, shieldObject2, equippedShield == "shield1", equippedShield == "shield2");
 	}
 
+	[PunRPC]
 	public void EquipCloak(string cloak)
 	{
 		equippedCloak = cloak;
@@ -40,27 +43,18 @@ public class PlayerEquipment : MonoBehaviourPun, IPunObservable
 		object2.SetActive(isEquipped2);
 	}
 
-	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+	public void TryEquipWeapon(string weapon)
 	{
-		if (stream.IsWriting)
-		{
-			stream.SendNext(equippedWeapon);
-			stream.SendNext(equippedShield);
-			stream.SendNext(equippedCloak);
-		}
-		else
-		{
-			equippedWeapon = (string)stream.ReceiveNext();
-			equippedShield = (string)stream.ReceiveNext();
-			equippedCloak = (string)stream.ReceiveNext();
-
-			UpdateWeapon();
-			UpdateShield();
-			UpdateCloak();
-		}
+		photonView.RPC("EquipWeapon", RpcTarget.All, weapon);
 	}
 
-	private void UpdateWeapon() => UpdateEquipment(swordObject1, swordObject2, equippedWeapon == "sword1", equippedWeapon == "sword2");
-	private void UpdateShield() => UpdateEquipment(shieldObject1, shieldObject2, equippedShield == "shield1", equippedShield == "shield2");
-	private void UpdateCloak() => UpdateEquipment(cloakObject1, cloakObject2, equippedCloak == "cloak1", equippedCloak == "cloak2");
+	public void TryEquipShield(string shield)
+	{
+		photonView.RPC("EquipShield", RpcTarget.All, shield);
+	}
+
+	public void TryEquipCloak(string cloak)
+	{
+		photonView.RPC("EquipCloak", RpcTarget.All, cloak);
+	}
 }
